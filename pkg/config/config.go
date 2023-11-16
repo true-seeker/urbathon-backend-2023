@@ -2,8 +2,10 @@ package config
 
 import (
 	"flag"
+	"fmt"
 	"github.com/spf13/viper"
 	"log"
+	"urbathon-backend-2023/pkg/projectpath"
 )
 
 var config *viper.Viper
@@ -17,6 +19,7 @@ func Init(env string) {
 	config.AddConfigPath("configs/")
 	config.AddConfigPath("/configs/")
 	config.AddConfigPath("/app/configs/")
+	config.AddConfigPath(fmt.Sprintf("%s/configs/", projectpath.Root))
 	err = config.ReadInConfig()
 	if err != nil {
 		log.Println("error on parsing configuration file", err)

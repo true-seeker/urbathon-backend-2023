@@ -3,7 +3,7 @@
     "address": "localhost",
     "user": "postgres",
     "password": "568219",
-    "dbname": "postgres",
+    "dbname": "urbathon",
     "port": "5432"
   },
   "server": {

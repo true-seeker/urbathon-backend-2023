@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -51,7 +50,6 @@ func (d *AuthHandler) Login(c *gin.Context) {
 		panic(err)
 	}
 	a := session.Get("user_id")
-	fmt.Println(a)
 	c.JSON(http.StatusOK, user)
 }
 
@@ -65,7 +63,6 @@ func (d *AuthHandler) Login(c *gin.Context) {
 func (d *AuthHandler) Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	a := session.Get("user_id")
-	fmt.Println(a)
 	session.Clear()
 	session.Options(sessions.Options{Path: "/", MaxAge: -1})
 	session.Save()
