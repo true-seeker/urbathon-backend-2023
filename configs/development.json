@@ -9,5 +9,9 @@
   "server": {
     "address": "localhost",
     "port": "8080"
+  },
+  "redis": {
+    "address": "cache",
+    "port": "6379"
   }
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"urbathon-backend-2023/internal/app/router"
 	"urbathon-backend-2023/internal/app/storage"
 	"urbathon-backend-2023/pkg/config"
@@ -35,4 +36,12 @@ func (a *App) Run(r *gin.Engine, storage storage.Sql) error {
 		return err
 	}
 	return nil
+}
+
+func (a *App) IsRunningInDockerContainer() bool {
+	if _, err := os.Stat("/.dockerenv"); err == nil {
+		return true
+	}
+
+	return false
 }

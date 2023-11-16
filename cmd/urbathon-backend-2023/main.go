@@ -2,9 +2,11 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -15,6 +17,7 @@ import (
 	"urbathon-backend-2023/docs"
 	"urbathon-backend-2023/internal/app/storage"
 	"urbathon-backend-2023/internal/app/storage/postgres"
+	rd "urbathon-backend-2023/internal/app/store/redis"
 	"urbathon-backend-2023/internal/pkg/app"
 	"urbathon-backend-2023/pkg/config"
 )
@@ -25,17 +28,27 @@ func Init() {
 	docs.SwaggerInfo.BasePath = "/api"
 }
 
-func InitDB() *postgres.Postgres {
+func initDB() *postgres.Postgres {
 	st := &postgres.Postgres{}
 	st.New()
 	storage.CurrentStorage = st
 	return st
 }
 
-func initGin() *gin.Engine {
+func initCache(a *app.App) *cookie.Store {
+	var store cookie.Store
+	if a.IsRunningInDockerContainer() {
+		r := rd.New()
+		store, _ = redis.NewStore(10, "tcp", fmt.Sprintf("%s:%s", r.Address, r.Port), "", []byte("secret"))
+	} else {
+		store = cookie.NewStore([]byte("secret"))
+	}
+	return &store
+}
+
+func initGin(store *cookie.Store) *gin.Engine {
 	r := gin.Default()
-	store := cookie.NewStore([]byte("secret"))
-	r.Use(sessions.Sessions("session", store))
+	r.Use(sessions.Sessions("session", *store))
 	r.Use(cors.Default())
 	return r
 }
@@ -56,9 +69,10 @@ func runMigrations(sql storage.Sql) {
 
 func main() {
 	Init()
-	st := InitDB()
-	r := initGin()
+	st := initDB()
 	a := app.New()
+	store := initCache(a)
+	r := initGin(store)
 
 	runMigrations(st)
 

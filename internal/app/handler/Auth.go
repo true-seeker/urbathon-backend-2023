@@ -49,7 +49,7 @@ func (d *AuthHandler) Login(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	a := session.Get("user_id")
+	session.Get("user_id")
 	c.JSON(http.StatusOK, user)
 }
 
@@ -62,7 +62,7 @@ func (d *AuthHandler) Login(c *gin.Context) {
 // @Router /auth/logout [post]
 func (d *AuthHandler) Logout(c *gin.Context) {
 	session := sessions.Default(c)
-	a := session.Get("user_id")
+	session.Get("user_id")
 	session.Clear()
 	session.Options(sessions.Options{Path: "/", MaxAge: -1})
 	session.Save()
