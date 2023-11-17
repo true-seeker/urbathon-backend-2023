@@ -17,7 +17,7 @@ func Session(c *gin.Context) {
 		c.Next()
 		return
 	}
-	userId := userIdAny.(int)
+	userId := userIdAny.(int32)
 	db := storage.CurrentStorage
 	userRepo := repository.NewUserRepository(db)
 	user, err := userRepo.Get(&userId)

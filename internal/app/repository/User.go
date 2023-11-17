@@ -2,54 +2,57 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
-	"urbathon-backend-2023/internal/app/model/entity"
+	. "github.com/go-jet/jet/v2/postgres"
+	"urbathon-backend-2023/.gen/urbathon/public/model"
+	. "urbathon-backend-2023/.gen/urbathon/public/table"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/storage"
 )
 
 type UserRepository struct {
-	db                 *sql.DB
-	incidentRepository *IncidentRepository
+	db *sql.DB
 }
 
 func NewUserRepository(s storage.Sql) *UserRepository {
 	return &UserRepository{db: s.GetDb()}
 }
 
-func (a *UserRepository) GetByCreds(loginInput *input.Login) (*entity.User, error) {
-	row := a.db.QueryRow("select id, name, email from users WHERE email = $1 AND password = $2", loginInput.Email, loginInput.Password)
+func (a *UserRepository) GetByCreds(loginInput *input.Login) (*model.Users, error) {
+	var u model.Users
+	stmt := SELECT(Users.ID, Users.Name, Users.Email).
+		FROM(Users).
+		WHERE(Users.Email.EQ(String(*loginInput.Email)).
+			AND(Users.Password.EQ(String(*loginInput.Password))))
 
-	var u entity.User
-
-	switch err := row.Scan(&u.Id, &u.Name, &u.Email); {
-	case errors.Is(err, sql.ErrNoRows):
+	err := stmt.Query(a.db, &u)
+	if err != nil {
 		return nil, err
 	}
 	return &u, nil
 }
-func (a *UserRepository) Get(id *int) (*entity.User, error) {
-	row := a.db.QueryRow("select id, name, email from users WHERE id = $1 ", id)
+func (a *UserRepository) Get(id *int32) (*model.Users, error) {
+	var u model.Users
+	stmt := SELECT(Users.ID, Users.Name, Users.Email).
+		FROM(Users).
+		WHERE(Users.ID.EQ(Int32(*id)))
 
-	var u entity.User
-
-	switch err := row.Scan(&u.Id, &u.Name, &u.Email); {
-	case errors.Is(err, sql.ErrNoRows):
+	err := stmt.Query(a.db, &u)
+	if err != nil {
 		return nil, err
 	}
 	return &u, nil
 }
 
-func (a *UserRepository) Create(userInput *input.User) (*entity.User, error) {
-	var id int
-	_ = a.db.QueryRow("insert into users(email, password, name) values ($1, $2, $3) RETURNING id",
-		userInput.Email, userInput.Password, userInput.Name).
-		Scan(&id)
+func (a *UserRepository) Create(user *model.Users) (*model.Users, error) {
+	var u model.Users
+	stmt := Users.INSERT(Users.Email, Users.Password, Users.Name).
+		MODEL(user).
+		RETURNING(Users.AllColumns)
 
-	e, err := a.Get(&id)
+	err := stmt.Query(a.db, &u)
 	if err != nil {
 		return nil, err
 	}
 
-	return e, nil
+	return &u, nil
 }

@@ -40,4 +40,6 @@ services:
         condition: service_healthy
     environment:
       <<: *database-credentials
-    command: ./urbathon-backend-2023 -srvAddr=webapi -srvPort=8080
+    command: >
+      sh -c "jet -dsn="postgresql://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}?sslmode=disable" -schema=public -path=../../.gen &&
+      ./urbathon-backend-2023 -srvAddr=webapi -srvPort=8080"

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"urbathon-backend-2023/internal/app/model/entity"
+	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/repository"
 	"urbathon-backend-2023/internal/app/storage"
@@ -15,7 +15,7 @@ func DecodeCredentials(c *gin.Context) (string, string, bool) {
 	return r.BasicAuth()
 }
 
-func GetAccountByCreds(c *gin.Context) (*entity.User, error) {
+func GetAccountByCreds(c *gin.Context) (*model.Users, error) {
 	login, password, ok := DecodeCredentials(c)
 	if !ok {
 		return nil, errors.New("")

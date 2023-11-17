@@ -16,28 +16,6 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	api := r.Group("/api")
-	databaseRepo := repository.NewDatabaseRepository(storage)
-	databaseService := service.NewDatabaseService(databaseRepo)
-	databaseHandler := handler.NewDatabaseHandler(databaseService)
-	databasesGroup := api.Group("database")
-	{
-		databasesGroup.GET("/", middleware.BasicAuth, databaseHandler.GetAll)
-		databasesGroup.GET("/:id", middleware.BasicAuth, databaseHandler.Get)
-		databasesGroup.POST("/", middleware.BasicAuth, databaseHandler.Create)
-		databasesGroup.DELETE("/:id", middleware.BasicAuth, databaseHandler.Delete)
-		databasesGroup.PATCH("/:id", middleware.BasicAuth, databaseHandler.Edit)
-	}
-	incidentRepo := repository.NewIncidentRepository(storage, databaseRepo)
-
-	alertRepo := repository.NewAlertRepository(storage, incidentRepo)
-	alertService := service.NewAlertService(alertRepo)
-	alertHandler := handler.NewAlertHandler(alertService)
-	alertsGroup := api.Group("alert")
-	{
-		alertsGroup.GET("/", middleware.BasicAuth, alertHandler.GetAll)
-		alertsGroup.GET("/:id", middleware.BasicAuth, alertHandler.Get)
-	}
-
 	userRepo := repository.NewUserRepository(storage)
 	authService := service.NewAuthService(userRepo)
 	authHandler := handler.NewAuthHandler(authService)

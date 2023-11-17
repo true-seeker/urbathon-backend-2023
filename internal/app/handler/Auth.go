@@ -4,7 +4,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"urbathon-backend-2023/internal/app/model/entity"
+	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/pkg/errorHandler"
@@ -44,7 +44,7 @@ func (d *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 	session := sessions.Default(c)
-	session.Set("user_id", *user.Id)
+	session.Set("user_id", user.Id)
 	err = session.Save()
 	if err != nil {
 		panic(err)
@@ -78,7 +78,7 @@ func (d *AuthHandler) Logout(c *gin.Context) {
 // @Router /auth/test [post]
 func (d *AuthHandler) Test(c *gin.Context) {
 	userAny, _ := c.Get("user")
-	user := userAny.(*entity.User)
+	user := userAny.(*model.Users)
 
 	c.JSON(http.StatusOK, user)
 }
@@ -106,7 +106,7 @@ func (d *AuthHandler) Register(c *gin.Context) {
 	}
 
 	session := sessions.Default(c)
-	session.Set("user_id", *user.Id)
+	session.Set("user_id", user.Id)
 	err = session.Save()
 
 	c.JSON(http.StatusCreated, user)
