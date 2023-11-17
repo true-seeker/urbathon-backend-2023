@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"log"
+	"os"
 	"urbathon-backend-2023/pkg/projectpath"
 )
 
@@ -24,7 +25,17 @@ func Init(env string) {
 	if err != nil {
 		log.Println("error on parsing configuration file", err)
 	}
+
+	initEnvVars(config)
 	initFlags()
+}
+
+func initEnvVars(c *viper.Viper) {
+	setConfigVarFromEnv(c, "database.address", "POSTGRES_HOST")
+	setConfigVarFromEnv(c, "database.user", "POSTGRES_USER")
+	setConfigVarFromEnv(c, "database.password", "POSTGRES_PASSWORD")
+	setConfigVarFromEnv(c, "database.dbname", "POSTGRES_DB")
+	setConfigVarFromEnv(c, "database.port", "POSTGRES_PORT")
 }
 
 func GetConfig() *viper.Viper {
@@ -43,25 +54,23 @@ func initFlags() {
 
 	flag.Parse()
 
-	if *dbAddr != "" {
-		config.Set("database.address", *dbAddr)
+	setConfigVarFromCLI(config, "database.address", *dbAddr)
+	setConfigVarFromCLI(config, "database.user", *dbUser)
+	setConfigVarFromCLI(config, "database.password", *dbPass)
+	setConfigVarFromCLI(config, "database.dbname", *dbName)
+	setConfigVarFromCLI(config, "database.port", *dbPort)
+	setConfigVarFromCLI(config, "server.address", *srvAddr)
+	setConfigVarFromCLI(config, "server.port", *srvPort)
+}
+
+func setConfigVarFromEnv(c *viper.Viper, key string, envKey string) {
+	if os.Getenv(envKey) != "" {
+		c.Set(key, os.Getenv(envKey))
 	}
-	if *dbUser != "" {
-		config.Set("database.user", *dbUser)
-	}
-	if *dbPass != "" {
-		config.Set("database.password", *dbPass)
-	}
-	if *dbName != "" {
-		config.Set("database.dbname", *dbName)
-	}
-	if *dbPort != "" {
-		config.Set("database.port", *dbPort)
-	}
-	if *srvAddr != "" {
-		config.Set("server.address", *srvAddr)
-	}
-	if *srvPort != "" {
-		config.Set("server.port", *srvPort)
+}
+
+func setConfigVarFromCLI(c *viper.Viper, key string, cliKey string) {
+	if cliKey != "" {
+		c.Set(key, cliKey)
 	}
 }
