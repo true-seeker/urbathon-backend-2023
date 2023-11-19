@@ -7,33 +7,7 @@ import (
 	"time"
 	"urbathon-backend-2023/pkg/config"
 	"urbathon-backend-2023/pkg/errorHandler"
-	"urbathon-backend-2023/pkg/paginator"
 )
-
-func ValidateAndReturnPagination(from, size string) (*paginator.Pagination, *errorHandler.HttpErr) {
-	pagination := &paginator.Pagination{}
-	if from != "" {
-		from, httpErr := ValidateAndReturnIntField(from, "from")
-		if httpErr != nil {
-			return nil, httpErr
-		}
-		if from < 0 {
-			return nil, errorHandler.New("from must be greater or equal to 0", http.StatusBadRequest)
-		}
-		pagination.From = from
-	}
-	if size != "" {
-		size, httpErr := ValidateAndReturnIntField(size, "size")
-		if httpErr != nil {
-			return nil, httpErr
-		}
-		if size <= 0 {
-			return nil, errorHandler.New("size must be greater than 0", http.StatusBadRequest)
-		}
-		pagination.Size = size
-	}
-	return pagination, nil
-}
 
 func ValidateAndReturnIntField(field, fieldName string) (int, *errorHandler.HttpErr) {
 	intField, err := strconv.Atoi(field)
