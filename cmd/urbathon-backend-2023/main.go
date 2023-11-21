@@ -67,6 +67,8 @@ func runMigrations(sql storage.Sql) {
 	}
 }
 
+// @title			Urbathon-2023
+// @description	Спецификация приложения команды подCRUDули
 func main() {
 	Init()
 	st := initDB()

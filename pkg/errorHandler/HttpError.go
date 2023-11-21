@@ -1,20 +1,19 @@
 package errorHandler
 
 import (
-	"errors"
 	"fmt"
 )
 
 // HttpErr структура для формирования сообщения об ошибке
 type HttpErr struct {
-	Err        error
-	StatusCode int
+	Message    string `json:"message"`
+	StatusCode int    `json:"status_code"`
 }
 
 func New(errText string, statusCode int) *HttpErr {
-	return &HttpErr{Err: errors.New(errText), StatusCode: statusCode}
+	return &HttpErr{Message: errText, StatusCode: statusCode}
 }
 
 func (r *HttpErr) Error() string {
-	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
+	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Message)
 }

@@ -1,6 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
+        "description": "Спецификация приложения команды подCRUDули",
+        "title": "Urbathon-2023",
         "contact": {}
     },
     "paths": {
@@ -12,6 +14,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "auth"
                 ],
                 "summary": "login",
                 "parameters": [
@@ -31,6 +36,18 @@
                         "schema": {
                             "$ref": "#/definitions/response.User"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
                     }
                 }
             }
@@ -38,11 +55,8 @@
         "/auth/logout": {
             "post": {
                 "description": "logout",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
+                "tags": [
+                    "auth"
                 ],
                 "summary": "logout",
                 "responses": {
@@ -61,6 +75,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "auth"
+                ],
                 "summary": "register",
                 "parameters": [
                     {
@@ -74,10 +91,16 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
                         }
                     }
                 }
@@ -92,6 +115,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "auth"
+                ],
                 "summary": "auth test",
                 "responses": {
                     "200": {
@@ -105,17 +131,31 @@
         }
     },
     "definitions": {
+        "errorHandler.HttpErr": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status_code": {
+                    "type": "integer"
+                }
+            }
+        },
         "input.User": {
             "type": "object",
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "test@gmail.com"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Ивано Иван Иванович"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "123456"
                 }
             }
         },
@@ -123,10 +163,12 @@
             "type": "object",
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "test@gmail.com"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "123456"
                 }
             }
         },
@@ -134,13 +176,16 @@
             "type": "object",
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "test@gmail.com"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Ивано Иван Иванович"
                 }
             }
         }

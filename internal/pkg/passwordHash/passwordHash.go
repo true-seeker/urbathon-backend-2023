@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"crypto/sha512"
 	"encoding/hex"
-	"fmt"
 )
 
 func GenerateRandomSalt() []byte {
@@ -36,6 +35,5 @@ func HashPassword(password string, salt []byte) string {
 
 func DoPasswordsMatch(hashedPassword, currPassword string, salt []byte) bool {
 	var currPasswordHash = HashPassword(currPassword, salt)
-	fmt.Println(hashedPassword, currPasswordHash)
 	return hashedPassword == currPasswordHash
 }

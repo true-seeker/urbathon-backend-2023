@@ -24,23 +24,26 @@ func NewAuthHandler(authService AuthService) *AuthHandler {
 }
 
 // Login godoc
-// @Summary login
-// @Description login
-// @Accept json
-// @Produce json
-// @Param input body input.UserLogin true "login and password"
-// @Success 200 {object} response.User
-// @Router /auth/login [post]
+// @Summary		login
+// @Description	login
+// @Accept			json
+// @Tags			auth
+// @Produce		json
+// @Param			input	body		input.UserLogin	true	"login and password"
+// @Success		200		{object}	response.User
+// @Failure		400		{object}	errorHandler.HttpErr
+// @Failure		401		{object}	errorHandler.HttpErr
+// @Router			/auth/login [post]
 func (d *AuthHandler) Login(c *gin.Context) {
 	loginInput := &input.Login{}
 	err := c.BindJSON(&loginInput)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, err)
 		return
 	}
 	user, httpErr := d.authService.Login(loginInput)
 	if httpErr != nil {
-		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr.Err.Error())
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
 	session := sessions.Default(c)
@@ -54,12 +57,11 @@ func (d *AuthHandler) Login(c *gin.Context) {
 }
 
 // Logout godoc
-// @Summary logout
-// @Description logout
-// @Accept json
-// @Produce json
-// @Success 200
-// @Router /auth/logout [post]
+// @Summary		logout
+// @Description	logout
+// @Tags			auth
+// @Success		200
+// @Router			/auth/logout [post]
 func (d *AuthHandler) Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Get("user_id")
@@ -70,12 +72,13 @@ func (d *AuthHandler) Logout(c *gin.Context) {
 }
 
 // Test godoc
-// @Summary auth test
-// @Description auth test
-// @Accept json
-// @Produce json
-// @Success 200 {object} response.User
-// @Router /auth/test [post]
+// @Summary		auth test
+// @Description	auth test
+// @Accept			json
+// @Tags			auth
+// @Produce		json
+// @Success		200	{object}	response.User
+// @Router			/auth/test [post]
 func (d *AuthHandler) Test(c *gin.Context) {
 	userAny, _ := c.Get("user")
 	user := userAny.(*model.Users)
@@ -84,13 +87,15 @@ func (d *AuthHandler) Test(c *gin.Context) {
 }
 
 // Register godoc
-// @Summary register
-// @Description register
-// @Accept json
-// @Produce json
-// @Param input body input.User true "User"
-// @Success 200 {object} response.User
-// @Router /auth/register [post]
+// @Summary		register
+// @Description	register
+// @Accept			json
+// @Tags			auth
+// @Produce		json
+// @Param			input	body		input.User	true	"User"
+// @Success		201		{object}	response.User
+// @Failure		400		{object}	errorHandler.HttpErr
+// @Router			/auth/register [post]
 func (d *AuthHandler) Register(c *gin.Context) {
 	userInput := &input.User{}
 	err := c.BindJSON(&userInput)
@@ -101,7 +106,7 @@ func (d *AuthHandler) Register(c *gin.Context) {
 
 	user, httpErr := d.authService.Create(userInput)
 	if err != nil {
-		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr.Err.Error())
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
 

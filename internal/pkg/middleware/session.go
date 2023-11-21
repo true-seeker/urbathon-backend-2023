@@ -23,7 +23,7 @@ func Session(c *gin.Context) {
 	user, err := userRepo.Get(&userId)
 	if err != nil {
 		httpErr := errorHandler.New("Something went wrong", http.StatusBadRequest)
-		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr.Err.Error())
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
 	c.Set("user", user)

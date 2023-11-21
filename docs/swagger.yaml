@@ -1,31 +1,48 @@
 definitions:
+  errorHandler.HttpErr:
+    properties:
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
   input.User:
     properties:
       email:
+        example: test@gmail.com
         type: string
       name:
+        example: Ивано Иван Иванович
         type: string
       password:
+        example: "123456"
         type: string
     type: object
   input.UserLogin:
     properties:
       email:
+        example: test@gmail.com
         type: string
       password:
+        example: "123456"
         type: string
     type: object
   response.User:
     properties:
       email:
+        example: test@gmail.com
         type: string
       id:
+        example: 1
         type: integer
       name:
+        example: Ивано Иван Иванович
         type: string
     type: object
 info:
   contact: {}
+  description: Спецификация приложения команды подCRUDули
+  title: Urbathon-2023
 paths:
   /auth/login:
     post:
@@ -46,18 +63,26 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
       summary: login
+      tags:
+      - auth
   /auth/logout:
     post:
-      consumes:
-      - application/json
       description: logout
-      produces:
-      - application/json
       responses:
         "200":
           description: OK
       summary: logout
+      tags:
+      - auth
   /auth/register:
     post:
       consumes:
@@ -73,11 +98,17 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/response.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
       summary: register
+      tags:
+      - auth
   /auth/test:
     post:
       consumes:
@@ -91,4 +122,6 @@ paths:
           schema:
             $ref: '#/definitions/response.User'
       summary: auth test
+      tags:
+      - auth
 swagger: "2.0"

@@ -30,12 +30,12 @@ func (d *AuthService) Login(loginInput *input.Login) (*response.User, *errorHand
 	user, err := d.userRepo.GetByEmail(loginInput)
 	switch {
 	case errors.Is(err, qrm.ErrNoRows):
-		return nil, errorHandler.New("Wrong email or password", http.StatusForbidden)
+		return nil, errorHandler.New("Wrong email or password", http.StatusUnauthorized)
 	case err != nil:
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
 	if !checkPassword(loginInput.Password, user) {
-		return nil, errorHandler.New("Wrong email or password", http.StatusForbidden)
+		return nil, errorHandler.New("Wrong email or password", http.StatusUnauthorized)
 	}
 	userResponse = mapper.UserToUserResponse(user)
 
