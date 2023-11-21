@@ -6,22 +6,22 @@ definitions:
       status_code:
         type: integer
     type: object
-  input.User:
+  input.UserLogin:
+    properties:
+      email:
+        example: test@gmail.com
+        type: string
+      password:
+        example: "123456"
+        type: string
+    type: object
+  input.UserRegister:
     properties:
       email:
         example: test@gmail.com
         type: string
       name:
         example: Ивано Иван Иванович
-        type: string
-      password:
-        example: "123456"
-        type: string
-    type: object
-  input.UserLogin:
-    properties:
-      email:
-        example: test@gmail.com
         type: string
       password:
         example: "123456"
@@ -89,12 +89,12 @@ paths:
       - application/json
       description: register
       parameters:
-      - description: User
+      - description: UserRegister
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/input.User'
+          $ref: '#/definitions/input.UserRegister'
       produces:
       - application/json
       responses:
@@ -104,6 +104,10 @@ paths:
             $ref: '#/definitions/response.User'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "409":
+          description: Conflict
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
       summary: register

@@ -90,12 +90,12 @@ const docTemplate = `{
                 "summary": "register",
                 "parameters": [
                     {
-                        "description": "User",
+                        "description": "UserRegister",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/input.User"
+                            "$ref": "#/definitions/input.UserRegister"
                         }
                     }
                 ],
@@ -108,6 +108,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/errorHandler.HttpErr"
                         }
@@ -151,7 +157,20 @@ const docTemplate = `{
                 }
             }
         },
-        "input.User": {
+        "input.UserLogin": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "test@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        },
+        "input.UserRegister": {
             "type": "object",
             "properties": {
                 "email": {
@@ -161,19 +180,6 @@ const docTemplate = `{
                 "name": {
                     "type": "string",
                     "example": "Ивано Иван Иванович"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "123456"
-                }
-            }
-        },
-        "input.UserLogin": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "test@gmail.com"
                 },
                 "password": {
                     "type": "string",
