@@ -28,9 +28,8 @@ func UserToUserResponses(users *[]model.Users) *[]response.User {
 
 func UserInputToUser(userInput *input.User) *model.Users {
 	r := &model.Users{
-		Name:     userInput.Name,
-		Email:    userInput.Email,
-		Password: userInput.Password,
+		Name:  userInput.Name,
+		Email: userInput.Email,
 	}
 	return r
 }

@@ -17,12 +17,11 @@ func NewUserRepository(s storage.Sql) *UserRepository {
 	return &UserRepository{db: s.GetDb()}
 }
 
-func (a *UserRepository) GetByCreds(loginInput *input.Login) (*model.Users, error) {
+func (a *UserRepository) GetByEmail(loginInput *input.Login) (*model.Users, error) {
 	var u model.Users
-	stmt := SELECT(Users.ID, Users.Name, Users.Email).
+	stmt := SELECT(Users.ID, Users.Name, Users.Email, Users.Password, Users.Salt).
 		FROM(Users).
-		WHERE(Users.Email.EQ(String(*loginInput.Email)).
-			AND(Users.Password.EQ(String(*loginInput.Password))))
+		WHERE(Users.Email.EQ(String(*loginInput.Email)))
 
 	err := stmt.Query(a.db, &u)
 	if err != nil {
@@ -45,7 +44,7 @@ func (a *UserRepository) Get(id *int32) (*model.Users, error) {
 
 func (a *UserRepository) Create(user *model.Users) (*model.Users, error) {
 	var u model.Users
-	stmt := Users.INSERT(Users.Email, Users.Password, Users.Name).
+	stmt := Users.INSERT(Users.Email, Users.Password, Users.Name, Users.Salt).
 		MODEL(user).
 		RETURNING(Users.AllColumns)
 
