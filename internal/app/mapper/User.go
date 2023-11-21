@@ -26,7 +26,7 @@ func UserToUserResponses(users *[]model.Users) *[]response.User {
 	return &rs
 }
 
-func UserInputToUser(userInput *input.User) *model.Users {
+func UserRegisterInputToUser(userInput *input.UserRegister) *model.Users {
 	r := &model.Users{
 		Name:  userInput.Name,
 		Email: userInput.Email,

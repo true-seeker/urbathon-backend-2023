@@ -8,12 +8,13 @@ import (
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
+	"urbathon-backend-2023/internal/app/validator"
 	"urbathon-backend-2023/internal/pkg/passwordHash"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
 
 type UserRepository interface {
-	GetByEmail(loginInput *input.Login) (*model.Users, error)
+	GetByEmail(email *string) (*model.Users, error)
 	Get(id *int32) (*model.Users, error)
 	Create(userInput *model.Users) (*model.Users, error)
 }
@@ -25,15 +26,20 @@ func NewAuthService(userRepo UserRepository) *AuthService {
 	return &AuthService{userRepo: userRepo}
 }
 
-func (d *AuthService) Login(loginInput *input.Login) (*response.User, *errorHandler.HttpErr) {
+func (d *AuthService) Login(loginInput *input.UserLogin) (*response.User, *errorHandler.HttpErr) {
 	userResponse := &response.User{}
-	user, err := d.userRepo.GetByEmail(loginInput)
+	if httpErr := d.validateLogin(loginInput); httpErr != nil {
+		return nil, httpErr
+	}
+
+	user, err := d.userRepo.GetByEmail(loginInput.Email)
 	switch {
 	case errors.Is(err, qrm.ErrNoRows):
 		return nil, errorHandler.New("Wrong email or password", http.StatusUnauthorized)
 	case err != nil:
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
+
 	if !checkPassword(loginInput.Password, user) {
 		return nil, errorHandler.New("Wrong email or password", http.StatusUnauthorized)
 	}
@@ -42,10 +48,14 @@ func (d *AuthService) Login(loginInput *input.Login) (*response.User, *errorHand
 	return userResponse, nil
 }
 
-func (d *AuthService) Create(userInput *input.User) (*response.User, *errorHandler.HttpErr) {
+func (d *AuthService) Register(userRegister *input.UserRegister) (*response.User, *errorHandler.HttpErr) {
 	userResponse := &response.User{}
-	user := mapper.UserInputToUser(userInput)
-	user.Password, user.Salt = generateHashedPass(userInput.Password)
+	if httpErr := d.validateRegister(userRegister); httpErr != nil {
+		return nil, httpErr
+	}
+
+	user := mapper.UserRegisterInputToUser(userRegister)
+	user.Password, user.Salt = generateHashedPass(userRegister.Password)
 
 	user, err := d.userRepo.Create(user)
 	if err != nil {
@@ -54,6 +64,27 @@ func (d *AuthService) Create(userInput *input.User) (*response.User, *errorHandl
 	userResponse = mapper.UserToUserResponse(user)
 
 	return userResponse, nil
+}
+
+func (d *AuthService) validateRegister(userRegister *input.UserRegister) *errorHandler.HttpErr {
+	if httpErr := validator.UserRegistration(userRegister); httpErr != nil {
+		return httpErr
+	}
+	user, err := d.userRepo.GetByEmail(userRegister.Email)
+	if err != nil && !errors.Is(err, qrm.ErrNoRows) {
+		return errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	if user != nil {
+		return errorHandler.New("User with email already exists", http.StatusConflict)
+	}
+	return nil
+}
+
+func (d *AuthService) validateLogin(loginInput *input.UserLogin) *errorHandler.HttpErr {
+	if httpErr := validator.UserLogin(loginInput); httpErr != nil {
+		return httpErr
+	}
+	return nil
 }
 
 func generateHashedPass(userPassword *string) (*[]byte, *[]byte) {

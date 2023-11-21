@@ -11,8 +11,8 @@ import (
 )
 
 type AuthService interface {
-	Login(login *input.Login) (*response.User, *errorHandler.HttpErr)
-	Create(userInput *input.User) (*response.User, *errorHandler.HttpErr)
+	Login(login *input.UserLogin) (*response.User, *errorHandler.HttpErr)
+	Register(userInput *input.UserRegister) (*response.User, *errorHandler.HttpErr)
 }
 
 type AuthHandler struct {
@@ -23,7 +23,7 @@ func NewAuthHandler(authService AuthService) *AuthHandler {
 	return &AuthHandler{authService: authService}
 }
 
-// Login godoc
+// Login
 // @Summary		login
 // @Description	login
 // @Accept			json
@@ -35,7 +35,7 @@ func NewAuthHandler(authService AuthService) *AuthHandler {
 // @Failure		401		{object}	errorHandler.HttpErr
 // @Router			/auth/login [post]
 func (d *AuthHandler) Login(c *gin.Context) {
-	loginInput := &input.Login{}
+	loginInput := &input.UserLogin{}
 	err := c.BindJSON(&loginInput)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err)
@@ -56,7 +56,7 @@ func (d *AuthHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// Logout godoc
+// Logout
 // @Summary		logout
 // @Description	logout
 // @Tags			auth
@@ -71,7 +71,7 @@ func (d *AuthHandler) Logout(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// Test godoc
+// Test
 // @Summary		auth test
 // @Description	auth test
 // @Accept			json
@@ -86,26 +86,27 @@ func (d *AuthHandler) Test(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// Register godoc
+// Register
 // @Summary		register
 // @Description	register
 // @Accept			json
 // @Tags			auth
 // @Produce		json
-// @Param			input	body		input.User	true	"User"
+// @Param			input	body		input.UserRegister	true	"UserRegister"
 // @Success		201		{object}	response.User
 // @Failure		400		{object}	errorHandler.HttpErr
+// @Failure		409		{object}	errorHandler.HttpErr
 // @Router			/auth/register [post]
 func (d *AuthHandler) Register(c *gin.Context) {
-	userInput := &input.User{}
+	userInput := &input.UserRegister{}
 	err := c.BindJSON(&userInput)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	user, httpErr := d.authService.Create(userInput)
-	if err != nil {
+	user, httpErr := d.authService.Register(userInput)
+	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
@@ -113,6 +114,9 @@ func (d *AuthHandler) Register(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("user_id", user.Id)
 	err = session.Save()
-
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
 	c.JSON(http.StatusCreated, user)
 }

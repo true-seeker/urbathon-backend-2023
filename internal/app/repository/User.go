@@ -5,7 +5,6 @@ import (
 	. "github.com/go-jet/jet/v2/postgres"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
-	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/storage"
 )
 
@@ -17,11 +16,11 @@ func NewUserRepository(s storage.Sql) *UserRepository {
 	return &UserRepository{db: s.GetDb()}
 }
 
-func (a *UserRepository) GetByEmail(loginInput *input.Login) (*model.Users, error) {
+func (a *UserRepository) GetByEmail(email *string) (*model.Users, error) {
 	var u model.Users
 	stmt := SELECT(Users.ID, Users.Name, Users.Email, Users.Password, Users.Salt).
 		FROM(Users).
-		WHERE(Users.Email.EQ(String(*loginInput.Email)))
+		WHERE(Users.Email.EQ(String(*email)))
 
 	err := stmt.Query(a.db, &u)
 	if err != nil {
