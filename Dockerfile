@@ -7,9 +7,8 @@ COPY go.sum .
 
 RUN go mod download
 
-COPY . .
+RUN go install github.com/go-jet/jet/v2/cmd/jet@latest
 
-RUN --mount=type=cache,target=/go/pkg/mod/ \
-    go install github.com/go-jet/jet/v2/cmd/jet@latest
+COPY . .
 
 CMD sh deployments/startup.sh
