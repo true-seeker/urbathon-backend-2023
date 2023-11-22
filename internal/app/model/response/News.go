@@ -14,7 +14,7 @@ type News struct {
 
 type NewsPaged struct {
 	Paged
-	Items *[]News
+	Items *[]News `json:"items"`
 }
 
 func NewNewsPaged(f *input.Filter, items *[]News, total *int) *NewsPaged {
