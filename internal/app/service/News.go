@@ -34,7 +34,7 @@ func (d *NewsService) Get(id *int32) (*response.News, *errorHandler.HttpErr) {
 	case err != nil:
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
-	newsResponse = mapper.NewsToNewsResponse(news)
+	newsResponse = mapper.NewsToNewsResponse(*news)
 	return newsResponse, nil
 }
 

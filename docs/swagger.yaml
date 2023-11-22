@@ -210,34 +210,4 @@ paths:
       summary: get news by id
       tags:
       - news
-  /news/register:
-    post:
-      consumes:
-      - application/json
-      description: register
-      parameters:
-      - description: UserRegister
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/input.UserRegister'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/response.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errorHandler.HttpErr'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/errorHandler.HttpErr'
-      summary: register
-      tags:
-      - news
 swagger: "2.0"

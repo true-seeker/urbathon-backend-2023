@@ -6,7 +6,7 @@ import (
 	"urbathon-backend-2023/internal/app/model/response"
 )
 
-func NewsToNewsResponse(news *model.News) *response.News {
+func NewsToNewsResponse(news model.News) *response.News {
 	r := &response.News{
 		Id:    news.ID,
 		Title: &news.Title,
@@ -17,11 +17,11 @@ func NewsToNewsResponse(news *model.News) *response.News {
 	return r
 }
 
-func NewsListToNewsResponses(newss *[]model.News) *[]response.News {
+func NewsListToNewsResponses(newsList *[]model.News) *[]response.News {
 	rs := make([]response.News, 0)
 
-	for _, news := range *newss {
-		rs = append(rs, *NewsToNewsResponse(&news))
+	for _, news := range *newsList {
+		rs = append(rs, *NewsToNewsResponse(news))
 	}
 
 	return &rs

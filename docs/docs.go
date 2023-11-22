@@ -189,52 +189,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/news/register": {
-            "post": {
-                "description": "register",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "news"
-                ],
-                "summary": "register",
-                "parameters": [
-                    {
-                        "description": "UserRegister",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/input.UserRegister"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/response.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandler.HttpErr"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandler.HttpErr"
-                        }
-                    }
-                }
-            }
-        },
         "/news/{id}": {
             "get": {
                 "description": "get news by id",
