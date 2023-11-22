@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	. "github.com/go-jet/jet/v2/postgres"
+	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
 	"urbathon-backend-2023/internal/app/model/entity"
 	"urbathon-backend-2023/internal/app/model/input"
@@ -65,4 +66,48 @@ func (a *AppealRepository) GetTotal() (*int, error) {
 		return nil, err
 	}
 	return &count, nil
+}
+
+func (a *AppealRepository) Create(appeal *model.Appeals) (*entity.Appeal, error) {
+	var u *entity.Appeal
+	stmt := Appeals.INSERT(Appeals.AllColumns.Except(Appeals.ID)).
+		MODEL(appeal).
+		RETURNING(Appeals.ID)
+
+	if err := stmt.Query(a.db, appeal); err != nil {
+		return nil, err
+	}
+
+	u, err := a.Get(&appeal.ID)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
+func (a *AppealRepository) Update(appeal *model.Appeals) (*entity.Appeal, error) {
+	var u *entity.Appeal
+	stmt := Appeals.UPDATE(Appeals.AllColumns.Except(Appeals.ID)).
+		MODEL(appeal).
+		WHERE(Appeals.ID.EQ(Int32(appeal.ID))).
+		RETURNING(Appeals.ID)
+
+	if err := stmt.Query(a.db, appeal); err != nil {
+		return nil, err
+	}
+
+	u, err := a.Get(&appeal.ID)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
+func (a *AppealRepository) Delete(id int32) error {
+	stmt := Appeals.DELETE().
+		WHERE(Appeals.ID.EQ(Int32(id)))
+	if _, err := stmt.Exec(a.db); err != nil {
+		return err
+	}
+	return nil
 }

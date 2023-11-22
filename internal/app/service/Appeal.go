@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/go-jet/jet/v2/qrm"
 	"net/http"
+	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/entity"
 	"urbathon-backend-2023/internal/app/model/input"
@@ -16,6 +17,9 @@ type AppealRepository interface {
 	Get(id *int32) (*entity.Appeal, error)
 	GetAll(f *input.Filter) (*[]entity.Appeal, error)
 	GetTotal() (*int, error)
+	Create(appeal *model.Appeals) (*entity.Appeal, error)
+	Update(appeal *model.Appeals) (*entity.Appeal, error)
+	Delete(id int32) error
 }
 type AppealService struct {
 	appealRepo AppealRepository
@@ -53,9 +57,57 @@ func (d *AppealService) GetAll(f *input.Filter) (*response.AppealPaged, *errorHa
 	appealPaged := response.NewAppealPaged(f, items, total)
 	return appealPaged, nil
 }
-func (d *AppealService) validateLogin(loginInput *input.UserLogin) *errorHandler.HttpErr {
-	if httpErr := validator.UserLogin(loginInput); httpErr != nil {
+
+func (d *AppealService) Create(appealInput *input.Appeal, user *model.Users) (*response.Appeal, *errorHandler.HttpErr) {
+	userResponse := &response.Appeal{}
+	if httpErr := d.validateCreate(appealInput); httpErr != nil {
+		return nil, httpErr
+	}
+
+	appeal := mapper.AppealInputToAppeal(appealInput)
+	appeal.UserID = user.ID
+
+	appealEntity, err := d.appealRepo.Create(appeal)
+	if err != nil {
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	userResponse = mapper.AppealToAppealResponse(*appealEntity)
+
+	return userResponse, nil
+}
+
+func (d *AppealService) Update(appealInput *input.Appeal, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr) {
+	userResponse := &response.Appeal{}
+	if httpErr := d.validateCreate(appealInput); httpErr != nil {
+		return nil, httpErr
+	}
+	//todo exists validation
+	appeal := mapper.AppealInputToAppeal(appealInput)
+	appeal.UserID = user.ID
+	appeal.ID = *id
+
+	appealEntity, err := d.appealRepo.Update(appeal)
+	if err != nil {
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	userResponse = mapper.AppealToAppealResponse(*appealEntity)
+
+	return userResponse, nil
+}
+
+func (d *AppealService) Delete(id int32) *errorHandler.HttpErr {
+	//todo exists validation
+	err := d.appealRepo.Delete(id)
+	if err != nil {
+		return errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	return nil
+}
+
+func (d *AppealService) validateCreate(appealInput *input.Appeal) *errorHandler.HttpErr {
+	if httpErr := validator.AppealCreate(appealInput); httpErr != nil {
 		return httpErr
 	}
+	// todo appeal_type_id
 	return nil
 }

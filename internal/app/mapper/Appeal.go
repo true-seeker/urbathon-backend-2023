@@ -35,9 +35,15 @@ func AppealListToAppealResponses(appealList *[]entity.Appeal) *[]response.Appeal
 	return &rs
 }
 
-func AppealInputToAppeal(appealInput *input.Appeal) *entity.Appeal {
-	r := &entity.Appeal{
-		Appeals: model.Appeals{ID: appealInput.Id},
+func AppealInputToAppeal(appealInput *input.Appeal) *model.Appeals {
+	r := &model.Appeals{
+		Title:        *appealInput.Title,
+		Address:      *appealInput.Address,
+		Description:  *appealInput.Description,
+		Latitude:     *appealInput.Latitude,
+		Longitude:    *appealInput.Longitude,
+		AppealTypeID: *appealInput.AppealTypeID,
 	}
+
 	return r
 }

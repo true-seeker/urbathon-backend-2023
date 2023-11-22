@@ -8,7 +8,7 @@ import (
 )
 
 func UserRegistration(userRegister *input.UserRegister) *errorHandler.HttpErr {
-	if IsStringEmpty(*userRegister.Email) {
+	if IsStringEmpty(userRegister.Email) {
 		return errorHandler.New("email is empty", http.StatusBadRequest)
 	}
 	_, err := mail.ParseAddress(*userRegister.Email)
@@ -16,22 +16,22 @@ func UserRegistration(userRegister *input.UserRegister) *errorHandler.HttpErr {
 		return errorHandler.New("email is invalid", http.StatusBadRequest)
 	}
 
-	if IsStringEmpty(*userRegister.Password) {
+	if IsStringEmpty(userRegister.Password) {
 		return errorHandler.New("password is empty", http.StatusBadRequest)
 	}
 
-	if IsStringEmpty(*userRegister.Name) {
+	if IsStringEmpty(userRegister.Name) {
 		return errorHandler.New("name is empty", http.StatusBadRequest)
 	}
 	return nil
 }
 
 func UserLogin(userLogin *input.UserLogin) *errorHandler.HttpErr {
-	if IsStringEmpty(*userLogin.Email) {
+	if IsStringEmpty(userLogin.Email) {
 		return errorHandler.New("email is empty", http.StatusBadRequest)
 	}
 
-	if IsStringEmpty(*userLogin.Password) {
+	if IsStringEmpty(userLogin.Password) {
 		return errorHandler.New("password is empty", http.StatusBadRequest)
 	}
 	return nil

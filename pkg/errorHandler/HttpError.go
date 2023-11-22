@@ -6,8 +6,8 @@ import (
 
 // HttpErr структура для формирования сообщения об ошибке
 type HttpErr struct {
-	Message    string `json:"message"`
-	StatusCode int    `json:"status_code"`
+	Message    string `json:"message" example:"Error message"`
+	StatusCode int    `json:"status_code" example:"400"`
 }
 
 func New(errText string, statusCode int) *HttpErr {

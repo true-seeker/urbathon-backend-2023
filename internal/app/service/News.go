@@ -8,7 +8,6 @@ import (
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
-	"urbathon-backend-2023/internal/app/validator"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
 
@@ -52,10 +51,4 @@ func (d *NewsService) GetAll(f *input.Filter) (*response.NewsPaged, *errorHandle
 	items = mapper.NewsListToNewsResponses(news)
 	newsPaged := response.NewNewsPaged(f, items, total)
 	return newsPaged, nil
-}
-func (d *NewsService) validateLogin(loginInput *input.UserLogin) *errorHandler.HttpErr {
-	if httpErr := validator.UserLogin(loginInput); httpErr != nil {
-		return httpErr
-	}
-	return nil
 }

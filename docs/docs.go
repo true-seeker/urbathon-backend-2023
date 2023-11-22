@@ -58,6 +58,41 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "create appeal",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appeal"
+                ],
+                "summary": "create appeal",
+                "parameters": [
+                    {
+                        "description": "appeal",
+                        "name": "appeal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/input.Appeal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.Appeal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
             }
         },
         "/appeal/{id}": {
@@ -85,6 +120,90 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.Appeal"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update appeal",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appeal"
+                ],
+                "summary": "update appeal",
+                "parameters": [
+                    {
+                        "description": "appeal",
+                        "name": "appeal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/input.Appeal"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "appeal id",
+                        "name": "appeal_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Appeal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete appeal",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appeal"
+                ],
+                "summary": "delete appeal",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "appeal id",
+                        "name": "appeal_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request",
@@ -322,10 +441,41 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Error message"
                 },
                 "status_code": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 400
+                }
+            }
+        },
+        "input.Appeal": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "Улица Пушкина"
+                },
+                "appeal_type_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Текст обращения"
+                },
+                "latitude": {
+                    "type": "number",
+                    "example": 54.1234
+                },
+                "longitude": {
+                    "type": "number",
+                    "example": 122.7656
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Обращение"
                 }
             }
         },
@@ -351,7 +501,7 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "example": "Ивано Иван Иванович"
+                    "example": "Иванов Иван Иванович"
                 },
                 "password": {
                     "type": "string",
@@ -363,25 +513,31 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "address": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Улица Пушкина"
                 },
                 "appeal_type": {
                     "$ref": "#/definitions/response.AppealType"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Текст обращения"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "latitude": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 54.1234
                 },
                 "longitude": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 122.7656
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Обращение"
                 },
                 "user": {
                     "$ref": "#/definitions/response.User"
@@ -392,10 +548,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Категория"
                 }
             }
         },
@@ -426,10 +584,12 @@ const docTemplate = `{
                     "$ref": "#/definitions/response.AppealCategory"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Тема"
                 }
             }
         },
@@ -440,10 +600,12 @@ const docTemplate = `{
                     "$ref": "#/definitions/response.AppealTheme"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Тип"
                 }
             }
         },
@@ -497,7 +659,7 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "example": "Ивано Иван Иванович"
+                    "example": "Иванов Иван Иванович"
                 }
             }
         }

@@ -2,9 +2,32 @@ definitions:
   errorHandler.HttpErr:
     properties:
       message:
+        example: Error message
         type: string
       status_code:
+        example: 400
         type: integer
+    type: object
+  input.Appeal:
+    properties:
+      address:
+        example: Улица Пушкина
+        type: string
+      appeal_type_id:
+        example: 1
+        type: integer
+      description:
+        example: Текст обращения
+        type: string
+      latitude:
+        example: 54.1234
+        type: number
+      longitude:
+        example: 122.7656
+        type: number
+      title:
+        example: Обращение
+        type: string
     type: object
   input.UserLogin:
     properties:
@@ -21,7 +44,7 @@ definitions:
         example: test@gmail.com
         type: string
       name:
-        example: Ивано Иван Иванович
+        example: Иванов Иван Иванович
         type: string
       password:
         example: "123456"
@@ -30,18 +53,24 @@ definitions:
   response.Appeal:
     properties:
       address:
+        example: Улица Пушкина
         type: string
       appeal_type:
         $ref: '#/definitions/response.AppealType'
       description:
+        example: Текст обращения
         type: string
       id:
+        example: 1
         type: integer
       latitude:
+        example: 54.1234
         type: number
       longitude:
+        example: 122.7656
         type: number
       title:
+        example: Обращение
         type: string
       user:
         $ref: '#/definitions/response.User'
@@ -49,8 +78,10 @@ definitions:
   response.AppealCategory:
     properties:
       id:
+        example: 1
         type: integer
       title:
+        example: Категория
         type: string
     type: object
   response.AppealPaged:
@@ -71,8 +102,10 @@ definitions:
       appeal_category:
         $ref: '#/definitions/response.AppealCategory'
       id:
+        example: 1
         type: integer
       title:
+        example: Тема
         type: string
     type: object
   response.AppealType:
@@ -80,8 +113,10 @@ definitions:
       appeal_theme:
         $ref: '#/definitions/response.AppealTheme'
       id:
+        example: 1
         type: integer
       title:
+        example: Тип
         type: string
     type: object
   response.News:
@@ -117,7 +152,7 @@ definitions:
         example: 1
         type: integer
       name:
-        example: Ивано Иван Иванович
+        example: Иванов Иван Иванович
         type: string
     type: object
 info:
@@ -156,7 +191,54 @@ paths:
       summary: get all appeal
       tags:
       - appeal
+    post:
+      description: create appeal
+      parameters:
+      - description: appeal
+        in: body
+        name: appeal
+        required: true
+        schema:
+          $ref: '#/definitions/input.Appeal'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Appeal'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: create appeal
+      tags:
+      - appeal
   /appeal/{id}:
+    delete:
+      description: delete appeal
+      parameters:
+      - description: appeal id
+        in: path
+        name: appeal_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: delete appeal
+      tags:
+      - appeal
     get:
       description: get appeal by id
       parameters:
@@ -181,6 +263,38 @@ paths:
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
       summary: get appeal by id
+      tags:
+      - appeal
+    put:
+      description: update appeal
+      parameters:
+      - description: appeal
+        in: body
+        name: appeal
+        required: true
+        schema:
+          $ref: '#/definitions/input.Appeal'
+      - description: appeal id
+        in: path
+        name: appeal_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Appeal'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: update appeal
       tags:
       - appeal
   /auth/login:
