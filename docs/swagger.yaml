@@ -162,7 +162,7 @@ info:
 paths:
   /appeal:
     get:
-      description: get all appeal
+      description: get all appeals
       parameters:
       - default: 1
         description: page
@@ -188,7 +188,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get all appeal
+      summary: get all appeals
       tags:
       - appeal
     post:
@@ -218,7 +218,8 @@ paths:
     delete:
       description: delete appeal
       parameters:
-      - description: appeal id
+      - default: 1
+        description: appeal id
         in: path
         name: appeal_id
         required: true
@@ -274,7 +275,8 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/input.Appeal'
-      - description: appeal id
+      - default: 1
+        description: appeal id
         in: path
         name: appeal_id
         required: true

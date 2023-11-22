@@ -51,10 +51,10 @@ func (d *AppealHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, appeal)
 }
 
-// GetAll get all appeal
+// GetAll get all appeals
 //
-// @Summary		get all appeal
-// @Description	get all appeal
+// @Summary		get all appeals
+// @Description	get all appeals
 // @Tags			appeal
 // @Param			page		query	int	false	"page"	minimum(1)	default(1)
 // @Param			page_size	query	int	false	"page"	minimum(1)	maximum(20)	default(10)
@@ -107,7 +107,7 @@ func (d *AppealHandler) Create(c *gin.Context) {
 // @Description	update appeal
 // @Tags			appeal
 // @Param			appeal		body	input.Appeal	true	"appeal"
-// @Param			appeal_id	path	int				true	"appeal id"
+// @Param			appeal_id	path	int				true	"appeal id" default(1)
 // @Produce		json
 // @Success		200	{object}	response.Appeal
 // @Failure		400	{object}	errorHandler.HttpErr
@@ -142,7 +142,7 @@ func (d *AppealHandler) Update(c *gin.Context) {
 // @Summary		delete appeal
 // @Description	delete appeal
 // @Tags			appeal
-// @Param			appeal_id	path	int	true	"appeal id"
+// @Param			appeal_id	path	int	true	"appeal id" default(1)
 // @Produce		json
 // @Success		200	{object}	nil
 // @Failure		400	{object}	errorHandler.HttpErr

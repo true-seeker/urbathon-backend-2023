@@ -17,14 +17,14 @@ const docTemplate = `{
     "paths": {
         "/appeal": {
             "get": {
-                "description": "get all appeal",
+                "description": "get all appeals",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appeal"
                 ],
-                "summary": "get all appeal",
+                "summary": "get all appeals",
                 "parameters": [
                     {
                         "minimum": 1,
@@ -156,6 +156,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
+                        "default": 1,
                         "description": "appeal id",
                         "name": "appeal_id",
                         "in": "path",
@@ -195,6 +196,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
+                        "default": 1,
                         "description": "appeal id",
                         "name": "appeal_id",
                         "in": "path",
