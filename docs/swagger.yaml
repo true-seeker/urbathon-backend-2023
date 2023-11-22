@@ -27,6 +27,30 @@ definitions:
         example: "123456"
         type: string
     type: object
+  response.News:
+    properties:
+      body:
+        type: string
+      date:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  response.NewsPaged:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/response.News'
+        type: array
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      total:
+        type: integer
+    type: object
   response.User:
     properties:
       email:
@@ -128,4 +152,92 @@ paths:
       summary: auth test
       tags:
       - auth
+  /news:
+    get:
+      description: get all news
+      parameters:
+      - default: 1
+        description: page
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: page
+        in: query
+        maximum: 20
+        minimum: 1
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.NewsPaged'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: get all news
+      tags:
+      - news
+  /news/{id}:
+    get:
+      description: get news by id
+      parameters:
+      - description: news id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.News'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: get news by id
+      tags:
+      - news
+  /news/register:
+    post:
+      consumes:
+      - application/json
+      description: register
+      parameters:
+      - description: UserRegister
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/input.UserRegister'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: register
+      tags:
+      - news
 swagger: "2.0"

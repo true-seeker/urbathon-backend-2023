@@ -26,5 +26,17 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		authGroup.POST("/test", middleware.Session, authHandler.Test)
 		authGroup.POST("/register", authHandler.Register)
 	}
+	newsRepository := repository.NewNewsRepository(storage)
+	newsService := service.NewNewsService(newsRepository)
+	newsHandler := handler.NewNewsHandler(newsService)
+	newsGroup := api.Group("news")
+	{
+		newsGroup.GET("/:id", newsHandler.Get)
+		newsGroup.GET("/", newsHandler.GetAll)
+		//newsGroup.POST("/", middleware.Session, newsHandler.Create)
+		//newsGroup.PUT("/:id", middleware.Session, newsHandler.Update)
+		//newsGroup.DELETE("/:id", middleware.Session, newsHandler.Delete)
+	}
+
 	return r
 }
