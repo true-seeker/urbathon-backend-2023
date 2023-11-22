@@ -6,6 +6,92 @@
         "contact": {}
     },
     "paths": {
+        "/appeal": {
+            "get": {
+                "description": "get all appeal",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appeal"
+                ],
+                "summary": "get all appeal",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 20,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "page",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.AppealPaged"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
+        "/appeal/{id}": {
+            "get": {
+                "description": "get appeal by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appeal"
+                ],
+                "summary": "get appeal by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "appeal id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Appeal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "login",
@@ -261,6 +347,94 @@
                 "password": {
                     "type": "string",
                     "example": "123456"
+                }
+            }
+        },
+        "response.Appeal": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "appeal_type": {
+                    "$ref": "#/definitions/response.AppealType"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/response.User"
+                }
+            }
+        },
+        "response.AppealCategory": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.AppealPaged": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Appeal"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "page_size": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.AppealTheme": {
+            "type": "object",
+            "properties": {
+                "appeal_category": {
+                    "$ref": "#/definitions/response.AppealCategory"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.AppealType": {
+            "type": "object",
+            "properties": {
+                "appeal_theme": {
+                    "$ref": "#/definitions/response.AppealTheme"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },

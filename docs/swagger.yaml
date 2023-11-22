@@ -27,6 +27,63 @@ definitions:
         example: "123456"
         type: string
     type: object
+  response.Appeal:
+    properties:
+      address:
+        type: string
+      appeal_type:
+        $ref: '#/definitions/response.AppealType'
+      description:
+        type: string
+      id:
+        type: integer
+      latitude:
+        type: number
+      longitude:
+        type: number
+      title:
+        type: string
+      user:
+        $ref: '#/definitions/response.User'
+    type: object
+  response.AppealCategory:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  response.AppealPaged:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/response.Appeal'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  response.AppealTheme:
+    properties:
+      appeal_category:
+        $ref: '#/definitions/response.AppealCategory'
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  response.AppealType:
+    properties:
+      appeal_theme:
+        $ref: '#/definitions/response.AppealTheme'
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
   response.News:
     properties:
       body:
@@ -68,6 +125,64 @@ info:
   description: Спецификация приложения команды подCRUDули
   title: Urbathon-2023
 paths:
+  /appeal:
+    get:
+      description: get all appeal
+      parameters:
+      - default: 1
+        description: page
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: page
+        in: query
+        maximum: 20
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.AppealPaged'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: get all appeal
+      tags:
+      - appeal
+  /appeal/{id}:
+    get:
+      description: get appeal by id
+      parameters:
+      - description: appeal id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Appeal'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: get appeal by id
+      tags:
+      - appeal
   /auth/login:
     post:
       consumes:

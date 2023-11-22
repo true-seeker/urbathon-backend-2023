@@ -38,5 +38,14 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		//newsGroup.DELETE("/:id", middleware.Session, newsHandler.Delete)
 	}
 
+	appealRepo := repository.NewAppealRepository(storage)
+	appealService := service.NewAppealService(appealRepo)
+	appealHandler := handler.NewAppealHandler(appealService)
+	appealGroup := api.Group("appeal")
+	{
+		appealGroup.GET("/", appealHandler.GetAll)
+		appealGroup.GET("/:id", appealHandler.Get)
+	}
+
 	return r
 }
