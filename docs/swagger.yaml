@@ -167,7 +167,7 @@ paths:
         in: query
         maximum: 20
         minimum: 1
-        name: pageSize
+        name: page_size
         type: integer
       produces:
       - application/json
