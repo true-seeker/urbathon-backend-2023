@@ -213,6 +213,76 @@
                 }
             }
         },
+        "/appeal_category": {
+            "get": {
+                "description": "get all appealCategories",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appealCategory"
+                ],
+                "summary": "get all appealCategories",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.AppealCategory"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
+        "/appeal_category/{id}": {
+            "get": {
+                "description": "get appealCategory by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appealCategory"
+                ],
+                "summary": "get appealCategory by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "appealCategory id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.AppealCategory"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "login",

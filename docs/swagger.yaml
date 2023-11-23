@@ -288,6 +288,52 @@ paths:
       summary: update appeal
       tags:
       - appeal
+  /appeal_category:
+    get:
+      description: get all appealCategories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.AppealCategory'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: get all appealCategories
+      tags:
+      - appealCategory
+  /appeal_category/{id}:
+    get:
+      description: get appealCategory by id
+      parameters:
+      - description: appealCategory id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.AppealCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: get appealCategory by id
+      tags:
+      - appealCategory
   /auth/login:
     post:
       consumes:

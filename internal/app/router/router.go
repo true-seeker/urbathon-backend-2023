@@ -47,5 +47,14 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		appealGroup.DELETE("/:id", middleware.Session, appealHandler.Delete)
 	}
 
+	appealCategoryRepo := repository.NewAppealCategoryRepository(storage)
+	appealCategoryService := service.NewAppealCategoryService(appealCategoryRepo)
+	appealCategoryHandler := handler.NewAppealCategoryHandler(appealCategoryService)
+	appealCategoryGroup := api.Group("appeal_category")
+	{
+		appealCategoryGroup.GET("/", appealCategoryHandler.GetAll)
+		appealCategoryGroup.GET("/:id", appealCategoryHandler.Get)
+	}
+
 	return r
 }
