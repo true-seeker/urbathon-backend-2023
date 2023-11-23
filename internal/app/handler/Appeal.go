@@ -79,8 +79,8 @@ func (d *AppealHandler) GetAll(c *gin.Context) {
 // @Description	create appeal
 // @Tags			appeal
 // @Param			appeal	formData	input.Appeal	true	"appeal"
-// @Param			photos	formData	[]file	true	"photos"
-// @Accept		mpfd
+// @Param			photos	formData	[]file			true	"photos"
+// @Accept			mpfd
 // @Produce		json
 // @Success		201	{object}	response.Appeal
 // @Failure		400	{object}	errorHandler.HttpErr
@@ -109,7 +109,7 @@ func (d *AppealHandler) Create(c *gin.Context) {
 // @Description	update appeal
 // @Tags			appeal
 // @Param			appeal		body	input.Appeal	true	"appeal"
-// @Param			appeal_id	path	int				true	"appeal id" default(1)
+// @Param			appeal_id	path	int				true	"appeal id"	default(1)
 // @Produce		json
 // @Success		200	{object}	response.Appeal
 // @Failure		400	{object}	errorHandler.HttpErr
@@ -144,7 +144,7 @@ func (d *AppealHandler) Update(c *gin.Context) {
 // @Summary		delete appeal
 // @Description	delete appeal
 // @Tags			appeal
-// @Param			appeal_id	path	int	true	"appeal id" default(1)
+// @Param			appeal_id	path	int	true	"appeal id"	default(1)
 // @Produce		json
 // @Success		200	{object}	nil
 // @Failure		400	{object}	errorHandler.HttpErr

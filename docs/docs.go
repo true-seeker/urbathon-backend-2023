@@ -333,6 +333,76 @@ const docTemplate = `{
                 }
             }
         },
+        "/appeal_status": {
+            "get": {
+                "description": "get all appealStatuses",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appealStatus"
+                ],
+                "summary": "get all appealStatuses",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.AppealStatus"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
+        "/appeal_status/{id}": {
+            "get": {
+                "description": "get appealStatus by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appealStatus"
+                ],
+                "summary": "get appealStatus by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "appealStatus id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.AppealStatus"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
         "/appeal_type": {
             "get": {
                 "description": "get all appealTypes",
@@ -705,6 +775,9 @@ const docTemplate = `{
                         "$ref": "#/definitions/response.AppealPhoto"
                     }
                 },
+                "appeal_status": {
+                    "$ref": "#/definitions/response.AppealStatus"
+                },
                 "appeal_type": {
                     "$ref": "#/definitions/response.AppealType"
                 },
@@ -783,6 +856,19 @@ const docTemplate = `{
                 "url": {
                     "type": "string",
                     "example": "https://storage.yandexcloud.net/urbathon/test.jpg"
+                }
+            }
+        },
+        "response.AppealStatus": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "status": {
+                    "type": "string",
+                    "example": "Решено"
                 }
             }
         },
