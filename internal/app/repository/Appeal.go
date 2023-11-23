@@ -18,7 +18,7 @@ func NewAppealRepository(s storage.Sql) *AppealRepository {
 	return &AppealRepository{db: s.GetDb()}
 }
 
-var selectStmt = SELECT(Appeals.AllColumns,
+var selectAppealStmt = SELECT(Appeals.AllColumns,
 	Users.ID.AS("users.id"),
 	Users.Name.AS("users.name"),
 	Users.Email.AS("users.email"),
@@ -33,7 +33,7 @@ var selectStmt = SELECT(Appeals.AllColumns,
 
 func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 	var u entity.Appeal
-	stmt := selectStmt.
+	stmt := selectAppealStmt.
 		WHERE(Appeals.ID.EQ(Int32(*id)))
 
 	if err := stmt.Query(a.db, &u); err != nil {
@@ -44,7 +44,7 @@ func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 
 func (a *AppealRepository) GetAll(f *input.Filter) (*[]entity.Appeal, error) {
 	var u []entity.Appeal
-	stmt := selectStmt.
+	stmt := selectAppealStmt.
 		LIMIT(f.PageSize).
 		OFFSET((f.Page - 1) * f.PageSize)
 	ORDER_BY(Appeals.ID.DESC())

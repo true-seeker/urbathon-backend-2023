@@ -292,6 +292,76 @@ const docTemplate = `{
                 }
             }
         },
+        "/appeal_type": {
+            "get": {
+                "description": "get all appealTypes",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appealType"
+                ],
+                "summary": "get all appealTypes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.AppealType"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
+        "/appeal_type/{id}": {
+            "get": {
+                "description": "get appealType by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appealType"
+                ],
+                "summary": "get appealType by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "appealType id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.AppealType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "login",
