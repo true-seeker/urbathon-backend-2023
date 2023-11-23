@@ -333,6 +333,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/appeal_category/{id}/appeal_types": {
+            "get": {
+                "description": "get all appealTypes by CategoryId",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appealCategory"
+                ],
+                "summary": "get all appealTypes by CategoryId",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "appealCategory id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.AppealTypeByCategory"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
         "/appeal_status": {
             "get": {
                 "description": "get all appealStatuses",
@@ -375,6 +419,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
+                        "default": 1,
                         "description": "appealStatus id",
                         "name": "id",
                         "in": "path",
@@ -878,6 +923,19 @@ const docTemplate = `{
                 "appeal_category": {
                     "$ref": "#/definitions/response.AppealCategory"
                 },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Тип"
+                }
+            }
+        },
+        "response.AppealTypeByCategory": {
+            "type": "object",
+            "properties": {
                 "id": {
                     "type": "integer",
                     "example": 1

@@ -54,6 +54,7 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 	{
 		appealCategoryGroup.GET("/", appealCategoryHandler.GetAll)
 		appealCategoryGroup.GET("/:id", appealCategoryHandler.Get)
+		appealCategoryGroup.GET("/:id/appeal_types", appealCategoryHandler.GetAppealTypes)
 	}
 
 	appealTypeRepo := repository.NewAppealTypeRepository(storage)

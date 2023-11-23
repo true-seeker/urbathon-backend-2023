@@ -11,6 +11,7 @@ import (
 type AppealCategoryService interface {
 	Get(id *int32) (*response.AppealCategory, *errorHandler.HttpErr)
 	GetAll() (*[]response.AppealCategory, *errorHandler.HttpErr)
+	GetAppealTypes(id *int32) (*[]response.AppealTypeByCategory, *errorHandler.HttpErr)
 }
 
 type AppealCategoryHandler struct {
@@ -62,4 +63,30 @@ func (d *AppealCategoryHandler) GetAll(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, appealCategories)
+}
+
+// GetAppealTypes get all appealTypes by CategoryId
+//
+// @Summary		get all appealTypes by CategoryId
+// @Description	get all appealTypes by CategoryId
+// @Tags			appealCategory
+// @Produce		json
+// @Param			id	path		int	true	"appealCategory id"
+// @Success		200	{object}	[]response.AppealTypeByCategory
+// @Failure		400	{object}	errorHandler.HttpErr
+// @Failure		404	{object}	errorHandler.HttpErr
+// @Router			/appeal_category/{id}/appeal_types [get]
+func (d *AppealCategoryHandler) GetAppealTypes(c *gin.Context) {
+	id, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+
+	appealTypes, httpErr := d.appealCategoryService.GetAppealTypes(&id)
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	c.JSON(http.StatusOK, appealTypes)
 }

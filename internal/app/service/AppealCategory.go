@@ -13,6 +13,7 @@ import (
 type AppealCategoryRepository interface {
 	Get(id *int32) (*model.AppealCategories, error)
 	GetAll() (*[]model.AppealCategories, error)
+	GetAppealTypes(id *int32) (*[]model.AppealTypes, error)
 }
 type AppealCategoryService struct {
 	appealCategoryRepo AppealCategoryRepository
@@ -44,4 +45,19 @@ func (d *AppealCategoryService) GetAll() (*[]response.AppealCategory, *errorHand
 
 	appealCategoryResponse = mapper.AppealCategoryModelListToAppealCategoryResponses(appealCategory)
 	return appealCategoryResponse, nil
+}
+
+func (d *AppealCategoryService) GetAppealTypes(id *int32) (*[]response.AppealTypeByCategory, *errorHandler.HttpErr) {
+	appealTypeResponses := &[]response.AppealTypeByCategory{}
+	_, err := d.appealCategoryRepo.Get(id)
+	switch {
+	case errors.Is(err, qrm.ErrNoRows):
+		return nil, errorHandler.New("AppealCategory with id does not exists", http.StatusNotFound)
+	case err != nil:
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	appealType, err := d.appealCategoryRepo.GetAppealTypes(id)
+
+	appealTypeResponses = mapper.AppealTypeModelListToAppealTypeResponsesByCategory(appealType)
+	return appealTypeResponses, nil
 }

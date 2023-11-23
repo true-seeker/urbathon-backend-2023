@@ -38,3 +38,15 @@ func (a *AppealCategoryRepository) GetAll() (*[]model.AppealCategories, error) {
 	}
 	return &u, nil
 }
+
+func (a *AppealCategoryRepository) GetAppealTypes(id *int32) (*[]model.AppealTypes, error) {
+	var u []model.AppealTypes
+	stmt := SELECT(AppealTypes.AllColumns).
+		FROM(AppealTypes).
+		WHERE(AppealTypes.AppealCategoryID.EQ(Int32(*id))).
+		ORDER_BY(AppealTypes.Title.ASC())
+	if err := stmt.Query(a.db, &u); err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
