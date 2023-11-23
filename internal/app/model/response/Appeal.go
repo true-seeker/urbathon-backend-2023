@@ -13,6 +13,7 @@ type Appeal struct {
 	Address      *string        `json:"address" example:"Улица Пушкина"`
 	Latitude     *float64       `json:"latitude" example:"54.1234"`
 	Longitude    *float64       `json:"longitude" example:"122.7656"`
+	AppealStatus *AppealStatus  `json:"appeal_status"`
 	AppealPhotos *[]AppealPhoto `json:"appeal_photos"`
 }
 

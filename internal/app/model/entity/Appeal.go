@@ -8,4 +8,5 @@ type Appeal struct {
 	User         *model.Users `json:"user"`
 	AppealType   *AppealType  `json:"appeal_type"`
 	AppealPhotos *[]model.AppealPhotos
+	AppealStatus *model.AppealStatus
 }

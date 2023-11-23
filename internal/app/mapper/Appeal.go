@@ -22,6 +22,7 @@ func AppealToAppealResponse(appeal entity.Appeal) *response.Appeal {
 		}),
 		AppealType:   AppealTypeToAppealTypeResponse(*appeal.AppealType),
 		AppealPhotos: AppealPhotoModelListToAppealPhotoResponses(appeal.AppealPhotos),
+		AppealStatus: AppealStatusModelToAppealStatusResponse(*appeal.AppealStatus),
 	}
 	return r
 }
