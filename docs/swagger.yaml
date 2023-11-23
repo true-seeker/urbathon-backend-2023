@@ -97,21 +97,10 @@ definitions:
       total:
         type: integer
     type: object
-  response.AppealTheme:
+  response.AppealType:
     properties:
       appeal_category:
         $ref: '#/definitions/response.AppealCategory'
-      id:
-        example: 1
-        type: integer
-      title:
-        example: Тема
-        type: string
-    type: object
-  response.AppealType:
-    properties:
-      appeal_theme:
-        $ref: '#/definitions/response.AppealTheme'
       id:
         example: 1
         type: integer

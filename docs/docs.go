@@ -579,27 +579,11 @@ const docTemplate = `{
                 }
             }
         },
-        "response.AppealTheme": {
+        "response.AppealType": {
             "type": "object",
             "properties": {
                 "appeal_category": {
                     "$ref": "#/definitions/response.AppealCategory"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "title": {
-                    "type": "string",
-                    "example": "Тема"
-                }
-            }
-        },
-        "response.AppealType": {
-            "type": "object",
-            "properties": {
-                "appeal_theme": {
-                    "$ref": "#/definitions/response.AppealTheme"
                 },
                 "id": {
                     "type": "integer",

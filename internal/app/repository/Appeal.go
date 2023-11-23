@@ -24,15 +24,12 @@ var selectStmt = SELECT(Appeals.AllColumns,
 	Users.Email.AS("users.email"),
 	AppealTypes.ID.AS("appealTypes.id"),
 	AppealTypes.Title.AS("appealTypes.title"),
-	AppealThemes.ID.AS("appealThemes.id"),
-	AppealThemes.Title.AS("appealThemes.title"),
 	AppealCategories.ID.AS("appealCategories.id"),
 	AppealCategories.Title.AS("appealCategories.title"),
 ).FROM(Appeals.
 	INNER_JOIN(Users, Users.ID.EQ(Appeals.UserID)).
 	INNER_JOIN(AppealTypes, AppealTypes.ID.EQ(Appeals.AppealTypeID)).
-	INNER_JOIN(AppealThemes, AppealThemes.ID.EQ(AppealTypes.AppealThemeID)).
-	INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealThemes.AppealCategoryID)))
+	INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)))
 
 func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 	var u entity.Appeal

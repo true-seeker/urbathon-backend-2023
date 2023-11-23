@@ -7,9 +7,9 @@ import (
 
 func AppealTypeToAppealTypeResponse(appealType entity.AppealType) *response.AppealType {
 	r := &response.AppealType{
-		Id:          appealType.ID,
-		Title:       appealType.Title,
-		AppealTheme: AppealThemeToAppealThemeResponse(*appealType.AppealTheme),
+		Id:             appealType.ID,
+		Title:          appealType.Title,
+		AppealCategory: AppealCategoryToAppealCategoryResponse(*appealType.AppealCategory),
 	}
 
 	return r
