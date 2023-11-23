@@ -49,8 +49,12 @@ func initCache(a *app.App) *cookie.Store {
 
 func initGin(store *cookie.Store) *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"POST", "PUT", "PATCH", "DELETE"},
+		AllowHeaders: []string{"Content-Type, access-control-allow-origin, access-control-allow-headers"},
+	}))
 	r.Use(sessions.Sessions("session", *store))
-	r.Use(cors.Default())
 	return r
 }
 
