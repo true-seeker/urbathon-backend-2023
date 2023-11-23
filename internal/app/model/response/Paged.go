@@ -1,7 +1,17 @@
 package response
 
+import "fmt"
+
 type Paged struct {
-	Page     int64 `json:"page"`
-	PageSize int64 `json:"page_size"`
-	Total    int   `json:"total"`
+	Page        int64  `json:"page" example:"1"`
+	PageSize    int64  `json:"page_size" example:"10"`
+	Total       int    `json:"total" example:"100"`
+	NextPageUrl string `json:"next_page_url" example:"/api/news?page=1&page_size=10"`
+}
+
+func NewPaged(page int64, pageSize int64, total int, resource string) *Paged {
+	return &Paged{Page: page,
+		PageSize:    pageSize,
+		Total:       total,
+		NextPageUrl: fmt.Sprintf("/api/%s?page=%d&page_size=%d", resource, page+1, pageSize)}
 }

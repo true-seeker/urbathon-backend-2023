@@ -755,14 +755,21 @@ const docTemplate = `{
                         "$ref": "#/definitions/response.Appeal"
                     }
                 },
+                "next_page_url": {
+                    "type": "string",
+                    "example": "/api/news?page=1\u0026page_size=10"
+                },
                 "page": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "page_size": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 10
                 },
                 "total": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 100
                 }
             }
         },
@@ -773,8 +780,9 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
-                "url example:": {
-                    "type": "string"
+                "url": {
+                    "type": "string",
+                    "example": "https://storage.yandexcloud.net/urbathon/test.jpg"
                 }
             }
         },
@@ -798,16 +806,20 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "body": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Тело новости"
                 },
                 "date": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2024-02-10T00:00:00+05:00"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Заголовок"
                 }
             }
         },
@@ -820,14 +832,21 @@ const docTemplate = `{
                         "$ref": "#/definitions/response.News"
                     }
                 },
+                "next_page_url": {
+                    "type": "string",
+                    "example": "/api/news?page=1\u0026page_size=10"
+                },
                 "page": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "page_size": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 10
                 },
                 "total": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 100
                 }
             }
         },

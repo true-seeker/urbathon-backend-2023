@@ -23,11 +23,7 @@ type AppealPaged struct {
 
 func NewAppealPaged(f *input.Filter, items *[]Appeal, total *int) *AppealPaged {
 	return &AppealPaged{
-		Paged: Paged{
-			Page:     f.Page,
-			PageSize: f.PageSize,
-			Total:    *total,
-		},
+		Paged: *NewPaged(f.Page, f.PageSize, *total, "appeal"),
 		Items: items,
 	}
 }

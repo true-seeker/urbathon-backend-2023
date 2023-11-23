@@ -94,11 +94,17 @@ definitions:
         items:
           $ref: '#/definitions/response.Appeal'
         type: array
+      next_page_url:
+        example: /api/news?page=1&page_size=10
+        type: string
       page:
+        example: 1
         type: integer
       page_size:
+        example: 10
         type: integer
       total:
+        example: 100
         type: integer
     type: object
   response.AppealPhoto:
@@ -106,7 +112,8 @@ definitions:
       id:
         example: 1
         type: integer
-      'url example:':
+      url:
+        example: https://storage.yandexcloud.net/urbathon/test.jpg
         type: string
     type: object
   response.AppealType:
@@ -123,12 +130,16 @@ definitions:
   response.News:
     properties:
       body:
+        example: Тело новости
         type: string
       date:
+        example: "2024-02-10T00:00:00+05:00"
         type: string
       id:
+        example: 1
         type: integer
       title:
+        example: Заголовок
         type: string
     type: object
   response.NewsPaged:
@@ -137,11 +148,17 @@ definitions:
         items:
           $ref: '#/definitions/response.News'
         type: array
+      next_page_url:
+        example: /api/news?page=1&page_size=10
+        type: string
       page:
+        example: 1
         type: integer
       page_size:
+        example: 10
         type: integer
       total:
+        example: 100
         type: integer
     type: object
   response.User:
