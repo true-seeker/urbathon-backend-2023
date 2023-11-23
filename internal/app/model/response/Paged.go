@@ -11,7 +11,6 @@ type Paged struct {
 
 func NewPaged(page int64, pageSize int64, total int, resource string) *Paged {
 	var nextPageUrlP *string
-	fmt.Println(resource, page+1, pageSize, nextPageUrlP)
 	if pageSize*page < int64(total) {
 		temp := fmt.Sprintf("/api/%s?page=%d&page_size=%d",
 			resource,
