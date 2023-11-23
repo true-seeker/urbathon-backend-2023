@@ -13,6 +13,7 @@ import (
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/s3"
 	"urbathon-backend-2023/internal/app/validator"
+	"urbathon-backend-2023/pkg/config"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
 
@@ -132,7 +133,7 @@ func (d *AppealService) validateUpdate(appealInput *input.Appeal) *errorHandler.
 func UploadAppealPhotos(appealInput *input.Appeal) (*[]string, *errorHandler.HttpErr) {
 	var urls []string
 	for _, photo := range *appealInput.Photos {
-		filename := fmt.Sprintf("%s_%s", time.Now().Format(time.Layout), photo.Filename)
+		filename := fmt.Sprintf("%s_%s", time.Now().Format(config.DateTimeLayout), photo.Filename)
 		openedFile, _ := photo.Open()
 		url, err := s3.BucketBase.UploadFile("urbathon", filename, openedFile)
 		if err != nil {
