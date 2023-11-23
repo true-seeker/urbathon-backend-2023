@@ -52,6 +52,9 @@
             },
             "post": {
                 "description": "create appeal",
+                "consumes": [
+                    "multipart/form-data"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -61,13 +64,51 @@
                 "summary": "create appeal",
                 "parameters": [
                     {
-                        "description": "appeal",
-                        "name": "appeal",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/input.Appeal"
-                        }
+                        "type": "string",
+                        "example": "Улица Пушкина",
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "name": "appeal_type_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "Текст обращения",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "number",
+                        "example": 54.1234,
+                        "name": "latitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "number",
+                        "example": 122.7656,
+                        "name": "longitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "Обращение",
+                        "name": "title",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "file"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "photos",
+                        "name": "photos",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -649,6 +690,12 @@
                     "type": "string",
                     "example": "Улица Пушкина"
                 },
+                "appeal_photos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.AppealPhoto"
+                    }
+                },
                 "appeal_type": {
                     "$ref": "#/definitions/response.AppealType"
                 },
@@ -707,6 +754,18 @@
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "response.AppealPhoto": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "url example:": {
+                    "type": "string"
                 }
             }
         },

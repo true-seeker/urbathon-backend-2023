@@ -55,6 +55,10 @@ definitions:
       address:
         example: Улица Пушкина
         type: string
+      appeal_photos:
+        items:
+          $ref: '#/definitions/response.AppealPhoto'
+        type: array
       appeal_type:
         $ref: '#/definitions/response.AppealType'
       description:
@@ -96,6 +100,14 @@ definitions:
         type: integer
       total:
         type: integer
+    type: object
+  response.AppealPhoto:
+    properties:
+      id:
+        example: 1
+        type: integer
+      'url example:':
+        type: string
     type: object
   response.AppealType:
     properties:
@@ -181,14 +193,42 @@ paths:
       tags:
       - appeal
     post:
+      consumes:
+      - multipart/form-data
       description: create appeal
       parameters:
-      - description: appeal
-        in: body
-        name: appeal
+      - example: Улица Пушкина
+        in: formData
+        name: address
+        type: string
+      - example: 1
+        in: formData
+        name: appeal_type_id
+        type: integer
+      - example: Текст обращения
+        in: formData
+        name: description
+        type: string
+      - example: 54.1234
+        in: formData
+        name: latitude
+        type: number
+      - example: 122.7656
+        in: formData
+        name: longitude
+        type: number
+      - example: Обращение
+        in: formData
+        name: title
+        type: string
+      - collectionFormat: csv
+        description: photos
+        in: formData
+        items:
+          type: file
+        name: photos
         required: true
-        schema:
-          $ref: '#/definitions/input.Appeal'
+        type: array
       produces:
       - application/json
       responses:

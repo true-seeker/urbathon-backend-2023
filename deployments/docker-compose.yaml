@@ -44,6 +44,8 @@ services:
     build: ../
     ports:
       - "8080:8080"
+    volumes:
+      - deployments/.aws:~/.aws
     depends_on:
       - migrate
     environment:

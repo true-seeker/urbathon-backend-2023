@@ -2,13 +2,16 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-jet/jet/v2/qrm"
 	"net/http"
+	"time"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/entity"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
+	"urbathon-backend-2023/internal/app/s3"
 	"urbathon-backend-2023/internal/app/validator"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
@@ -17,7 +20,7 @@ type AppealRepository interface {
 	Get(id *int32) (*entity.Appeal, error)
 	GetAll(f *input.Filter) (*[]entity.Appeal, error)
 	GetTotal() (*int, error)
-	Create(appeal *model.Appeals) (*entity.Appeal, error)
+	Create(appeal *model.Appeals, urls *[]string) (*entity.Appeal, error)
 	Update(appeal *model.Appeals) (*entity.Appeal, error)
 	Delete(id int32) error
 }
@@ -65,9 +68,14 @@ func (d *AppealService) Create(appealInput *input.Appeal, user *model.Users) (*r
 	}
 
 	appeal := mapper.AppealInputToAppeal(appealInput)
-	appeal.UserID = user.ID
 
-	appealEntity, err := d.appealRepo.Create(appeal)
+	appeal.UserID = user.ID
+	photo_urls, httpErr := UploadAppealPhotos(appealInput)
+	if httpErr != nil {
+		return nil, httpErr
+	}
+
+	appealEntity, err := d.appealRepo.Create(appeal, photo_urls)
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
@@ -78,7 +86,7 @@ func (d *AppealService) Create(appealInput *input.Appeal, user *model.Users) (*r
 
 func (d *AppealService) Update(appealInput *input.Appeal, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr) {
 	userResponse := &response.Appeal{}
-	if httpErr := d.validateCreate(appealInput); httpErr != nil {
+	if httpErr := d.validateUpdate(appealInput); httpErr != nil {
 		return nil, httpErr
 	}
 	//todo exists validation
@@ -101,6 +109,7 @@ func (d *AppealService) Delete(id int32) *errorHandler.HttpErr {
 	if err != nil {
 		return errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
+	//todo deletion_date
 	return nil
 }
 
@@ -110,4 +119,27 @@ func (d *AppealService) validateCreate(appealInput *input.Appeal) *errorHandler.
 	}
 	// todo appeal_type_id
 	return nil
+}
+
+func (d *AppealService) validateUpdate(appealInput *input.Appeal) *errorHandler.HttpErr {
+	if httpErr := validator.AppealUpdate(appealInput); httpErr != nil {
+		return httpErr
+	}
+	// todo appeal_type_id
+	return nil
+}
+
+func UploadAppealPhotos(appealInput *input.Appeal) (*[]string, *errorHandler.HttpErr) {
+	var urls []string
+	for _, photo := range *appealInput.Photos {
+		filename := fmt.Sprintf("%s_%s", time.Now().Format(time.Layout), photo.Filename)
+		openedFile, _ := photo.Open()
+		url, err := s3.BucketBase.UploadFile("urbathon", filename, openedFile)
+		if err != nil {
+			return nil, errorHandler.New("Yandex S3 not available", http.StatusBadRequest)
+		}
+		urls = append(urls, url)
+	}
+
+	return &urls, nil
 }

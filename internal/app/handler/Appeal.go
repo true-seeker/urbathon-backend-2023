@@ -78,14 +78,16 @@ func (d *AppealHandler) GetAll(c *gin.Context) {
 // @Summary		create appeal
 // @Description	create appeal
 // @Tags			appeal
-// @Param			appeal	body	input.Appeal	true	"appeal"
+// @Param			appeal	formData	input.Appeal	true	"appeal"
+// @Param			photos	formData	[]file	true	"photos"
+// @Accept		mpfd
 // @Produce		json
 // @Success		201	{object}	response.Appeal
 // @Failure		400	{object}	errorHandler.HttpErr
 // @Router			/appeal [post]
 func (d *AppealHandler) Create(c *gin.Context) {
 	appealInput := &input.Appeal{}
-	if err := c.BindJSON(&appealInput); err != nil {
+	if err := c.Bind(&appealInput); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}

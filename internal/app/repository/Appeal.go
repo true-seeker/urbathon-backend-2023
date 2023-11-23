@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	. "github.com/go-jet/jet/v2/postgres"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
@@ -26,10 +27,13 @@ var selectAppealStmt = SELECT(Appeals.AllColumns,
 	AppealTypes.Title.AS("appealTypes.title"),
 	AppealCategories.ID.AS("appealCategories.id"),
 	AppealCategories.Title.AS("appealCategories.title"),
+	AppealPhotos.ID.AS("appealPhotos.id"),
+	AppealPhotos.URL.AS("appealPhotos.url"),
 ).FROM(Appeals.
 	INNER_JOIN(Users, Users.ID.EQ(Appeals.UserID)).
 	INNER_JOIN(AppealTypes, AppealTypes.ID.EQ(Appeals.AppealTypeID)).
-	INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)))
+	INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)).
+	INNER_JOIN(AppealPhotos, AppealPhotos.AppealID.EQ(Appeals.ID)))
 
 func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 	var u entity.Appeal
@@ -65,17 +69,35 @@ func (a *AppealRepository) GetTotal() (*int, error) {
 	return &count, nil
 }
 
-func (a *AppealRepository) Create(appeal *model.Appeals) (*entity.Appeal, error) {
+func (a *AppealRepository) Create(appeal *model.Appeals, urls *[]string) (*entity.Appeal, error) {
 	var u *entity.Appeal
+	tx, err := a.db.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	ctx := context.TODO()
 	stmt := Appeals.INSERT(Appeals.AllColumns.Except(Appeals.ID)).
 		MODEL(appeal).
 		RETURNING(Appeals.ID)
 
-	if err := stmt.Query(a.db, appeal); err != nil {
+	if err := stmt.QueryContext(ctx, tx, appeal); err != nil {
 		return nil, err
 	}
 
-	u, err := a.Get(&appeal.ID)
+	for _, url := range *urls {
+		photosStmt := AppealPhotos.INSERT(AppealPhotos.AppealID, AppealPhotos.URL).
+			VALUES(Int32(appeal.ID), String(url))
+		if _, err := photosStmt.ExecContext(ctx, tx); err != nil {
+			return nil, err
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	u, err = a.Get(&appeal.ID)
 	if err != nil {
 		return nil, err
 	}

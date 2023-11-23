@@ -15,6 +15,7 @@ import (
 	"os/signal"
 	"syscall"
 	"urbathon-backend-2023/docs"
+	"urbathon-backend-2023/internal/app/s3"
 	"urbathon-backend-2023/internal/app/storage"
 	"urbathon-backend-2023/internal/app/storage/postgres"
 	rd "urbathon-backend-2023/internal/app/store/redis"
@@ -22,10 +23,10 @@ import (
 	"urbathon-backend-2023/pkg/config"
 )
 
-// Init Инициализация сервиса
 func Init() {
 	config.Init("development")
 	docs.SwaggerInfo.BasePath = "/api"
+	s3.Init()
 }
 
 func initDB() *postgres.Postgres {

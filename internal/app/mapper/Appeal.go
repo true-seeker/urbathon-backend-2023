@@ -20,7 +20,8 @@ func AppealToAppealResponse(appeal entity.Appeal) *response.Appeal {
 			Name:  appeal.User.Name,
 			Email: appeal.User.Email,
 		}),
-		AppealType: AppealTypeToAppealTypeResponse(*appeal.AppealType),
+		AppealType:   AppealTypeToAppealTypeResponse(*appeal.AppealType),
+		AppealPhotos: AppealPhotoModelListToAppealPhotoResponses(appeal.AppealPhotos),
 	}
 	return r
 }
