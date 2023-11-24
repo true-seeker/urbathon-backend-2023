@@ -90,6 +90,39 @@ definitions:
         example: Категория
         type: string
     type: object
+  response.AppealComment:
+    properties:
+      date:
+        example: "2024-02-10T00:00:00+05:00"
+        type: string
+      id:
+        example: 1
+        type: integer
+      text:
+        example: Текст комментария
+        type: string
+      user:
+        $ref: '#/definitions/response.User'
+    type: object
+  response.AppealCommentPaged:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/response.AppealComment'
+        type: array
+      next_page_url:
+        example: /api/news?page=1&page_size=10
+        type: string
+      page:
+        example: 1
+        type: integer
+      page_size:
+        example: 10
+        type: integer
+      total:
+        example: 100
+        type: integer
+    type: object
   response.AppealPaged:
     properties:
       items:
@@ -363,6 +396,47 @@ paths:
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
       summary: update appeal
+      tags:
+      - appeal
+  /appeal/{id}/comments:
+    get:
+      description: get appeal comments
+      parameters:
+      - default: 1
+        description: appeal id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - default: 10
+        description: page
+        in: query
+        maximum: 20
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.AppealCommentPaged'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: get appeal comments
       tags:
       - appeal
   /appeal/{id}/status/{status_id}:

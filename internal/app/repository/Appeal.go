@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	. "github.com/go-jet/jet/v2/postgres"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
@@ -37,6 +38,12 @@ var selectAppealStmt = SELECT(Appeals.AllColumns,
 	INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)).
 	INNER_JOIN(AppealPhotos, AppealPhotos.AppealID.EQ(Appeals.ID)).
 	INNER_JOIN(AppealStatus, AppealStatus.ID.EQ(Appeals.StatusID)))
+
+var selectAppealCommentsStmt = SELECT(AppealComments.AllColumns,
+	Users.ID.AS("users.id"),
+	Users.Name.AS("users.name"),
+).FROM(AppealComments.
+	INNER_JOIN(Users, Users.ID.EQ(AppealComments.UserID)))
 
 func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 	var u entity.Appeal
@@ -143,4 +150,31 @@ func (a *AppealRepository) UpdateStatus(appealId int32, statusId int32) error {
 	}
 
 	return nil
+}
+
+func (a *AppealRepository) GetAllComments(f *input.Filter, appealId int32) (*[]entity.AppealComment, error) {
+	var u []entity.AppealComment
+	stmt := selectAppealCommentsStmt.
+		WHERE(AppealComments.AppealID.EQ(Int32(appealId))).
+		LIMIT(f.PageSize).
+		OFFSET((f.Page - 1) * f.PageSize).
+		ORDER_BY(AppealComments.Date.DESC())
+	if err := stmt.Query(a.db, &u); err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
+func (a *AppealRepository) GetTotalComments(appealId int32) (*int, error) {
+	var count int
+	rawSql, args := SELECT(Raw("count(*)")).
+		FROM(AppealComments).
+		WHERE(AppealComments.AppealID.EQ(Int32(appealId))).
+		Sql()
+
+	if err := a.db.QueryRow(rawSql, args...).Scan(&count); err != nil {
+		fmt.Println(rawSql, args)
+		return nil, err
+	}
+	return &count, nil
 }

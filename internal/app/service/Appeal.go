@@ -25,6 +25,8 @@ type AppealRepository interface {
 	Update(appeal *model.Appeals) (*entity.Appeal, error)
 	Delete(id int32) error
 	UpdateStatus(appealId int32, statusId int32) error
+	GetAllComments(f *input.Filter, appealId int32) (*[]entity.AppealComment, error)
+	GetTotalComments(appealId int32) (*int, error)
 }
 type AppealService struct {
 	appealRepo AppealRepository
@@ -72,7 +74,7 @@ func (d *AppealService) Create(appealInput *input.Appeal, user *model.Users) (*r
 	appeal := mapper.AppealInputToAppeal(appealInput)
 
 	appeal.UserID = user.ID
-	photo_urls, httpErr := UploadAppealPhotos(appealInput)
+	photo_urls, httpErr := uploadAppealPhotos(appealInput)
 	if httpErr != nil {
 		return nil, httpErr
 	}
@@ -115,6 +117,32 @@ func (d *AppealService) Delete(id int32) *errorHandler.HttpErr {
 	return nil
 }
 
+func (d *AppealService) UpdateStatus(appealId int32, statusId int32) *errorHandler.HttpErr {
+	//todo exists validation
+	err := d.appealRepo.UpdateStatus(appealId, statusId)
+	if err != nil {
+		return errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	//todo deletion_date
+	return nil
+}
+
+func (d *AppealService) GetAllComments(f *input.Filter, appealId int32) (*response.AppealCommentPaged, *errorHandler.HttpErr) {
+	items := &[]response.AppealComment{}
+	comments, err := d.appealRepo.GetAllComments(f, appealId)
+	if err != nil {
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	total, err := d.appealRepo.GetTotalComments(appealId)
+	if err != nil {
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+
+	items = mapper.AppealCommentsToAppealCommentResponses(comments)
+	appealPaged := response.NewAppealCommentPaged(f, items, total, appealId)
+	return appealPaged, nil
+}
+
 func (d *AppealService) validateCreate(appealInput *input.Appeal) *errorHandler.HttpErr {
 	if httpErr := validator.AppealCreate(appealInput); httpErr != nil {
 		return httpErr
@@ -131,7 +159,7 @@ func (d *AppealService) validateUpdate(appealInput *input.AppealUpdate) *errorHa
 	return nil
 }
 
-func UploadAppealPhotos(appealInput *input.Appeal) (*[]string, *errorHandler.HttpErr) {
+func uploadAppealPhotos(appealInput *input.Appeal) (*[]string, *errorHandler.HttpErr) {
 	var urls []string
 	for _, photo := range *appealInput.Photos {
 		filename := fmt.Sprintf("%s_%s", time.Now().Format(config.DateTimeLayout), photo.Filename)
@@ -144,14 +172,4 @@ func UploadAppealPhotos(appealInput *input.Appeal) (*[]string, *errorHandler.Htt
 	}
 
 	return &urls, nil
-}
-
-func (d *AppealService) UpdateStatus(appealId int32, statusId int32) *errorHandler.HttpErr {
-	//todo exists validation
-	err := d.appealRepo.UpdateStatus(appealId, statusId)
-	if err != nil {
-		return errorHandler.New(err.Error(), http.StatusBadRequest)
-	}
-	//todo deletion_date
-	return nil
 }
