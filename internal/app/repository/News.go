@@ -39,9 +39,8 @@ func (a *NewsRepository) Get(id *int32) (*entity.News, error) {
 
 func (a *NewsRepository) GetAll(f *filter.Pagination) (*[]entity.News, error) {
 	var u []entity.News
-	stmt := getSelectNewStmt().
-		LIMIT(f.PageSize).
-		OFFSET((f.Page - 1) * f.PageSize).
+	stmt := getSelectNewStmt()
+	stmt = f.GetLimitOffsetStmt(stmt).
 		ORDER_BY(News.Date.DESC())
 	if err := stmt.Query(a.db, &u); err != nil {
 		return nil, err

@@ -55,7 +55,7 @@ func (d *NewsHandler) Get(c *gin.Context) {
 //	@Summary		get all news
 //	@Description	get all news
 //	@Tags			news
-//	@Param			page		query	int	false	"page"	minimum(1)	default(1)
+//	@Param			page		query	int	false	"page"	minimum(-1)	default(1)
 //	@Param			page_size	query	int	false	"page"	minimum(1)	maximum(20)	default(10)
 //	@Produce		json
 //	@Success		200	{object}	response.NewsPaged

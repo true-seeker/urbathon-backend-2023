@@ -9,7 +9,11 @@ type AppealFilter struct {
 	*Pagination
 	*Sort
 
-	UserId *int32 `json:"user_id" example:"1" swaggerignore:"true"`
+	UserId   *int32   `json:"user_id" `
+	LatUp    *float64 `json:"lat_up" `
+	LatDown  *float64 `json:"lat_down" `
+	LongUp   *float64 `json:"long_up" `
+	LongDown *float64 `json:"long_down" `
 }
 
 func NewAppealFilter(c *gin.Context) (*AppealFilter, *errorHandler.HttpErr) {

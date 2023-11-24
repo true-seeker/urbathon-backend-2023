@@ -285,6 +285,18 @@ paths:
         in: query
         name: field
         type: string
+      - in: query
+        name: lat_down
+        type: number
+      - in: query
+        name: lat_up
+        type: number
+      - in: query
+        name: long_down
+        type: number
+      - in: query
+        name: long_up
+        type: number
       - example: asc
         in: query
         name: order
@@ -294,6 +306,9 @@ paths:
         type: integer
       - in: query
         name: page_size
+        type: integer
+      - in: query
+        name: user_id
         type: integer
       produces:
       - application/json
@@ -566,6 +581,18 @@ paths:
         in: query
         name: field
         type: string
+      - in: query
+        name: lat_down
+        type: number
+      - in: query
+        name: lat_up
+        type: number
+      - in: query
+        name: long_down
+        type: number
+      - in: query
+        name: long_up
+        type: number
       - example: asc
         in: query
         name: order
@@ -575,6 +602,9 @@ paths:
         type: integer
       - in: query
         name: page_size
+        type: integer
+      - in: query
+        name: user_id
         type: integer
       produces:
       - application/json
@@ -849,7 +879,7 @@ paths:
       - default: 1
         description: page
         in: query
-        minimum: 1
+        minimum: -1
         name: page
         type: integer
       - default: 10

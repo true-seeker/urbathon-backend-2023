@@ -54,9 +54,8 @@ func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 
 func (a *AppealRepository) GetAll(f *filter.AppealFilter) (*[]entity.Appeal, error) {
 	var u []entity.Appeal
-	stmt := getSelectAppealStmt().
-		LIMIT(f.PageSize).
-		OFFSET((f.Page - 1) * f.PageSize).
+	stmt := getSelectAppealStmt()
+	stmt = f.GetLimitOffsetStmt(stmt).
 		ORDER_BY(Appeals.ID.DESC())
 
 	stmt = makeWhere(f, stmt)
@@ -156,6 +155,12 @@ func (a *AppealRepository) UpdateStatus(appealId int32, statusId int32) error {
 func makeWhere(f *filter.AppealFilter, stmt SelectStatement) SelectStatement {
 	if f.UserId != nil {
 		stmt = stmt.WHERE(Appeals.UserID.EQ(Int32(*f.UserId)))
+	}
+	if f.LatUp != nil && f.LatDown != nil && f.LongDown != nil && f.LongUp != nil {
+		stmt = stmt.WHERE(Appeals.Longitude.GT(Float(*f.LongUp)).
+			AND(Appeals.Longitude.LT(Float(*f.LongDown))).
+			AND(Appeals.Latitude.GT(Float(*f.LatDown))).
+			AND(Appeals.Latitude.LT(Float(*f.LatUp))))
 	}
 	return stmt
 }

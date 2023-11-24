@@ -33,6 +33,26 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "number",
+                        "name": "lat_down",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "lat_up",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "long_down",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "long_up",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "example": "asc",
                         "name": "order",
@@ -46,6 +66,11 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "user_id",
                         "in": "query"
                     }
                 ],
@@ -159,6 +184,26 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "number",
+                        "name": "lat_down",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "lat_up",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "long_down",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "long_up",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "example": "asc",
                         "name": "order",
@@ -172,6 +217,11 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "user_id",
                         "in": "query"
                     }
                 ],
@@ -879,7 +929,7 @@ const docTemplate = `{
                 "summary": "get all news",
                 "parameters": [
                     {
-                        "minimum": 1,
+                        "minimum": -1,
                         "type": "integer",
                         "default": 1,
                         "description": "page",
