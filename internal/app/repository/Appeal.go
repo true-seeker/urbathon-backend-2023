@@ -80,7 +80,7 @@ func (a *AppealRepository) Create(appeal *model.Appeals, urls *[]string) (*entit
 	}
 
 	ctx := context.TODO()
-	stmt := Appeals.INSERT(Appeals.AllColumns.Except(Appeals.ID)).
+	stmt := Appeals.INSERT(Appeals.AllColumns.Except(Appeals.ID, Appeals.StatusID)).
 		MODEL(appeal).
 		RETURNING(Appeals.ID)
 
