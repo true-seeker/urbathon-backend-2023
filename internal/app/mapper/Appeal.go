@@ -49,3 +49,16 @@ func AppealInputToAppeal(appealInput *input.Appeal) *model.Appeals {
 
 	return r
 }
+
+func AppealInputUpdateToAppeal(appealInput *input.AppealUpdate) *model.Appeals {
+	r := &model.Appeals{
+		Title:        *appealInput.Title,
+		Address:      *appealInput.Address,
+		Description:  *appealInput.Description,
+		Latitude:     *appealInput.Latitude,
+		Longitude:    *appealInput.Longitude,
+		AppealTypeID: *appealInput.AppealTypeID,
+	}
+
+	return r
+}

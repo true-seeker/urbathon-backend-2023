@@ -14,7 +14,7 @@ type AppealService interface {
 	Get(id *int32) (*response.Appeal, *errorHandler.HttpErr)
 	GetAll(filter *input.Filter) (*response.AppealPaged, *errorHandler.HttpErr)
 	Create(appealInput *input.Appeal, user *model.Users) (*response.Appeal, *errorHandler.HttpErr)
-	Update(appealInput *input.Appeal, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr)
+	Update(appealInput *input.AppealUpdate, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr)
 	Delete(id int32) *errorHandler.HttpErr
 }
 
@@ -108,8 +108,8 @@ func (d *AppealHandler) Create(c *gin.Context) {
 // @Summary		update appeal
 // @Description	update appeal
 // @Tags			appeal
-// @Param			appeal		body	input.Appeal	true	"appeal"
-// @Param			appeal_id	path	int				true	"appeal id"	default(1)
+// @Param			appeal		body	input.AppealUpdate	true	"appeal"
+// @Param			id	path	int				true	"appeal id"	default(1)
 // @Produce		json
 // @Success		200	{object}	response.Appeal
 // @Failure		400	{object}	errorHandler.HttpErr
@@ -121,7 +121,7 @@ func (d *AppealHandler) Update(c *gin.Context) {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
-	appealInput := &input.Appeal{}
+	appealInput := &input.AppealUpdate{}
 	if err := c.BindJSON(&appealInput); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return

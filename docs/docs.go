@@ -192,14 +192,14 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/input.Appeal"
+                            "$ref": "#/definitions/input.AppealUpdate"
                         }
                     },
                     {
                         "type": "integer",
                         "default": 1,
                         "description": "appeal id",
-                        "name": "appeal_id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -748,7 +748,7 @@ const docTemplate = `{
                 }
             }
         },
-        "input.Appeal": {
+        "input.AppealUpdate": {
             "type": "object",
             "properties": {
                 "address": {

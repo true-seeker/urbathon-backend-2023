@@ -8,7 +8,7 @@ definitions:
         example: 400
         type: integer
     type: object
-  input.Appeal:
+  input.AppealUpdate:
     properties:
       address:
         example: Улица Пушкина
@@ -340,11 +340,11 @@ paths:
         name: appeal
         required: true
         schema:
-          $ref: '#/definitions/input.Appeal'
+          $ref: '#/definitions/input.AppealUpdate'
       - default: 1
         description: appeal id
         in: path
-        name: appeal_id
+        name: id
         required: true
         type: integer
       produces:

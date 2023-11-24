@@ -109,7 +109,7 @@ func (a *AppealRepository) Create(appeal *model.Appeals, urls *[]string) (*entit
 
 func (a *AppealRepository) Update(appeal *model.Appeals) (*entity.Appeal, error) {
 	var u *entity.Appeal
-	stmt := Appeals.UPDATE(Appeals.AllColumns.Except(Appeals.ID)).
+	stmt := Appeals.UPDATE(Appeals.AllColumns.Except(Appeals.ID, Appeals.StatusID)).
 		MODEL(appeal).
 		WHERE(Appeals.ID.EQ(Int32(appeal.ID))).
 		RETURNING(Appeals.ID)

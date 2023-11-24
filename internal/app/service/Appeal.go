@@ -85,13 +85,13 @@ func (d *AppealService) Create(appealInput *input.Appeal, user *model.Users) (*r
 	return userResponse, nil
 }
 
-func (d *AppealService) Update(appealInput *input.Appeal, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr) {
+func (d *AppealService) Update(appealInput *input.AppealUpdate, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr) {
 	userResponse := &response.Appeal{}
 	if httpErr := d.validateUpdate(appealInput); httpErr != nil {
 		return nil, httpErr
 	}
 	//todo exists validation
-	appeal := mapper.AppealInputToAppeal(appealInput)
+	appeal := mapper.AppealInputUpdateToAppeal(appealInput)
 	appeal.UserID = user.ID
 	appeal.ID = *id
 
@@ -122,7 +122,7 @@ func (d *AppealService) validateCreate(appealInput *input.Appeal) *errorHandler.
 	return nil
 }
 
-func (d *AppealService) validateUpdate(appealInput *input.Appeal) *errorHandler.HttpErr {
+func (d *AppealService) validateUpdate(appealInput *input.AppealUpdate) *errorHandler.HttpErr {
 	if httpErr := validator.AppealUpdate(appealInput); httpErr != nil {
 		return httpErr
 	}

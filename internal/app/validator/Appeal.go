@@ -23,7 +23,7 @@ func AppealCreate(appealInput *input.Appeal) *errorHandler.HttpErr {
 		return errorHandler.New("latitude must be in [-90;90]", http.StatusBadRequest)
 	}
 
-	if !IsLatitudeCorrect(appealInput.Longitude) {
+	if !IsLongitudeCorrect(appealInput.Longitude) {
 		return errorHandler.New("latitude must be in [-180;180]", http.StatusBadRequest)
 	}
 
@@ -33,7 +33,7 @@ func AppealCreate(appealInput *input.Appeal) *errorHandler.HttpErr {
 	return nil
 }
 
-func AppealUpdate(appealInput *input.Appeal) *errorHandler.HttpErr {
+func AppealUpdate(appealInput *input.AppealUpdate) *errorHandler.HttpErr {
 	if IsStringEmpty(appealInput.Title) {
 		return errorHandler.New("title is empty", http.StatusBadRequest)
 	}
@@ -50,7 +50,7 @@ func AppealUpdate(appealInput *input.Appeal) *errorHandler.HttpErr {
 		return errorHandler.New("latitude must be in [-90;90]", http.StatusBadRequest)
 	}
 
-	if !IsLatitudeCorrect(appealInput.Longitude) {
+	if !IsLongitudeCorrect(appealInput.Longitude) {
 		return errorHandler.New("latitude must be in [-180;180]", http.StatusBadRequest)
 	}
 	return nil
