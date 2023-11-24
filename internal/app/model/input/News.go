@@ -1,10 +1,10 @@
 package input
 
-import "time"
+import "mime/multipart"
 
 type News struct {
-	Id    int32      `json:"id"`
-	Title *string    `json:"title"`
-	Body  *string    `json:"body"`
-	Date  *time.Time `json:"date"`
+	Title      *string               `form:"title"`
+	Body       *string               `form:"body"`
+	CategoryId *int32                `form:"category_id"`
+	Photo      *multipart.FileHeader `form:"photo" swaggerignore:"true"`
 }

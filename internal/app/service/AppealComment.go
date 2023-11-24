@@ -1,9 +1,7 @@
 package service
 
 import (
-	"fmt"
 	"net/http"
-	"time"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/entity"
@@ -11,7 +9,6 @@ import (
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/s3"
 	"urbathon-backend-2023/internal/app/validator"
-	"urbathon-backend-2023/pkg/config"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
 
@@ -62,7 +59,7 @@ func (d *AppealCommentService) Create(appealCommentInput *input.AppealComment, u
 	appealComment.UserID = &user.ID
 	appealComment.AppealID = appealId
 
-	photoUrls, httpErr := uploadAppealCommentPhotos(appealCommentInput)
+	photoUrls, httpErr := s3.UploadPhotos(appealCommentInput.Photos)
 	if httpErr != nil {
 		return nil, httpErr
 	}
@@ -74,22 +71,4 @@ func (d *AppealCommentService) Create(appealCommentInput *input.AppealComment, u
 	appealCommentResponse = mapper.AppealCommentToAppealCommentResponse(*appeal)
 
 	return appealCommentResponse, nil
-}
-
-func uploadAppealCommentPhotos(appealInput *input.AppealComment) (*[]string, *errorHandler.HttpErr) {
-	var urls []string
-	if appealInput.Photos == nil {
-		return &urls, nil
-	}
-	for _, photo := range *appealInput.Photos {
-		filename := fmt.Sprintf("%s_%s", time.Now().Format(config.DateTimeLayout), photo.Filename)
-		openedFile, _ := photo.Open()
-		url, err := s3.BucketBase.UploadFile("urbathon", filename, openedFile)
-		if err != nil {
-			return nil, errorHandler.New("Yandex S3 not available", http.StatusBadRequest)
-		}
-		urls = append(urls, url)
-	}
-
-	return &urls, nil
 }

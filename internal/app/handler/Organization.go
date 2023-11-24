@@ -23,16 +23,17 @@ func NewOrganizationHandler(organizationService OrganizationService) *Organizati
 }
 
 // Register
-// @Summary		register organization
-// @Description	register organization
-// @Accept			json
-// @Tags			organization
-// @Produce		json
-// @Param			input	body		input.OrganizationRegister	true	"OrganizationRegister"
-// @Success		201		{object}	response.User
-// @Failure		400		{object}	errorHandler.HttpErr
-// @Failure		409		{object}	errorHandler.HttpErr
-// @Router			/organization [post]
+//
+//	@Summary		register organization
+//	@Description	register organization
+//	@Accept			json
+//	@Tags			organization
+//	@Produce		json
+//	@Param			input	body		input.OrganizationRegister	true	"OrganizationRegister"
+//	@Success		201		{object}	response.User
+//	@Failure		400		{object}	errorHandler.HttpErr
+//	@Failure		409		{object}	errorHandler.HttpErr
+//	@Router			/organization [post]
 func (d *OrganizationHandler) Register(c *gin.Context) {
 	userInput := &input.OrganizationRegister{}
 	err := c.BindJSON(&userInput)
@@ -51,15 +52,16 @@ func (d *OrganizationHandler) Register(c *gin.Context) {
 }
 
 // AddUser
-// @Summary		add user to organization
-// @Description	add user to organization
-// @Tags			organization
-// @Param			id	path		int	true	"organization id"
-// @Param			user_id	path		int	true	"user id"
-// @Success		200		{object}	nil
-// @Failure		400		{object}	errorHandler.HttpErr
-// @Failure		404		{object}	errorHandler.HttpErr
-// @Router			/organization/{id}/add_user/{user_id} [post]
+//
+//	@Summary		add user to organization
+//	@Description	add user to organization
+//	@Tags			organization
+//	@Param			id		path		int	true	"organization id"
+//	@Param			user_id	path		int	true	"user id"
+//	@Success		200		{object}	nil
+//	@Failure		400		{object}	errorHandler.HttpErr
+//	@Failure		404		{object}	errorHandler.HttpErr
+//	@Router			/organization/{id}/add_user/{user_id} [post]
 func (d *OrganizationHandler) AddUser(c *gin.Context) {
 	organizationId, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")
 	if httpErr != nil {

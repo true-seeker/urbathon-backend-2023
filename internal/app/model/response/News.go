@@ -11,6 +11,7 @@ type News struct {
 	Body     *string       `json:"body" example:"Тело новости"`
 	Date     *time.Time    `json:"date" example:"2024-02-10T00:00:00+05:00"`
 	Category *NewsCategory `json:"category"`
+	PhotoUrl *string       `json:"photo_url" example:"https://storage.yandexcloud.net/urbathon/test.jpg"`
 }
 
 type NewsPaged struct {

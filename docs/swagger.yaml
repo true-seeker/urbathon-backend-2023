@@ -222,6 +222,9 @@ definitions:
       id:
         example: 1
         type: integer
+      photo_url:
+        example: https://storage.yandexcloud.net/urbathon/test.jpg
+        type: string
       title:
         example: Заголовок
         type: string
@@ -835,6 +838,38 @@ paths:
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
       summary: get all news
+      tags:
+      - news
+    post:
+      consumes:
+      - multipart/form-data
+      description: create news
+      parameters:
+      - in: formData
+        name: body
+        type: string
+      - in: formData
+        name: category_id
+        type: integer
+      - in: formData
+        name: title
+        type: string
+      - description: photo
+        in: formData
+        name: photo
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.News'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: create news
       tags:
       - news
   /news/{id}:

@@ -2,10 +2,8 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"github.com/go-jet/jet/v2/qrm"
 	"net/http"
-	"time"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/entity"
@@ -13,7 +11,6 @@ import (
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/s3"
 	"urbathon-backend-2023/internal/app/validator"
-	"urbathon-backend-2023/pkg/config"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
 
@@ -72,12 +69,12 @@ func (d *AppealService) Create(appealInput *input.Appeal, user *model.Users) (*r
 	appeal := mapper.AppealInputToAppeal(appealInput)
 
 	appeal.UserID = user.ID
-	photo_urls, httpErr := uploadAppealPhotos(appealInput)
+	photoUrls, httpErr := s3.UploadPhotos(appealInput.Photos)
 	if httpErr != nil {
 		return nil, httpErr
 	}
 
-	appealEntity, err := d.appealRepo.Create(appeal, photo_urls)
+	appealEntity, err := d.appealRepo.Create(appeal, photoUrls)
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
@@ -139,19 +136,4 @@ func (d *AppealService) validateUpdate(appealInput *input.AppealUpdate) *errorHa
 	}
 	// todo appeal_type_id
 	return nil
-}
-
-func uploadAppealPhotos(appealInput *input.Appeal) (*[]string, *errorHandler.HttpErr) {
-	var urls []string
-	for _, photo := range *appealInput.Photos {
-		filename := fmt.Sprintf("%s_%s", time.Now().Format(config.DateTimeLayout), photo.Filename)
-		openedFile, _ := photo.Open()
-		url, err := s3.BucketBase.UploadFile("urbathon", filename, openedFile)
-		if err != nil {
-			return nil, errorHandler.New("Yandex S3 not available", http.StatusBadRequest)
-		}
-		urls = append(urls, url)
-	}
-
-	return &urls, nil
 }
