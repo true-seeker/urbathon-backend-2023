@@ -17,7 +17,6 @@ type AppealService interface {
 	Update(appealInput *input.AppealUpdate, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr)
 	Delete(id int32) *errorHandler.HttpErr
 	UpdateStatus(appealId int32, statusId int32) *errorHandler.HttpErr
-	GetAllComments(f *input.Filter, appealId int32) (*response.AppealCommentPaged, *errorHandler.HttpErr)
 }
 
 type AppealHandler struct {
@@ -196,34 +195,4 @@ func (d *AppealHandler) UpdateStatus(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
-}
-
-// GetComments get appeal comments
-//
-// @Summary		get appeal comments
-// @Description	get appeal comments
-// @Tags			appeal
-// @Param			id			path	int	true	"appeal id"	default(1)
-// @Param			page		query	int	false	"page"		minimum(1)	default(1)
-// @Param			page_size	query	int	false	"page"		minimum(1)	maximum(20)	default(10)
-// @Produce		json
-// @Success		200	{object}	response.AppealCommentPaged
-// @Failure		400	{object}	errorHandler.HttpErr
-// @Failure		404	{object}	errorHandler.HttpErr
-// @Router			/appeal/{id}/comments [get]
-func (d *AppealHandler) GetComments(c *gin.Context) {
-	f, httpErr := validator.ValidateQueryFilter(c)
-	appealId, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")
-	if httpErr != nil {
-		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
-		return
-	}
-	// todo exists validation
-
-	commentsResponse, httpErr := d.appealService.GetAllComments(f, appealId)
-	if httpErr != nil {
-		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
-		return
-	}
-	c.JSON(http.StatusOK, commentsResponse)
 }

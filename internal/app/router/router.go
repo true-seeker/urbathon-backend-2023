@@ -38,6 +38,9 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 	appealRepo := repository.NewAppealRepository(storage)
 	appealService := service.NewAppealService(appealRepo)
 	appealHandler := handler.NewAppealHandler(appealService)
+	appealCommentRepo := repository.NewAppealCommentRepository(storage)
+	appealCommentService := service.NewAppealCommentService(appealCommentRepo)
+	appealCommentHandler := handler.NewAppealCommentHandler(appealCommentService)
 	appealGroup := api.Group("appeal")
 	{
 		appealGroup.GET("/", appealHandler.GetAll)
@@ -45,7 +48,8 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		appealGroup.POST("/", middleware.Session, appealHandler.Create)
 		appealGroup.PUT("/:id", middleware.Session, appealHandler.Update)
 		appealGroup.POST("/:id/status/:status_id", middleware.Session, appealHandler.UpdateStatus)
-		appealGroup.GET("/:id/comments", middleware.Session, appealHandler.GetComments)
+		appealGroup.GET("/:id/comment", middleware.Session, appealCommentHandler.GetComments)
+		appealGroup.POST("/:id/comment", middleware.Session, appealCommentHandler.CreateComment)
 		appealGroup.DELETE("/:id", middleware.Session, appealHandler.Delete)
 	}
 

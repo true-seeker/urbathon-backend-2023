@@ -7,10 +7,11 @@ import (
 )
 
 type AppealComment struct {
-	Id   int32      `json:"id" example:"1"`
-	User *User      `json:"user"`
-	Date *time.Time `json:"date" example:"2024-02-10T00:00:00+05:00"`
-	Text *string    `json:"text" example:"Текст комментария"`
+	Id                  int32                 `json:"id" example:"1"`
+	User                *User                 `json:"user"`
+	AppealCommentPhotos *[]AppealCommentPhoto `json:"appeal_comment_photos"`
+	Date                *time.Time            `json:"date" example:"2024-02-10T00:00:00+05:00"`
+	Text                *string               `json:"text" example:"Текст комментария"`
 }
 
 type AppealCommentPaged struct {

@@ -25,8 +25,6 @@ type AppealRepository interface {
 	Update(appeal *model.Appeals) (*entity.Appeal, error)
 	Delete(id int32) error
 	UpdateStatus(appealId int32, statusId int32) error
-	GetAllComments(f *input.Filter, appealId int32) (*[]entity.AppealComment, error)
-	GetTotalComments(appealId int32) (*int, error)
 }
 type AppealService struct {
 	appealRepo AppealRepository
@@ -125,22 +123,6 @@ func (d *AppealService) UpdateStatus(appealId int32, statusId int32) *errorHandl
 	}
 	//todo deletion_date
 	return nil
-}
-
-func (d *AppealService) GetAllComments(f *input.Filter, appealId int32) (*response.AppealCommentPaged, *errorHandler.HttpErr) {
-	items := &[]response.AppealComment{}
-	comments, err := d.appealRepo.GetAllComments(f, appealId)
-	if err != nil {
-		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
-	}
-	total, err := d.appealRepo.GetTotalComments(appealId)
-	if err != nil {
-		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
-	}
-
-	items = mapper.AppealCommentsToAppealCommentResponses(comments)
-	appealPaged := response.NewAppealCommentPaged(f, items, total, appealId)
-	return appealPaged, nil
 }
 
 func (d *AppealService) validateCreate(appealInput *input.Appeal) *errorHandler.HttpErr {

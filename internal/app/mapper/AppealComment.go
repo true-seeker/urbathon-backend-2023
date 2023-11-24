@@ -3,6 +3,7 @@ package mapper
 import (
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/model/entity"
+	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 )
 
@@ -16,6 +17,7 @@ func AppealCommentToAppealCommentResponse(appeal entity.AppealComment) *response
 			Name:  appeal.User.Name,
 			Email: appeal.User.Email,
 		}),
+		AppealCommentPhotos: AppealCommentPhotoModelListToAppealCommentPhotoResponses(appeal.AppealCommentPhotos),
 	}
 	return r
 }
@@ -28,4 +30,12 @@ func AppealCommentsToAppealCommentResponses(appealList *[]entity.AppealComment) 
 	}
 
 	return &rs
+}
+
+func AppealCommentInputToAppealComment(appealInput *input.AppealComment) *model.AppealComments {
+	r := &model.AppealComments{
+		Text: appealInput.Text,
+	}
+
+	return r
 }

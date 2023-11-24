@@ -263,14 +263,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/appeal/{id}/comments": {
+        "/appeal/{id}/comment": {
             "get": {
                 "description": "get appeal comments",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "appeal"
+                    "appealComment"
                 ],
                 "summary": "get appeal comments",
                 "parameters": [
@@ -309,6 +309,65 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "create comment appeal",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appealComment"
+                ],
+                "summary": "create comment appeal",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "appeal id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "Текст кооментария",
+                        "name": "text",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "file"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "photos",
+                        "name": "photos",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.AppealComment"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/errorHandler.HttpErr"
                         }
@@ -973,6 +1032,12 @@ const docTemplate = `{
         "response.AppealComment": {
             "type": "object",
             "properties": {
+                "appeal_comment_photos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.AppealCommentPhoto"
+                    }
+                },
                 "date": {
                     "type": "string",
                     "example": "2024-02-10T00:00:00+05:00"
@@ -1014,6 +1079,19 @@ const docTemplate = `{
                 "total": {
                     "type": "integer",
                     "example": 100
+                }
+            }
+        },
+        "response.AppealCommentPhoto": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "url": {
+                    "type": "string",
+                    "example": "https://storage.yandexcloud.net/urbathon/test.jpg"
                 }
             }
         },
