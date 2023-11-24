@@ -9,11 +9,11 @@ type AppealFilter struct {
 	*Pagination
 	*Sort
 
-	UserId   *int32   `json:"user_id" `
-	LatUp    *float64 `json:"lat_up" `
-	LatDown  *float64 `json:"lat_down" `
-	LongUp   *float64 `json:"long_up" `
-	LongDown *float64 `json:"long_down" `
+	UserId   *int32   `form:"user_id" `
+	LatUp    *float64 `form:"lat_up" `
+	LatDown  *float64 `form:"lat_down" `
+	LongUp   *float64 `form:"long_up" `
+	LongDown *float64 `form:"long_down" `
 }
 
 func NewAppealFilter(c *gin.Context) (*AppealFilter, *errorHandler.HttpErr) {
@@ -23,7 +23,7 @@ func NewAppealFilter(c *gin.Context) (*AppealFilter, *errorHandler.HttpErr) {
 		Sort:       new(Sort),
 	}
 
-	_ = c.ShouldBindQuery(p.Pagination)
+	_ = c.ShouldBindQuery(&p)
 
 	p.Pagination, httpErr = ValidatePagination(p.Pagination)
 	if httpErr != nil {
