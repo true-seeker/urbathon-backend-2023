@@ -3,8 +3,8 @@ package repository
 import (
 	"database/sql"
 	. "github.com/go-jet/jet/v2/postgres"
-	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
+	"urbathon-backend-2023/internal/app/model/entity"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/storage"
 )
@@ -17,10 +17,15 @@ func NewNewsRepository(s storage.Sql) *NewsRepository {
 	return &NewsRepository{db: s.GetDb()}
 }
 
-func (a *NewsRepository) Get(id *int32) (*model.News, error) {
-	var u model.News
-	stmt := SELECT(News.AllColumns).
-		FROM(News).
+var selectNewsStmt = SELECT(News.AllColumns,
+	NewsCategories.ID.AS("newsCategories.id"),
+	NewsCategories.Title.AS("newsCategories.title")).
+	FROM(News.
+		INNER_JOIN(NewsCategories, NewsCategories.ID.EQ(News.CategoryID)))
+
+func (a *NewsRepository) Get(id *int32) (*entity.News, error) {
+	var u entity.News
+	stmt := selectNewsStmt.
 		WHERE(News.ID.EQ(Int32(*id)))
 
 	if err := stmt.Query(a.db, &u); err != nil {
@@ -29,10 +34,9 @@ func (a *NewsRepository) Get(id *int32) (*model.News, error) {
 	return &u, nil
 }
 
-func (a *NewsRepository) GetAll(f *input.Filter) (*[]model.News, error) {
-	var u []model.News
-	stmt := SELECT(News.AllColumns).
-		FROM(News).
+func (a *NewsRepository) GetAll(f *input.Filter) (*[]entity.News, error) {
+	var u []entity.News
+	stmt := selectNewsStmt.
 		LIMIT(f.PageSize).
 		OFFSET((f.Page - 1) * f.PageSize).
 		ORDER_BY(News.Date.DESC())

@@ -1296,6 +1296,9 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Тело новости"
                 },
+                "category": {
+                    "$ref": "#/definitions/response.NewsCategory"
+                },
                 "date": {
                     "type": "string",
                     "example": "2024-02-10T00:00:00+05:00"
@@ -1307,6 +1310,19 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "Заголовок"
+                }
+            }
+        },
+        "response.NewsCategory": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Отходы"
                 }
             }
         },

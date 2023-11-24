@@ -2,11 +2,12 @@ package mapper
 
 import (
 	"urbathon-backend-2023/.gen/urbathon/public/model"
+	"urbathon-backend-2023/internal/app/model/entity"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 )
 
-func NewsToNewsResponse(news model.News) *response.News {
+func NewsModelToNewsResponse(news model.News) *response.News {
 	r := &response.News{
 		Id:    news.ID,
 		Title: &news.Title,
@@ -17,7 +18,29 @@ func NewsToNewsResponse(news model.News) *response.News {
 	return r
 }
 
-func NewsListToNewsResponses(newsList *[]model.News) *[]response.News {
+func NewsToNewsResponse(news entity.News) *response.News {
+	r := &response.News{
+		Id:       news.ID,
+		Title:    &news.Title,
+		Body:     &news.Body,
+		Date:     news.Date,
+		Category: NewsCategoryModelToNewsCategoryResponse(*news.NewsCategory),
+	}
+
+	return r
+}
+
+func NewsModelListToNewsResponses(newsList *[]model.News) *[]response.News {
+	rs := make([]response.News, 0)
+
+	for _, news := range *newsList {
+		rs = append(rs, *NewsModelToNewsResponse(news))
+	}
+
+	return &rs
+}
+
+func NewsListToNewsResponses(newsList *[]entity.News) *[]response.News {
 	rs := make([]response.News, 0)
 
 	for _, news := range *newsList {

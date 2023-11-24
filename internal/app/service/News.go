@@ -4,16 +4,16 @@ import (
 	"errors"
 	"github.com/go-jet/jet/v2/qrm"
 	"net/http"
-	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/mapper"
+	"urbathon-backend-2023/internal/app/model/entity"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
 
 type NewsRepository interface {
-	Get(id *int32) (*model.News, error)
-	GetAll(f *input.Filter) (*[]model.News, error)
+	Get(id *int32) (*entity.News, error)
+	GetAll(f *input.Filter) (*[]entity.News, error)
 	GetTotal() (*int, error)
 }
 type NewsService struct {

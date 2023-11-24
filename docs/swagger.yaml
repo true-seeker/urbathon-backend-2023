@@ -214,6 +214,8 @@ definitions:
       body:
         example: Тело новости
         type: string
+      category:
+        $ref: '#/definitions/response.NewsCategory'
       date:
         example: "2024-02-10T00:00:00+05:00"
         type: string
@@ -222,6 +224,15 @@ definitions:
         type: integer
       title:
         example: Заголовок
+        type: string
+    type: object
+  response.NewsCategory:
+    properties:
+      id:
+        example: 1
+        type: integer
+      title:
+        example: Отходы
         type: string
     type: object
   response.NewsPaged:
