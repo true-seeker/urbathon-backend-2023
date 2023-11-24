@@ -54,26 +54,3 @@ func (a *UserRepository) Create(user *model.Users) (*model.Users, error) {
 
 	return &u, nil
 }
-
-func (a *UserRepository) RegisterOrganization(organization *model.Organizations, organizationInputCategories *[]int32) (*model.Organizations, error) {
-	var u model.Organizations
-	stmt := Organizations.
-		INSERT(Organizations.AllColumns.Except(Organizations.ID)).
-		MODEL(organization).
-		RETURNING(Organizations.AllColumns)
-
-	if err := stmt.Query(a.db, &u); err != nil {
-		return nil, err
-	}
-
-	stmt = OrganizationAppealCategory.
-		INSERT(OrganizationAppealCategory.OrganizationID, OrganizationAppealCategory.AppealCategoryID)
-	for _, e := range *organizationInputCategories {
-		stmt = stmt.VALUES(u.ID, Int32(e))
-	}
-	if _, err := stmt.Exec(a.db); err != nil {
-		return nil, err
-	}
-
-	return &u, nil
-}

@@ -780,36 +780,6 @@ paths:
       summary: register
       tags:
       - auth
-  /auth/register_organization:
-    post:
-      consumes:
-      - application/json
-      description: register organization
-      parameters:
-      - description: OrganizationRegister
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/input.OrganizationRegister'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/response.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errorHandler.HttpErr'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/errorHandler.HttpErr'
-      summary: register organization
-      tags:
-      - auth
   /auth/test:
     post:
       consumes:
@@ -883,4 +853,34 @@ paths:
       summary: get news by id
       tags:
       - news
+  /organization:
+    post:
+      consumes:
+      - application/json
+      description: register organization
+      parameters:
+      - description: OrganizationRegister
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/input.OrganizationRegister'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: register organization
+      tags:
+      - organization
 swagger: "2.0"

@@ -17,7 +17,6 @@ type UserRepository interface {
 	GetByEmail(email *string) (*model.Users, error)
 	Get(id *int32) (*model.Users, error)
 	Create(userInput *model.Users) (*model.Users, error)
-	RegisterOrganization(organization *model.Organizations, organizationInputCategories *[]int32) (*model.Organizations, error)
 }
 type AuthService struct {
 	userRepo UserRepository
@@ -67,23 +66,6 @@ func (d *AuthService) Register(userRegister *input.UserRegister) (*response.User
 	return userResponse, nil
 }
 
-func (d *AuthService) RegisterOrganization(organizationInput *input.OrganizationRegister) (*response.Organization, *errorHandler.HttpErr) {
-	organizationResponse := &response.Organization{}
-	if httpErr := d.validateRegisterOrganizaton(organizationInput); httpErr != nil {
-		return nil, httpErr
-	}
-
-	organization := mapper.OrganizationRegisterInputToOrganization(organizationInput)
-
-	organization, err := d.userRepo.RegisterOrganization(organization, organizationInput.Categories)
-	if err != nil {
-		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
-	}
-	organizationResponse = mapper.OrganizationToOrganizationResponse(organization)
-
-	return organizationResponse, nil
-}
-
 func (d *AuthService) validateRegister(userRegister *input.UserRegister) *errorHandler.HttpErr {
 	if httpErr := validator.UserRegistration(userRegister); httpErr != nil {
 		return httpErr
@@ -94,13 +76,6 @@ func (d *AuthService) validateRegister(userRegister *input.UserRegister) *errorH
 	}
 	if user != nil {
 		return errorHandler.New("User with email already exists", http.StatusConflict)
-	}
-	return nil
-}
-
-func (d *AuthService) validateRegisterOrganizaton(organizationRegister *input.OrganizationRegister) *errorHandler.HttpErr {
-	if httpErr := validator.OrganizationRegistration(organizationRegister); httpErr != nil {
-		return httpErr
 	}
 	return nil
 }

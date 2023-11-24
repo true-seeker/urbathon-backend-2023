@@ -25,8 +25,15 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		authGroup.POST("/logout", authHandler.Logout)
 		authGroup.POST("/test", middleware.Session, authHandler.Test)
 		authGroup.POST("/register", authHandler.Register)
-		authGroup.POST("/register_organization", authHandler.RegisterOrganization) // todo admin role
 	}
+	organizationRepo := repository.NewOrganizationRepository(storage)
+	organizationService := service.NewOrganizationService(organizationRepo)
+	organizationHandler := handler.NewOrganizationHandler(organizationService)
+	organizationGroup := api.Group("organization")
+	{
+		organizationGroup.POST("/", organizationHandler.Register) // todo admin role
+	}
+
 	newsRepository := repository.NewNewsRepository(storage)
 	newsService := service.NewNewsService(newsRepository)
 	newsHandler := handler.NewNewsHandler(newsService)
