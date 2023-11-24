@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
+	"urbathon-backend-2023/internal/app/model/filter"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/validator"
@@ -12,7 +13,7 @@ import (
 
 type NewsService interface {
 	Get(id *int32) (*response.News, *errorHandler.HttpErr)
-	GetAll(filter *input.Filter) (*response.NewsPaged, *errorHandler.HttpErr)
+	GetAll(filter *filter.Pagination) (*response.NewsPaged, *errorHandler.HttpErr)
 	Create(newsInput *input.News, user *model.Users) (*response.News, *errorHandler.HttpErr)
 }
 
@@ -61,9 +62,16 @@ func (d *NewsHandler) Get(c *gin.Context) {
 //	@Failure		400	{object}	errorHandler.HttpErr
 //	@Router			/news [get]
 func (d *NewsHandler) GetAll(c *gin.Context) {
-	f, httpErr := validator.ValidateQueryFilter(c)
+	var p *filter.Pagination
+	_ = c.ShouldBindQuery(p)
 
-	news, httpErr := d.newsService.GetAll(f)
+	p, httpErr := filter.ValidatePagination(p)
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+
+	news, httpErr := d.newsService.GetAll(p)
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return

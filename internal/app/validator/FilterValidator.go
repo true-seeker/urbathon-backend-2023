@@ -2,11 +2,9 @@ package validator
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"time"
-	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/pkg/config"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
@@ -53,17 +51,4 @@ func ValidateAndReturnDate(field, fieldName string) (*time.Time, *errorHandler.H
 		return nil, errorHandler.New(fmt.Sprintf("%s must be in ISO-8601 format", fieldName), http.StatusBadRequest)
 	}
 	return &date, nil
-}
-
-func ValidateQueryFilter(c *gin.Context) (*input.Filter, *errorHandler.HttpErr) {
-	var f input.Filter
-	_ = c.ShouldBindQuery(&f)
-
-	if f.Page <= 0 {
-		f.Page = config.DefaultPage
-	}
-	if f.PageSize <= 0 || f.PageSize > config.MaxPageSize {
-		f.PageSize = config.PageSize
-	}
-	return &f, nil
 }

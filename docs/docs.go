@@ -27,19 +27,24 @@ const docTemplate = `{
                 "summary": "get all appeals",
                 "parameters": [
                     {
-                        "minimum": 1,
+                        "type": "string",
+                        "example": "name",
+                        "name": "field",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "asc",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
-                        "default": 1,
-                        "description": "page",
                         "name": "page",
                         "in": "query"
                     },
                     {
-                        "maximum": 20,
-                        "minimum": 1,
                         "type": "integer",
-                        "default": 10,
-                        "description": "page",
                         "name": "page_size",
                         "in": "query"
                     }
@@ -125,6 +130,56 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.Appeal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
+        "/appeal/my": {
+            "get": {
+                "description": "get my appeals",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appeal"
+                ],
+                "summary": "get my appeals",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "name",
+                        "name": "field",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "asc",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.AppealPaged"
                         }
                     },
                     "400": {

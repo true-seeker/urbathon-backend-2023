@@ -7,6 +7,7 @@ import (
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/entity"
+	"urbathon-backend-2023/internal/app/model/filter"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/s3"
@@ -16,8 +17,8 @@ import (
 
 type AppealRepository interface {
 	Get(id *int32) (*entity.Appeal, error)
-	GetAll(f *input.Filter) (*[]entity.Appeal, error)
-	GetTotal() (*int, error)
+	GetAll(f *filter.AppealFilter) (*[]entity.Appeal, error)
+	GetTotal(f *filter.AppealFilter) (*int, error)
 	Create(appeal *model.Appeals, urls *[]string) (*entity.Appeal, error)
 	Update(appeal *model.Appeals) (*entity.Appeal, error)
 	Delete(id int32) error
@@ -44,19 +45,19 @@ func (d *AppealService) Get(id *int32) (*response.Appeal, *errorHandler.HttpErr)
 	return appealResponse, nil
 }
 
-func (d *AppealService) GetAll(f *input.Filter) (*response.AppealPaged, *errorHandler.HttpErr) {
-	items := &[]response.Appeal{}
+func (d *AppealService) GetAll(f *filter.AppealFilter) (*response.AppealPaged, *errorHandler.HttpErr) {
 	appeal, err := d.appealRepo.GetAll(f)
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
-	total, err := d.appealRepo.GetTotal()
+
+	total, err := d.appealRepo.GetTotal(f)
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
 
-	items = mapper.AppealListToAppealResponses(appeal)
-	appealPaged := response.NewAppealPaged(f, items, total)
+	items := mapper.AppealListToAppealResponses(appeal)
+	appealPaged := response.NewAppealPaged(f.Pagination, items, total)
 	return appealPaged, nil
 }
 
@@ -120,6 +121,21 @@ func (d *AppealService) UpdateStatus(appealId int32, statusId int32) *errorHandl
 	}
 	//todo deletion_date
 	return nil
+}
+
+func (d *AppealService) GetMyAppeals(f *filter.AppealFilter) (*response.AppealPaged, *errorHandler.HttpErr) {
+	appeal, err := d.appealRepo.GetAll(f)
+	if err != nil {
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	total, err := d.appealRepo.GetTotal(f)
+	if err != nil {
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+
+	items := mapper.AppealListToAppealResponses(appeal)
+	appealPaged := response.NewAppealPaged(f.Pagination, items, total)
+	return appealPaged, nil
 }
 
 func (d *AppealService) validateCreate(appealInput *input.Appeal) *errorHandler.HttpErr {

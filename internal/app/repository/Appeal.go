@@ -7,7 +7,7 @@ import (
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
 	"urbathon-backend-2023/internal/app/model/entity"
-	"urbathon-backend-2023/internal/app/model/input"
+	"urbathon-backend-2023/internal/app/model/filter"
 	"urbathon-backend-2023/internal/app/storage"
 )
 
@@ -19,28 +19,31 @@ func NewAppealRepository(s storage.Sql) *AppealRepository {
 	return &AppealRepository{db: s.GetDb()}
 }
 
-var selectAppealStmt = SELECT(Appeals.AllColumns,
-	Users.ID.AS("users.id"),
-	Users.Name.AS("users.name"),
-	Users.Email.AS("users.email"),
-	AppealTypes.ID.AS("appealTypes.id"),
-	AppealTypes.Title.AS("appealTypes.title"),
-	AppealCategories.ID.AS("appealCategories.id"),
-	AppealCategories.Title.AS("appealCategories.title"),
-	AppealPhotos.ID.AS("appealPhotos.id"),
-	AppealPhotos.URL.AS("appealPhotos.url"),
-	AppealStatus.ID.AS("appealStatus.id"),
-	AppealStatus.Status.AS("appealStatus.status"),
-).FROM(Appeals.
-	INNER_JOIN(Users, Users.ID.EQ(Appeals.UserID)).
-	INNER_JOIN(AppealTypes, AppealTypes.ID.EQ(Appeals.AppealTypeID)).
-	INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)).
-	LEFT_JOIN(AppealPhotos, AppealPhotos.AppealID.EQ(Appeals.ID)).
-	INNER_JOIN(AppealStatus, AppealStatus.ID.EQ(Appeals.StatusID)))
+func getSelectAppealStmt() SelectStatement {
+	return SELECT(Appeals.AllColumns,
+		Users.ID.AS("users.id"),
+		Users.Name.AS("users.name"),
+		Users.Email.AS("users.email"),
+		AppealTypes.ID.AS("appealTypes.id"),
+		AppealTypes.Title.AS("appealTypes.title"),
+		AppealCategories.ID.AS("appealCategories.id"),
+		AppealCategories.Title.AS("appealCategories.title"),
+		AppealPhotos.ID.AS("appealPhotos.id"),
+		AppealPhotos.URL.AS("appealPhotos.url"),
+		AppealStatus.ID.AS("appealStatus.id"),
+		AppealStatus.Status.AS("appealStatus.status"),
+	).FROM(Appeals.
+		INNER_JOIN(Users, Users.ID.EQ(Appeals.UserID)).
+		INNER_JOIN(AppealTypes, AppealTypes.ID.EQ(Appeals.AppealTypeID)).
+		INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)).
+		LEFT_JOIN(AppealPhotos, AppealPhotos.AppealID.EQ(Appeals.ID)).
+		INNER_JOIN(AppealStatus, AppealStatus.ID.EQ(Appeals.StatusID)))
+
+}
 
 func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 	var u entity.Appeal
-	stmt := selectAppealStmt.
+	stmt := getSelectAppealStmt().
 		WHERE(Appeals.ID.EQ(Int32(*id)))
 
 	if err := stmt.Query(a.db, &u); err != nil {
@@ -49,25 +52,29 @@ func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 	return &u, nil
 }
 
-func (a *AppealRepository) GetAll(f *input.Filter) (*[]entity.Appeal, error) {
+func (a *AppealRepository) GetAll(f *filter.AppealFilter) (*[]entity.Appeal, error) {
 	var u []entity.Appeal
-	stmt := selectAppealStmt.
+	stmt := getSelectAppealStmt().
 		LIMIT(f.PageSize).
 		OFFSET((f.Page - 1) * f.PageSize).
 		ORDER_BY(Appeals.ID.DESC())
+
+	stmt = makeWhere(f, stmt)
+
 	if err := stmt.Query(a.db, &u); err != nil {
 		return nil, err
 	}
 	return &u, nil
 }
 
-func (a *AppealRepository) GetTotal() (*int, error) {
+func (a *AppealRepository) GetTotal(f *filter.AppealFilter) (*int, error) {
 	var count int
-	rawSql, _ := SELECT(Raw("count(*)")).
-		FROM(Appeals).
-		Sql()
+	stmt := SELECT(Raw("count(*)")).
+		FROM(Appeals)
+	stmt = makeWhere(f, stmt)
 
-	if err := a.db.QueryRow(rawSql).Scan(&count); err != nil {
+	rawSql, args := stmt.Sql()
+	if err := a.db.QueryRow(rawSql, args...).Scan(&count); err != nil {
 		return nil, err
 	}
 	return &count, nil
@@ -144,4 +151,11 @@ func (a *AppealRepository) UpdateStatus(appealId int32, statusId int32) error {
 	}
 
 	return nil
+}
+
+func makeWhere(f *filter.AppealFilter, stmt SelectStatement) SelectStatement {
+	if f.UserId != nil {
+		stmt = stmt.WHERE(Appeals.UserID.EQ(Int32(*f.UserId)))
+	}
+	return stmt
 }

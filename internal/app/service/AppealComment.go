@@ -5,6 +5,7 @@ import (
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/entity"
+	"urbathon-backend-2023/internal/app/model/filter"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/s3"
@@ -13,7 +14,7 @@ import (
 )
 
 type AppealCommentRepository interface {
-	GetAllComments(f *input.Filter, appealId int32) (*[]entity.AppealComment, error)
+	GetAllComments(f *filter.Pagination, appealId int32) (*[]entity.AppealComment, error)
 	GetTotalComments(appealId int32) (*int, error)
 	Create(appealComments *model.AppealComments, urls *[]string) (*entity.AppealComment, error)
 }
@@ -25,7 +26,7 @@ func NewAppealCommentService(appealCommentRepository AppealCommentRepository) *A
 	return &AppealCommentService{appealCommentRepo: appealCommentRepository}
 }
 
-func (d *AppealCommentService) GetAllByAppealId(f *input.Filter, appealId int32) (*response.AppealCommentPaged, *errorHandler.HttpErr) {
+func (d *AppealCommentService) GetAllByAppealId(f *filter.Pagination, appealId int32) (*response.AppealCommentPaged, *errorHandler.HttpErr) {
 	items := &[]response.AppealComment{}
 	comments, err := d.appealCommentRepo.GetAllComments(f, appealId)
 	if err != nil {

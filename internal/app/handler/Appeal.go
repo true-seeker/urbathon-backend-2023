@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
+	"urbathon-backend-2023/internal/app/model/filter"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/validator"
@@ -12,11 +13,12 @@ import (
 
 type AppealService interface {
 	Get(id *int32) (*response.Appeal, *errorHandler.HttpErr)
-	GetAll(filter *input.Filter) (*response.AppealPaged, *errorHandler.HttpErr)
+	GetAll(filter *filter.AppealFilter) (*response.AppealPaged, *errorHandler.HttpErr)
 	Create(appealInput *input.Appeal, user *model.Users) (*response.Appeal, *errorHandler.HttpErr)
 	Update(appealInput *input.AppealUpdate, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr)
 	Delete(id int32) *errorHandler.HttpErr
 	UpdateStatus(appealId int32, statusId int32) *errorHandler.HttpErr
+	GetMyAppeals(f *filter.AppealFilter) (*response.AppealPaged, *errorHandler.HttpErr)
 }
 
 type AppealHandler struct {
@@ -57,14 +59,17 @@ func (d *AppealHandler) Get(c *gin.Context) {
 // @Summary		get all appeals
 // @Description	get all appeals
 // @Tags			appeal
-// @Param			page		query	int	false	"page"	minimum(1)	default(1)
-// @Param			page_size	query	int	false	"page"	minimum(1)	maximum(20)	default(10)
+// @Param			page		query	filter.AppealFilter	false	"page"
 // @Produce		json
 // @Success		200	{object}	response.AppealPaged
 // @Failure		400	{object}	errorHandler.HttpErr
 // @Router			/appeal [get]
 func (d *AppealHandler) GetAll(c *gin.Context) {
-	f, httpErr := validator.ValidateQueryFilter(c)
+	f, httpErr := filter.NewAppealFilter(c)
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
 
 	appeal, httpErr := d.appealService.GetAll(f)
 	if httpErr != nil {
@@ -195,4 +200,32 @@ func (d *AppealHandler) UpdateStatus(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+// GetMyAppeals get my appeals
+//
+// @Summary		get my appeals
+// @Description	get my appeals
+// @Tags			appeal
+// @Param			page		query	filter.AppealFilter	false	"filter"
+// @Produce		json
+// @Success		200	{object}	response.AppealPaged
+// @Failure		400	{object}	errorHandler.HttpErr
+// @Router			/appeal/my [get]
+func (d *AppealHandler) GetMyAppeals(c *gin.Context) {
+	f, httpErr := filter.NewAppealFilter(c)
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	userAny, _ := c.Get("user")
+	user := userAny.(*model.Users)
+	f.UserId = &user.ID
+
+	appeal, httpErr := d.appealService.GetMyAppeals(f)
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	c.JSON(http.StatusOK, appeal)
 }

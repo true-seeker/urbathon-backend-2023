@@ -15,16 +15,17 @@ type AppealTypeRepository struct {
 func NewAppealTypeRepository(s storage.Sql) *AppealTypeRepository {
 	return &AppealTypeRepository{db: s.GetDb()}
 }
-
-var selectAppealTypeStmt = SELECT(AppealTypes.AllColumns,
-	AppealCategories.ID.AS("appealCategories.id"),
-	AppealCategories.Title.AS("appealCategories.title"),
-).FROM(AppealTypes.
-	INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)))
+func getSelectAppealTypeStmt() SelectStatement {
+	return SELECT(AppealTypes.AllColumns,
+		AppealCategories.ID.AS("appealCategories.id"),
+		AppealCategories.Title.AS("appealCategories.title"),
+	).FROM(AppealTypes.
+		INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)))
+}
 
 func (a *AppealTypeRepository) Get(id *int32) (*entity.AppealType, error) {
 	var u entity.AppealType
-	stmt := selectAppealTypeStmt.
+	stmt := getSelectAppealTypeStmt().
 		WHERE(AppealTypes.ID.EQ(Int32(*id)))
 
 	if err := stmt.Query(a.db, &u); err != nil {
@@ -35,7 +36,7 @@ func (a *AppealTypeRepository) Get(id *int32) (*entity.AppealType, error) {
 
 func (a *AppealTypeRepository) GetAll() (*[]entity.AppealType, error) {
 	var u []entity.AppealType
-	stmt := selectAppealTypeStmt.
+	stmt := getSelectAppealTypeStmt().
 		ORDER_BY(AppealTypes.Title.ASC())
 	if err := stmt.Query(a.db, &u); err != nil {
 		return nil, err

@@ -1,7 +1,7 @@
 package response
 
 import (
-	"urbathon-backend-2023/internal/app/model/input"
+	"urbathon-backend-2023/internal/app/model/filter"
 )
 
 type Appeal struct {
@@ -22,7 +22,7 @@ type AppealPaged struct {
 	Items *[]Appeal `json:"items"`
 }
 
-func NewAppealPaged(f *input.Filter, items *[]Appeal, total *int) *AppealPaged {
+func NewAppealPaged(f *filter.Pagination, items *[]Appeal, total *int) *AppealPaged {
 	return &AppealPaged{
 		Paged: *NewPaged(f.Page, f.PageSize, *total, "appeal"),
 		Items: items,

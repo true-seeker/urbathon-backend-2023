@@ -54,6 +54,7 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 	appealGroup := api.Group("appeal")
 	{
 		appealGroup.GET("/", appealHandler.GetAll)
+		appealGroup.GET("/my", middleware.Session, appealHandler.GetMyAppeals)
 		appealGroup.GET("/:id", appealHandler.Get)
 		appealGroup.POST("/", middleware.Session, appealHandler.Create)
 		appealGroup.PUT("/:id", middleware.Session, appealHandler.Update)

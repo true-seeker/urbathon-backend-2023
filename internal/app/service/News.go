@@ -8,6 +8,7 @@ import (
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/entity"
+	"urbathon-backend-2023/internal/app/model/filter"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/s3"
@@ -17,7 +18,7 @@ import (
 
 type NewsRepository interface {
 	Get(id *int32) (*entity.News, error)
-	GetAll(f *input.Filter) (*[]entity.News, error)
+	GetAll(f *filter.Pagination) (*[]entity.News, error)
 	GetTotal() (*int, error)
 	Create(news *model.News) (*entity.News, error)
 }
@@ -42,7 +43,7 @@ func (d *NewsService) Get(id *int32) (*response.News, *errorHandler.HttpErr) {
 	return newsResponse, nil
 }
 
-func (d *NewsService) GetAll(f *input.Filter) (*response.NewsPaged, *errorHandler.HttpErr) {
+func (d *NewsService) GetAll(f *filter.Pagination) (*response.NewsPaged, *errorHandler.HttpErr) {
 	items := &[]response.News{}
 	news, err := d.newsRepo.GetAll(f)
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
+	"urbathon-backend-2023/internal/app/model/filter"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/internal/app/validator"
@@ -11,7 +12,7 @@ import (
 )
 
 type AppealCommentService interface {
-	GetAllByAppealId(f *input.Filter, appealId int32) (*response.AppealCommentPaged, *errorHandler.HttpErr)
+	GetAllByAppealId(f *filter.Pagination, appealId int32) (*response.AppealCommentPaged, *errorHandler.HttpErr)
 	Create(commentInput *input.AppealComment, user *model.Users, appealId *int32) (*response.AppealComment, *errorHandler.HttpErr)
 }
 
@@ -37,7 +38,15 @@ func NewAppealCommentHandler(appealCommentService AppealCommentService) *AppealC
 //	@Failure		404	{object}	errorHandler.HttpErr
 //	@Router			/appeal/{id}/comment [get]
 func (d *AppealCommentHandler) GetComments(c *gin.Context) {
-	f, httpErr := validator.ValidateQueryFilter(c)
+	var p *filter.Pagination
+	_ = c.ShouldBindQuery(p)
+
+	p, httpErr := filter.ValidatePagination(p)
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+
 	appealId, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
@@ -45,7 +54,7 @@ func (d *AppealCommentHandler) GetComments(c *gin.Context) {
 	}
 	// todo exists validation
 
-	commentsResponse, httpErr := d.appealCommentService.GetAllByAppealId(f, appealId)
+	commentsResponse, httpErr := d.appealCommentService.GetAllByAppealId(p, appealId)
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return

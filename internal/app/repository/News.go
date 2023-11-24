@@ -6,7 +6,7 @@ import (
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
 	"urbathon-backend-2023/internal/app/model/entity"
-	"urbathon-backend-2023/internal/app/model/input"
+	"urbathon-backend-2023/internal/app/model/filter"
 	"urbathon-backend-2023/internal/app/storage"
 )
 
@@ -18,15 +18,17 @@ func NewNewsRepository(s storage.Sql) *NewsRepository {
 	return &NewsRepository{db: s.GetDb()}
 }
 
-var selectNewsStmt = SELECT(News.AllColumns,
-	NewsCategories.ID.AS("newsCategories.id"),
-	NewsCategories.Title.AS("newsCategories.title")).
-	FROM(News.
-		LEFT_JOIN(NewsCategories, NewsCategories.ID.EQ(News.CategoryID)))
+func getSelectNewStmt() SelectStatement {
+	return SELECT(News.AllColumns,
+		NewsCategories.ID.AS("newsCategories.id"),
+		NewsCategories.Title.AS("newsCategories.title")).
+		FROM(News.
+			LEFT_JOIN(NewsCategories, NewsCategories.ID.EQ(News.CategoryID)))
+}
 
 func (a *NewsRepository) Get(id *int32) (*entity.News, error) {
 	var u entity.News
-	stmt := selectNewsStmt.
+	stmt := getSelectNewStmt().
 		WHERE(News.ID.EQ(Int32(*id)))
 
 	if err := stmt.Query(a.db, &u); err != nil {
@@ -35,9 +37,9 @@ func (a *NewsRepository) Get(id *int32) (*entity.News, error) {
 	return &u, nil
 }
 
-func (a *NewsRepository) GetAll(f *input.Filter) (*[]entity.News, error) {
+func (a *NewsRepository) GetAll(f *filter.Pagination) (*[]entity.News, error) {
 	var u []entity.News
-	stmt := selectNewsStmt.
+	stmt := getSelectNewStmt().
 		LIMIT(f.PageSize).
 		OFFSET((f.Page - 1) * f.PageSize).
 		ORDER_BY(News.Date.DESC())

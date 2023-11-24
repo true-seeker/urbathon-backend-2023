@@ -281,17 +281,18 @@ paths:
     get:
       description: get all appeals
       parameters:
-      - default: 1
-        description: page
+      - example: name
         in: query
-        minimum: 1
+        name: field
+        type: string
+      - example: asc
+        in: query
+        name: order
+        type: string
+      - in: query
         name: page
         type: integer
-      - default: 10
-        description: page
-        in: query
-        maximum: 20
-        minimum: 1
+      - in: query
         name: page_size
         type: integer
       produces:
@@ -555,6 +556,38 @@ paths:
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
       summary: update appeal status
+      tags:
+      - appeal
+  /appeal/my:
+    get:
+      description: get my appeals
+      parameters:
+      - example: name
+        in: query
+        name: field
+        type: string
+      - example: asc
+        in: query
+        name: order
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.AppealPaged'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: get my appeals
       tags:
       - appeal
   /appeal_category:

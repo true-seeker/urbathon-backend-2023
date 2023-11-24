@@ -2,7 +2,7 @@ package response
 
 import (
 	"time"
-	"urbathon-backend-2023/internal/app/model/input"
+	"urbathon-backend-2023/internal/app/model/filter"
 )
 
 type News struct {
@@ -19,7 +19,7 @@ type NewsPaged struct {
 	Items *[]News `json:"items"`
 }
 
-func NewNewsPaged(f *input.Filter, items *[]News, total *int) *NewsPaged {
+func NewNewsPaged(f *filter.Pagination, items *[]News, total *int) *NewsPaged {
 	return &NewsPaged{
 		Paged: *NewPaged(f.Page, f.PageSize, *total, "news"),
 		Items: items,
