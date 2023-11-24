@@ -29,6 +29,22 @@ definitions:
         example: Обращение
         type: string
     type: object
+  input.OrganizationRegister:
+    properties:
+      address:
+        type: string
+      category_ids:
+        items:
+          type: integer
+        type: array
+      inn:
+        type: string
+      name:
+        example: ЖКХ
+        type: string
+      phone:
+        type: string
+    type: object
   input.UserLogin:
     properties:
       email:
@@ -238,6 +254,9 @@ definitions:
       name:
         example: Иванов Иван Иванович
         type: string
+      organization_id:
+        example: 1
+        type: integer
     type: object
 info:
   contact: {}
@@ -759,6 +778,36 @@ paths:
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
       summary: register
+      tags:
+      - auth
+  /auth/register_organization:
+    post:
+      consumes:
+      - application/json
+      description: register organization
+      parameters:
+      - description: OrganizationRegister
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/input.OrganizationRegister'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: register organization
       tags:
       - auth
   /auth/test:

@@ -789,6 +789,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/register_organization": {
+            "post": {
+                "description": "register organization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "register organization",
+                "parameters": [
+                    {
+                        "description": "OrganizationRegister",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/input.OrganizationRegister"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/test": {
             "post": {
                 "description": "auth test",
@@ -939,6 +985,30 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "Обращение"
+                }
+            }
+        },
+        "input.OrganizationRegister": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "category_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "inn": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "ЖКХ"
+                },
+                "phone": {
+                    "type": "string"
                 }
             }
         },
@@ -1239,6 +1309,10 @@ const docTemplate = `{
                 "name": {
                     "type": "string",
                     "example": "Иванов Иван Иванович"
+                },
+                "organization_id": {
+                    "type": "integer",
+                    "example": 1
                 }
             }
         }

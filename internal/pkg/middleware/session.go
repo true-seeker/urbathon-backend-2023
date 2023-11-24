@@ -19,7 +19,7 @@ func Session(c *gin.Context) {
 	}
 	userId := userIdAny.(int32)
 	db := storage.CurrentStorage
-	userRepo := repository.NewUserRepository(db)
+	userRepo := repository.NewAuthRepository(db)
 	user, err := userRepo.Get(&userId)
 	if err != nil {
 		httpErr := errorHandler.New("Something went wrong", http.StatusBadRequest)

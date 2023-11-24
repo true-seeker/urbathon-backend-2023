@@ -8,9 +8,10 @@ import (
 
 func UserToUserResponse(user *model.Users) *response.User {
 	r := &response.User{
-		Id:    user.ID,
-		Email: user.Email,
-		Name:  user.Name,
+		Id:             user.ID,
+		Email:          user.Email,
+		Name:           user.Name,
+		OrganizationId: user.OrganizationID,
 	}
 
 	return r

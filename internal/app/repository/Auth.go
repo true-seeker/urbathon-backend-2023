@@ -12,7 +12,7 @@ type UserRepository struct {
 	db *sql.DB
 }
 
-func NewUserRepository(s storage.Sql) *UserRepository {
+func NewAuthRepository(s storage.Sql) *UserRepository {
 	return &UserRepository{db: s.GetDb()}
 }
 
@@ -28,6 +28,7 @@ func (a *UserRepository) GetByEmail(email *string) (*model.Users, error) {
 	}
 	return &u, nil
 }
+
 func (a *UserRepository) Get(id *int32) (*model.Users, error) {
 	var u model.Users
 	stmt := SELECT(Users.ID, Users.Name, Users.Email).
@@ -40,7 +41,6 @@ func (a *UserRepository) Get(id *int32) (*model.Users, error) {
 	}
 	return &u, nil
 }
-
 func (a *UserRepository) Create(user *model.Users) (*model.Users, error) {
 	var u model.Users
 	stmt := Users.INSERT(Users.Email, Users.Password, Users.Name, Users.Salt).
@@ -49,6 +49,29 @@ func (a *UserRepository) Create(user *model.Users) (*model.Users, error) {
 
 	err := stmt.Query(a.db, &u)
 	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
+
+func (a *UserRepository) RegisterOrganization(organization *model.Organizations, organizationInputCategories *[]int32) (*model.Organizations, error) {
+	var u model.Organizations
+	stmt := Organizations.
+		INSERT(Organizations.AllColumns.Except(Organizations.ID)).
+		MODEL(organization).
+		RETURNING(Organizations.AllColumns)
+
+	if err := stmt.Query(a.db, &u); err != nil {
+		return nil, err
+	}
+
+	stmt = OrganizationAppealCategory.
+		INSERT(OrganizationAppealCategory.OrganizationID, OrganizationAppealCategory.AppealCategoryID)
+	for _, e := range *organizationInputCategories {
+		stmt = stmt.VALUES(u.ID, Int32(e))
+	}
+	if _, err := stmt.Exec(a.db); err != nil {
 		return nil, err
 	}
 

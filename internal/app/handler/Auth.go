@@ -13,6 +13,7 @@ import (
 type AuthService interface {
 	Login(login *input.UserLogin) (*response.User, *errorHandler.HttpErr)
 	Register(userInput *input.UserRegister) (*response.User, *errorHandler.HttpErr)
+	RegisterOrganization(organizationInput *input.OrganizationRegister) (*response.Organization, *errorHandler.HttpErr)
 }
 
 type AuthHandler struct {
@@ -119,4 +120,32 @@ func (d *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, user)
+}
+
+// RegisterOrganization
+// @Summary		register organization
+// @Description	register organization
+// @Accept			json
+// @Tags			auth
+// @Produce		json
+// @Param			input	body		input.OrganizationRegister	true	"OrganizationRegister"
+// @Success		201		{object}	response.User
+// @Failure		400		{object}	errorHandler.HttpErr
+// @Failure		409		{object}	errorHandler.HttpErr
+// @Router			/auth/register_organization [post]
+func (d *AuthHandler) RegisterOrganization(c *gin.Context) {
+	userInput := &input.OrganizationRegister{}
+	err := c.BindJSON(&userInput)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	organization, httpErr := d.authService.RegisterOrganization(userInput)
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+
+	c.JSON(http.StatusCreated, organization)
 }

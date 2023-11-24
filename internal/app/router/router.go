@@ -16,8 +16,8 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	api := r.Group("/api")
-	userRepo := repository.NewUserRepository(storage)
-	authService := service.NewAuthService(userRepo)
+	authRepo := repository.NewAuthRepository(storage)
+	authService := service.NewAuthService(authRepo)
 	authHandler := handler.NewAuthHandler(authService)
 	authGroup := api.Group("auth")
 	{
@@ -25,6 +25,7 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		authGroup.POST("/logout", authHandler.Logout)
 		authGroup.POST("/test", middleware.Session, authHandler.Test)
 		authGroup.POST("/register", authHandler.Register)
+		authGroup.POST("/register_organization", authHandler.RegisterOrganization) // todo admin role
 	}
 	newsRepository := repository.NewNewsRepository(storage)
 	newsService := service.NewNewsService(newsRepository)
