@@ -17,6 +17,10 @@ func AppealPhotoModelToAppealPhotoResponse(appealPhoto model.AppealPhotos) *resp
 func AppealPhotoModelListToAppealPhotoResponses(appealPhotoList *[]model.AppealPhotos) *[]response.AppealPhoto {
 	rs := make([]response.AppealPhoto, 0)
 
+	if appealPhotoList == nil {
+		return &rs
+	}
+
 	for _, appealPhoto := range *appealPhotoList {
 		rs = append(rs, *AppealPhotoModelToAppealPhotoResponse(appealPhoto))
 	}

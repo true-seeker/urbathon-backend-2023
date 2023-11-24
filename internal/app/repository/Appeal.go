@@ -35,7 +35,7 @@ var selectAppealStmt = SELECT(Appeals.AllColumns,
 	INNER_JOIN(Users, Users.ID.EQ(Appeals.UserID)).
 	INNER_JOIN(AppealTypes, AppealTypes.ID.EQ(Appeals.AppealTypeID)).
 	INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)).
-	INNER_JOIN(AppealPhotos, AppealPhotos.AppealID.EQ(Appeals.ID)).
+	LEFT_JOIN(AppealPhotos, AppealPhotos.AppealID.EQ(Appeals.ID)).
 	INNER_JOIN(AppealStatus, AppealStatus.ID.EQ(Appeals.StatusID)))
 
 func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
@@ -53,8 +53,8 @@ func (a *AppealRepository) GetAll(f *input.Filter) (*[]entity.Appeal, error) {
 	var u []entity.Appeal
 	stmt := selectAppealStmt.
 		LIMIT(f.PageSize).
-		OFFSET((f.Page - 1) * f.PageSize)
-	ORDER_BY(Appeals.ID.DESC())
+		OFFSET((f.Page - 1) * f.PageSize).
+		ORDER_BY(Appeals.ID.DESC())
 	if err := stmt.Query(a.db, &u); err != nil {
 		return nil, err
 	}
@@ -64,7 +64,8 @@ func (a *AppealRepository) GetAll(f *input.Filter) (*[]entity.Appeal, error) {
 func (a *AppealRepository) GetTotal() (*int, error) {
 	var count int
 	rawSql, _ := SELECT(Raw("count(*)")).
-		FROM(Appeals).Sql()
+		FROM(Appeals).
+		Sql()
 
 	if err := a.db.QueryRow(rawSql).Scan(&count); err != nil {
 		return nil, err
