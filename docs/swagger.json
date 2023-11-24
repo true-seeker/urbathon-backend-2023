@@ -934,6 +934,48 @@
                     }
                 }
             }
+        },
+        "/organization/{id}/add_user/{user_id}": {
+            "post": {
+                "description": "add user to organization",
+                "tags": [
+                    "organization"
+                ],
+                "summary": "add user to organization",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "organization id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

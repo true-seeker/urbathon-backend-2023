@@ -883,4 +883,32 @@ paths:
       summary: register organization
       tags:
       - organization
+  /organization/{id}/add_user/{user_id}:
+    post:
+      description: add user to organization
+      parameters:
+      - description: organization id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: user id
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: add user to organization
+      tags:
+      - organization
 swagger: "2.0"

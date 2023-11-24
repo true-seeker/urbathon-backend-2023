@@ -5,11 +5,13 @@ import (
 	"net/http"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
+	"urbathon-backend-2023/internal/app/validator"
 	"urbathon-backend-2023/pkg/errorHandler"
 )
 
 type OrganizationService interface {
 	Register(organizationInput *input.OrganizationRegister) (*response.Organization, *errorHandler.HttpErr)
+	AddUser(organizationId int32, userId int32) *errorHandler.HttpErr
 }
 
 type OrganizationHandler struct {
@@ -46,4 +48,35 @@ func (d *OrganizationHandler) Register(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, organization)
+}
+
+// AddUser
+// @Summary		add user to organization
+// @Description	add user to organization
+// @Tags			organization
+// @Param			id	path		int	true	"organization id"
+// @Param			user_id	path		int	true	"user id"
+// @Success		200		{object}	nil
+// @Failure		400		{object}	errorHandler.HttpErr
+// @Failure		404		{object}	errorHandler.HttpErr
+// @Router			/organization/{id}/add_user/{user_id} [post]
+func (d *OrganizationHandler) AddUser(c *gin.Context) {
+	organizationId, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	userId, httpErr := validator.ValidateAndReturnId(c.Param("user_id"), "user_id")
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+
+	if httpErr := d.organizationService.AddUser(organizationId, userId); httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	//todo exists validation
+
+	c.Status(http.StatusOK)
 }

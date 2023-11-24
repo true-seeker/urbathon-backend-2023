@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	. "github.com/go-jet/jet/v2/postgres"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
@@ -15,6 +16,7 @@ type OrganizationRepository struct {
 func NewOrganizationRepository(s storage.Sql) *OrganizationRepository {
 	return &OrganizationRepository{db: s.GetDb()}
 }
+
 func (a *OrganizationRepository) Register(organization *model.Organizations, organizationInputCategories *[]int32) (*model.Organizations, error) {
 	var u model.Organizations
 	stmt := Organizations.
@@ -36,4 +38,15 @@ func (a *OrganizationRepository) Register(organization *model.Organizations, org
 	}
 
 	return &u, nil
+}
+func (a *OrganizationRepository) AddUser(organizationId int32, userId int32) error {
+	stmt := Users.
+		UPDATE(Users.OrganizationID, Users.Role).
+		SET(Int32(organizationId), Int32(2)).
+		WHERE(Users.ID.EQ(Int32(userId)))
+	fmt.Println(stmt.Sql())
+	if _, err := stmt.Exec(a.db); err != nil {
+		return err
+	}
+	return nil
 }

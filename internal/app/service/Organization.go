@@ -12,6 +12,7 @@ import (
 
 type OrganizationRepository interface {
 	Register(organization *model.Organizations, organizationInputCategories *[]int32) (*model.Organizations, error)
+	AddUser(organizationId int32, userId int32) error
 }
 type OrganizationService struct {
 	organizationRepo OrganizationRepository
@@ -22,7 +23,6 @@ func NewOrganizationService(organizationRepository OrganizationRepository) *Orga
 }
 
 func (d *OrganizationService) Register(organizationInput *input.OrganizationRegister) (*response.Organization, *errorHandler.HttpErr) {
-	organizationResponse := &response.Organization{}
 	if httpErr := d.validateRegisterOrganization(organizationInput); httpErr != nil {
 		return nil, httpErr
 	}
@@ -33,9 +33,16 @@ func (d *OrganizationService) Register(organizationInput *input.OrganizationRegi
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
-	organizationResponse = mapper.OrganizationToOrganizationResponse(organization)
+	organizationResponse := mapper.OrganizationToOrganizationResponse(organization)
 
 	return organizationResponse, nil
+}
+
+func (d *OrganizationService) AddUser(organizationId int32, userId int32) *errorHandler.HttpErr {
+	if err := d.organizationRepo.AddUser(organizationId, userId); err != nil {
+		return errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	return nil
 }
 
 func (d *OrganizationService) validateRegisterOrganization(organizationRegister *input.OrganizationRegister) *errorHandler.HttpErr {
