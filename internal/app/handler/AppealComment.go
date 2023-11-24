@@ -38,10 +38,10 @@ func NewAppealCommentHandler(appealCommentService AppealCommentService) *AppealC
 //	@Failure		404	{object}	errorHandler.HttpErr
 //	@Router			/appeal/{id}/comment [get]
 func (d *AppealCommentHandler) GetComments(c *gin.Context) {
-	var p *filter.Pagination
-	_ = c.ShouldBindQuery(p)
+	var p filter.Pagination
+	_ = c.ShouldBindQuery(&p)
 
-	p, httpErr := filter.ValidatePagination(p)
+	p2, httpErr := filter.ValidatePagination(&p)
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
@@ -54,7 +54,7 @@ func (d *AppealCommentHandler) GetComments(c *gin.Context) {
 	}
 	// todo exists validation
 
-	commentsResponse, httpErr := d.appealCommentService.GetAllByAppealId(p, appealId)
+	commentsResponse, httpErr := d.appealCommentService.GetAllByAppealId(p2, appealId)
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return

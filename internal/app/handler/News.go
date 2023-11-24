@@ -62,16 +62,16 @@ func (d *NewsHandler) Get(c *gin.Context) {
 //	@Failure		400	{object}	errorHandler.HttpErr
 //	@Router			/news [get]
 func (d *NewsHandler) GetAll(c *gin.Context) {
-	var p *filter.Pagination
-	_ = c.ShouldBindQuery(p)
+	var p filter.Pagination
+	_ = c.ShouldBindQuery(&p)
 
-	p, httpErr := filter.ValidatePagination(p)
+	p2, httpErr := filter.ValidatePagination(&p)
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
 
-	news, httpErr := d.newsService.GetAll(p)
+	news, httpErr := d.newsService.GetAll(p2)
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
