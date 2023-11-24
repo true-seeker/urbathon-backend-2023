@@ -230,7 +230,54 @@
                         "type": "integer",
                         "default": 1,
                         "description": "appeal id",
-                        "name": "appeal_id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
+        "/appeal/{id}/status/{status_id}": {
+            "post": {
+                "description": "update appeal status",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "appeal"
+                ],
+                "summary": "update appeal status",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "appeal id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "new status id",
+                        "name": "status_id",
                         "in": "path",
                         "required": true
                     }

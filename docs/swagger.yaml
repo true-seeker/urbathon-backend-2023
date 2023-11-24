@@ -287,7 +287,7 @@ paths:
       - default: 1
         description: appeal id
         in: path
-        name: appeal_id
+        name: id
         required: true
         type: integer
       produces:
@@ -363,6 +363,38 @@ paths:
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
       summary: update appeal
+      tags:
+      - appeal
+  /appeal/{id}/status/{status_id}:
+    post:
+      description: update appeal status
+      parameters:
+      - default: 1
+        description: appeal id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 1
+        description: new status id
+        in: path
+        name: status_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: update appeal status
       tags:
       - appeal
   /appeal_category:

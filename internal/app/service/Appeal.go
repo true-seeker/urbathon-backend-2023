@@ -24,6 +24,7 @@ type AppealRepository interface {
 	Create(appeal *model.Appeals, urls *[]string) (*entity.Appeal, error)
 	Update(appeal *model.Appeals) (*entity.Appeal, error)
 	Delete(id int32) error
+	UpdateStatus(appealId int32, statusId int32) error
 }
 type AppealService struct {
 	appealRepo AppealRepository
@@ -143,4 +144,14 @@ func UploadAppealPhotos(appealInput *input.Appeal) (*[]string, *errorHandler.Htt
 	}
 
 	return &urls, nil
+}
+
+func (d *AppealService) UpdateStatus(appealId int32, statusId int32) *errorHandler.HttpErr {
+	//todo exists validation
+	err := d.appealRepo.UpdateStatus(appealId, statusId)
+	if err != nil {
+		return errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+	//todo deletion_date
+	return nil
 }

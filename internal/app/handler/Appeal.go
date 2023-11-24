@@ -16,6 +16,7 @@ type AppealService interface {
 	Create(appealInput *input.Appeal, user *model.Users) (*response.Appeal, *errorHandler.HttpErr)
 	Update(appealInput *input.AppealUpdate, user *model.Users, id *int32) (*response.Appeal, *errorHandler.HttpErr)
 	Delete(id int32) *errorHandler.HttpErr
+	UpdateStatus(appealId int32, statusId int32) *errorHandler.HttpErr
 }
 
 type AppealHandler struct {
@@ -144,7 +145,7 @@ func (d *AppealHandler) Update(c *gin.Context) {
 // @Summary		delete appeal
 // @Description	delete appeal
 // @Tags			appeal
-// @Param			appeal_id	path	int	true	"appeal id"	default(1)
+// @Param			id	path	int	true	"appeal id"	default(1)
 // @Produce		json
 // @Success		200	{object}	nil
 // @Failure		400	{object}	errorHandler.HttpErr
@@ -156,8 +157,39 @@ func (d *AppealHandler) Delete(c *gin.Context) {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
-	httpErr = d.appealService.Delete(id)
+	if httpErr = d.appealService.Delete(id); httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+// UpdateStatus
+//
+// @Summary		update appeal status
+// @Description	update appeal status
+// @Tags			appeal
+// @Param			id	path	int	true	"appeal id"	default(1)
+// @Param			status_id	path	int	true	"new status id"	default(1)
+// @Produce		json
+// @Success		200	{object}	nil
+// @Failure		400	{object}	errorHandler.HttpErr
+// @Failure		404	{object}	errorHandler.HttpErr
+// @Router			/appeal/{id}/status/{status_id} [post]
+func (d *AppealHandler) UpdateStatus(c *gin.Context) {
+	appealId, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")
 	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	statusId, httpErr := validator.ValidateAndReturnId(c.Param("status_id"), "id")
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	// todo exists validation
+	if httpErr = d.appealService.UpdateStatus(appealId, statusId); httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}

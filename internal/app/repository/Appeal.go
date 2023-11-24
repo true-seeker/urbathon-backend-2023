@@ -133,3 +133,14 @@ func (a *AppealRepository) Delete(id int32) error {
 	}
 	return nil
 }
+
+func (a *AppealRepository) UpdateStatus(appealId int32, statusId int32) error {
+	stmt := Appeals.UPDATE(Appeals.StatusID).
+		SET(Int32(statusId)).
+		WHERE(Appeals.ID.EQ(Int32(appealId)))
+	if _, err := stmt.Exec(a.db); err != nil {
+		return err
+	}
+
+	return nil
+}
