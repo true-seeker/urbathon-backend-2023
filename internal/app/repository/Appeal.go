@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	. "github.com/go-jet/jet/v2/postgres"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
@@ -62,9 +63,12 @@ func (a *AppealRepository) GetAll(f *filter.AppealFilter) (*[]entity.Appeal, err
 
 	stmt = makeWhere(f, stmt)
 
+	fmt.Println(stmt.Sql())
+
 	if err := stmt.Query(a.db, &u); err != nil {
 		return nil, err
 	}
+	fmt.Println(111, len(u))
 	return &u, nil
 }
 
