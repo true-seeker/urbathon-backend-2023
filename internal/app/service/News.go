@@ -49,15 +49,9 @@ func (d *NewsService) Get(id *int32, userId *int32) (*response.News, *errorHandl
 		var selectedOptionId int
 		if userId != nil {
 			selectedOptionId, err = d.newsRepo.GetUserVoteOptionId(userId)
-			if err != nil {
-				return nil, errorHandler.New("News with id does not exists", http.StatusNotFound)
-			}
 		}
 		for i, option := range *newsResponse.Poll.Options {
-			count, err := d.newsRepo.GetPollOptionVotesCount(option.ID)
-			if err != nil {
-				return nil, errorHandler.New("News with id does not exists", http.StatusNotFound)
-			}
+			count, _ := d.newsRepo.GetPollOptionVotesCount(option.ID)
 			if option.ID == int32(selectedOptionId) {
 				t := true
 				(*newsResponse.Poll.Options)[i].IsUserVoted = &t
