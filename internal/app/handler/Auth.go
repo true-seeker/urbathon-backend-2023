@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
+	"urbathon-backend-2023/internal/app/mapper"
 	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/model/response"
 	"urbathon-backend-2023/pkg/errorHandler"
@@ -82,8 +83,9 @@ func (d *AuthHandler) Logout(c *gin.Context) {
 func (d *AuthHandler) Test(c *gin.Context) {
 	userAny, _ := c.Get("user")
 	user := userAny.(*model.Users)
+	userResponse := mapper.UserToUserResponse(user)
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, userResponse)
 }
 
 // Register

@@ -31,7 +31,7 @@ func (a *UserRepository) GetByEmail(email *string) (*model.Users, error) {
 
 func (a *UserRepository) Get(id *int32) (*model.Users, error) {
 	var u model.Users
-	stmt := SELECT(Users.ID, Users.FirstName, Users.LastName, Users.Patronymic, Users.Email).
+	stmt := SELECT(Users.ID, Users.FirstName, Users.LastName, Users.Patronymic, Users.Email, Users.PhoneNumber).
 		FROM(Users).
 		WHERE(Users.ID.EQ(Int32(*id)))
 
