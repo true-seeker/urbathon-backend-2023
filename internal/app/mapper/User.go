@@ -14,6 +14,7 @@ func UserToUserResponse(user *model.Users) *response.User {
 		LastName:       user.LastName,
 		Patronymic:     user.Patronymic,
 		OrganizationId: user.OrganizationID,
+		Phone:          user.PhoneNumber,
 	}
 
 	return r

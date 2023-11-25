@@ -18,7 +18,7 @@ func NewAuthRepository(s storage.Sql) *UserRepository {
 
 func (a *UserRepository) GetByEmail(email *string) (*model.Users, error) {
 	var u model.Users
-	stmt := SELECT(Users.ID, Users.FirstName, Users.LastName, Users.Patronymic, Users.Email, Users.Password, Users.Salt).
+	stmt := SELECT(Users.ID, Users.FirstName, Users.LastName, Users.Patronymic, Users.Email, Users.Password, Users.Salt, Users.PhoneNumber).
 		FROM(Users).
 		WHERE(Users.Email.EQ(String(*email)))
 

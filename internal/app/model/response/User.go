@@ -7,4 +7,5 @@ type User struct {
 	LastName       *string `json:"last_name" example:"Иванов"`
 	Patronymic     *string `json:"patronymic" example:"Иванович"`
 	OrganizationId *int32  `json:"organization_id,omitempty" example:"1"`
+	Phone          *string `json:"phone,omitempty" swaggerignore:"true"`
 }
