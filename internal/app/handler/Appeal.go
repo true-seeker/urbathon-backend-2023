@@ -201,31 +201,3 @@ func (d *AppealHandler) UpdateStatus(c *gin.Context) {
 
 	c.Status(http.StatusOK)
 }
-
-// GetMyAppeals get my appeals
-//
-// @Summary		get my appeals
-// @Description	get my appeals
-// @Tags			appeal
-// @Param			page		query	filter.AppealFilter	false	"filter"
-// @Produce		json
-// @Success		200	{object}	response.AppealPaged
-// @Failure		400	{object}	errorHandler.HttpErr
-// @Router			/appeal/my [get]
-func (d *AppealHandler) GetMyAppeals(c *gin.Context) {
-	f, httpErr := filter.NewAppealFilter(c)
-	if httpErr != nil {
-		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
-		return
-	}
-	userAny, _ := c.Get("user")
-	user := userAny.(*model.Users)
-	f.UserId = &user.ID
-
-	appeal, httpErr := d.appealService.GetMyAppeals(f)
-	if httpErr != nil {
-		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
-		return
-	}
-	c.JSON(http.StatusOK, appeal)
-}
