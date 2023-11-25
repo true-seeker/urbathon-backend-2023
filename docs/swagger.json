@@ -1050,6 +1050,54 @@
                 }
             }
         },
+        "/news/{id}/poll_vote/{option_id}": {
+            "post": {
+                "description": "poll vote",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "news"
+                ],
+                "summary": "poll vote",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "news id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "option_id",
+                        "name": "option_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.News"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
         "/organization": {
             "post": {
                 "description": "register organization",
@@ -1550,9 +1598,16 @@
                     "type": "integer",
                     "example": 1
                 },
+                "is_user_voted": {
+                    "type": "boolean"
+                },
                 "title": {
                     "type": "string",
                     "example": "Вариант опроса"
+                },
+                "votes": {
+                    "type": "integer",
+                    "example": 1
                 }
             }
         },

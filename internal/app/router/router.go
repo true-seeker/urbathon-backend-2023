@@ -40,9 +40,10 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 	newsHandler := handler.NewNewsHandler(newsService)
 	newsGroup := api.Group("news")
 	{
-		newsGroup.GET("/:id", newsHandler.Get)
+		newsGroup.GET("/:id", middleware.OptionalSession, newsHandler.Get)
 		newsGroup.GET("/", newsHandler.GetAll)
-		newsGroup.POST("/", middleware.Session, newsHandler.Create) // todo service role
+		newsGroup.POST("/", middleware.Session, newsHandler.Create)                           // todo service role
+		newsGroup.POST("/:id/poll_vote/:option_id", middleware.Session, newsHandler.PollVote) // todo service role
 	}
 
 	appealRepo := repository.NewAppealRepository(storage)

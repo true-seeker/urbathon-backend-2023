@@ -286,9 +286,14 @@ definitions:
       id:
         example: 1
         type: integer
+      is_user_voted:
+        type: boolean
       title:
         example: Вариант опроса
         type: string
+      votes:
+        example: 1
+        type: integer
     type: object
   response.User:
     properties:
@@ -1003,6 +1008,38 @@ paths:
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
       summary: get news by id
+      tags:
+      - news
+  /news/{id}/poll_vote/{option_id}:
+    post:
+      description: poll vote
+      parameters:
+      - description: news id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: option_id
+        in: path
+        name: option_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.News'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorHandler.HttpErr'
+      summary: poll vote
       tags:
       - news
   /organization:

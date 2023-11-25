@@ -22,6 +22,9 @@ type NewsRepository interface {
 	GetAll(f *filter.Pagination) (*[]entity.News, error)
 	GetTotal() (*int, error)
 	Create(news *model.News, poll entity.NewsPoll) (*entity.News, error)
+	Vote(newsId int32, OptionId int32) error
+	GetPollOptionVotesCount(optionId int32) (int, error)
+	GetUserVoteOptionId(id *int32) (int, error)
 }
 type NewsService struct {
 	newsRepo NewsRepository
@@ -31,7 +34,7 @@ func NewNewsService(newsRepository NewsRepository) *NewsService {
 	return &NewsService{newsRepo: newsRepository}
 }
 
-func (d *NewsService) Get(id *int32) (*response.News, *errorHandler.HttpErr) {
+func (d *NewsService) Get(id *int32, userId *int32) (*response.News, *errorHandler.HttpErr) {
 	newsResponse := &response.News{}
 	news, err := d.newsRepo.Get(id)
 	switch {
@@ -41,6 +44,29 @@ func (d *NewsService) Get(id *int32) (*response.News, *errorHandler.HttpErr) {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
 	newsResponse = mapper.NewsToNewsResponse(*news)
+
+	if newsResponse.Poll != nil {
+		var selectedOptionId int
+		if userId != nil {
+			selectedOptionId, err = d.newsRepo.GetUserVoteOptionId(userId)
+			if err != nil {
+				return nil, errorHandler.New("News with id does not exists", http.StatusNotFound)
+			}
+		}
+		for i, option := range *newsResponse.Poll.Options {
+			count, err := d.newsRepo.GetPollOptionVotesCount(option.ID)
+			if err != nil {
+				return nil, errorHandler.New("News with id does not exists", http.StatusNotFound)
+			}
+			if option.ID == int32(selectedOptionId) {
+				t := true
+				(*newsResponse.Poll.Options)[i].IsUserVoted = &t
+			}
+			(*newsResponse.Poll.Options)[i].Votes = &count
+		}
+
+	}
+
 	return newsResponse, nil
 }
 
@@ -61,7 +87,6 @@ func (d *NewsService) GetAll(f *filter.Pagination) (*response.NewsPaged, *errorH
 }
 
 func (d *NewsService) Create(newsInput *input.News, user *model.Users) (*response.News, *errorHandler.HttpErr) {
-	newsResponse := &response.News{}
 	if httpErr := d.validateCreate(newsInput); httpErr != nil {
 		return nil, httpErr
 	}
@@ -89,8 +114,22 @@ func (d *NewsService) Create(newsInput *input.News, user *model.Users) (*respons
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
-	newsResponse = mapper.NewsToNewsResponse(*appealEntity)
+	newsResponse, httpErr := d.Get(&appealEntity.ID, &user.ID)
+	if httpErr != nil {
+		return nil, httpErr
+	}
+	return newsResponse, nil
+}
 
+func (d *NewsService) Vote(userId int32, OptionId int32, newsId int32) (*response.News, *errorHandler.HttpErr) {
+	if err := d.newsRepo.Vote(userId, OptionId); err != nil {
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
+
+	newsResponse, err := d.Get(&newsId, &userId)
+	if err != nil {
+		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+	}
 	return newsResponse, nil
 }
 

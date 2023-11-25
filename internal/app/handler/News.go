@@ -12,9 +12,10 @@ import (
 )
 
 type NewsService interface {
-	Get(id *int32) (*response.News, *errorHandler.HttpErr)
+	Get(id *int32, userId *int32) (*response.News, *errorHandler.HttpErr)
 	GetAll(filter *filter.Pagination) (*response.NewsPaged, *errorHandler.HttpErr)
 	Create(newsInput *input.News, user *model.Users) (*response.News, *errorHandler.HttpErr)
+	Vote(userId int32, OptionId int32, newsId int32) (*response.News, *errorHandler.HttpErr)
 }
 
 type NewsHandler struct {
@@ -42,7 +43,14 @@ func (d *NewsHandler) Get(c *gin.Context) {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
-	news, httpErr := d.newsService.Get(&id)
+	var userId *int32
+	userAny, exists := c.Get("user")
+	if exists {
+		user := userAny.(*model.Users)
+		userId = &user.ID
+	}
+
+	news, httpErr := d.newsService.Get(&id, userId)
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
@@ -100,11 +108,46 @@ func (d *NewsHandler) Create(c *gin.Context) {
 	userAny, _ := c.Get("user")
 	user := userAny.(*model.Users)
 
-	appeal, httpErr := d.newsService.Create(newsInput, user)
+	news, httpErr := d.newsService.Create(newsInput, user)
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
 
-	c.JSON(http.StatusCreated, appeal)
+	c.JSON(http.StatusCreated, news)
+}
+
+// PollVote
+//
+// @Summary		poll vote
+// @Description	poll vote
+// @Tags			news
+// @Param			id	path		int	true	"news id"
+// @Param			option_id	path		int	true	"option_id"
+// @Produce		json
+// @Success		200	{object}	response.News
+// @Failure		400	{object}	errorHandler.HttpErr
+// @Failure		404	{object}	errorHandler.HttpErr
+// @Router			/news/{id}/poll_vote/{option_id} [post]
+func (d *NewsHandler) PollVote(c *gin.Context) {
+	newsId, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	optionId, httpErr := validator.ValidateAndReturnId(c.Param("option_id"), "option_id")
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	userAny, _ := c.Get("user")
+	user := userAny.(*model.Users)
+
+	news, httpErr := d.newsService.Vote(user.ID, optionId, newsId)
+	if httpErr != nil {
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, news)
 }

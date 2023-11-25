@@ -22,7 +22,7 @@ func NewsPollToNewsPollResponse(newsPoll *entity.NewsPoll) *response.NewsPoll {
 	r := &response.NewsPoll{
 		ID:      newsPoll.ID,
 		Title:   newsPoll.Title,
-		Options: PollOptionModelListToPollOptionResponses(newsPoll.Options),
+		Options: PollOptionListToPollOptionResponses(newsPoll.Options),
 	}
 
 	return r

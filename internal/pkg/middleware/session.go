@@ -29,3 +29,23 @@ func Session(c *gin.Context) {
 	c.Set("user", user)
 	c.Next()
 }
+
+func OptionalSession(c *gin.Context) {
+	session := sessions.Default(c)
+	userIdAny := session.Get("user_id")
+	if userIdAny == nil {
+		c.Next()
+		return
+	}
+	userId := userIdAny.(int32)
+	db := storage.CurrentStorage
+	userRepo := repository.NewAuthRepository(db)
+	user, err := userRepo.Get(&userId)
+	if err != nil {
+		httpErr := errorHandler.New("Something went wrong", http.StatusBadRequest)
+		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+		return
+	}
+	c.Set("user", user)
+	c.Next()
+}
