@@ -26,10 +26,10 @@ func NewNewsHandler(newsService NewsService) *NewsHandler {
 	return &NewsHandler{newsService: newsService}
 }
 
-// Get get news by id
+// Get Получение новости по айди
 //
-//	@Summary		get news by id
-//	@Description	get news by id
+//	@Summary		Получение новости по айди
+//	@Description	Получение новости по айди
 //	@Tags			news
 //	@Produce		json
 //	@Param			id	path		int	true	"news id"
@@ -58,10 +58,10 @@ func (d *NewsHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, news)
 }
 
-// GetAll get all news
+// GetAll Получение всех новостей
 //
-//	@Summary		get all news
-//	@Description	get all news
+//	@Summary		Получение всех новостей
+//	@Description	Получение всех новостей
 //	@Tags			news
 //	@Param			page		query	int	false	"page"	minimum(-1)	default(1)
 //	@Param			page_size	query	int	false	"page"	minimum(1)	maximum(20)	default(10)
@@ -87,10 +87,10 @@ func (d *NewsHandler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, news)
 }
 
-// Create
+// Create Создание новости
 //
-// @Summary		create news
-// @Description	create news
+// @Summary		Создание новости
+// @Description	Создание новости
 // @Tags			news
 // @Param			news	formData	input.News	true	"news"
 // @Param			photo	formData	file		false	"photo"
@@ -117,10 +117,10 @@ func (d *NewsHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, news)
 }
 
-// PollVote
+// PollVote Проголосовать в опросе под новостью
 //
-// @Summary		poll vote
-// @Description	poll vote
+// @Summary		Проголосовать в опросе под новостью
+// @Description	Проголосовать в опросе под новостью
 // @Tags			news
 // @Param			id	path		int	true	"news id"
 // @Param			option_id	path		int	true	"option_id"

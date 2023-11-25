@@ -29,10 +29,10 @@ func NewAppealHandler(appealService AppealService) *AppealHandler {
 	return &AppealHandler{appealService: appealService}
 }
 
-// Get get appeal by id
+// Get Получение обращения по айди
 //
-// @Summary		get appeal by id
-// @Description	get appeal by id
+// @Summary		Получение обращения по айди
+// @Description	Получение обращения по айди
 // @Tags			appeal
 // @Produce		json
 // @Param			id	path		int	true	"appeal id"
@@ -54,12 +54,12 @@ func (d *AppealHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, appeal)
 }
 
-// GetAll get all appeals
+// GetAll получение всех обращений
 //
-// @Summary		get all appeals
-// @Description	get all appeals
+// @Summary		получение всех обращений
+// @Description	получение всех обращений
 // @Tags			appeal
-// @Param			page		query	filter.AppealFilter	false	"page"
+// @Param			page	query	filter.AppealFilter	false	"page"
 // @Produce		json
 // @Success		200	{object}	response.AppealPaged
 // @Failure		400	{object}	errorHandler.HttpErr
@@ -79,10 +79,10 @@ func (d *AppealHandler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, appeal)
 }
 
-// Create
+// Create Создание обращения
 //
-// @Summary		create appeal
-// @Description	create appeal
+// @Summary		Создание обращения
+// @Description	Создание обращения
 // @Tags			appeal
 // @Param			appeal	formData	input.Appeal	true	"appeal"
 // @Param			photos	formData	[]file			true	"photos"
@@ -109,10 +109,10 @@ func (d *AppealHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, appeal)
 }
 
-// Update
+// Update Обновление обращения
 //
-// @Summary		update appeal
-// @Description	update appeal
+// @Summary		Обновление обращения
+// @Description	Обновление обращения
 // @Tags			appeal
 // @Param			appeal	body	input.AppealUpdate	true	"appeal"
 // @Param			id		path	int					true	"appeal id"	default(1)
@@ -145,10 +145,10 @@ func (d *AppealHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, appeal)
 }
 
-// Delete
+// Delete Удаление обращения
 //
-// @Summary		delete appeal
-// @Description	delete appeal
+// @Summary		Удаление обращения
+// @Description	Удаление обращения
 // @Tags			appeal
 // @Param			id	path	int	true	"appeal id"	default(1)
 // @Produce		json
@@ -170,10 +170,10 @@ func (d *AppealHandler) Delete(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// UpdateStatus
+// UpdateStatus Обновление статуса обращения
 //
-// @Summary		update appeal status
-// @Description	update appeal status
+// @Summary		Обновление статуса обращения
+// @Description	Обновление статуса обращения
 // @Tags			appeal
 // @Param			id			path	int	true	"appeal id"		default(1)
 // @Param			status_id	path	int	true	"new status id"	default(1)

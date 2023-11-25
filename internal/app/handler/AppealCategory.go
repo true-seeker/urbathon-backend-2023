@@ -22,10 +22,10 @@ func NewAppealCategoryHandler(appealCategoryService AppealCategoryService) *Appe
 	return &AppealCategoryHandler{appealCategoryService: appealCategoryService}
 }
 
-// Get get appealCategory by id
+// Get Получение категории обращения по айди
 //
-// @Summary		get appealCategory by id
-// @Description	get appealCategory by id
+// @Summary		Получение категории обращения по айди
+// @Description	Получение категории обращения по айди
 // @Tags			appealCategory
 // @Produce		json
 // @Param			id	path		int	true	"appealCategory id"
@@ -47,10 +47,10 @@ func (d *AppealCategoryHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, appealCategory)
 }
 
-// GetAll get all appealCategories
+// GetAll Получение всех категорий обращений
 //
-// @Summary		get all appealCategories
-// @Description	get all appealCategories
+// @Summary		Получение всех категорий обращений
+// @Description	Получение всех категорий обращений
 // @Tags			appealCategory
 // @Produce		json
 // @Success		200	{object}	[]response.AppealCategory
@@ -65,10 +65,10 @@ func (d *AppealCategoryHandler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, appealCategories)
 }
 
-// GetAppealTypes get all appealTypes by CategoryId
+// GetAppealTypes Получение всех типов обращений по айди категории
 //
-// @Summary		get all appealTypes by CategoryId
-// @Description	get all appealTypes by CategoryId
+// @Summary		Получение всех типов обращений по айди категории
+// @Description	Получение всех типов обращений по айди категории
 // @Tags			appealCategory
 // @Produce		json
 // @Param			id	path		int	true	"appealCategory id"

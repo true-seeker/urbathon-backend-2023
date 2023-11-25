@@ -29,6 +29,15 @@ definitions:
         example: Обращение
         type: string
     type: object
+  input.OrganizationAddUser:
+    properties:
+      job:
+        example: Главный по главным
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
   input.OrganizationRegister:
     properties:
       address:
@@ -303,6 +312,21 @@ definitions:
         example: Название опроса
         type: string
     type: object
+  response.Organization:
+    properties:
+      address:
+        type: string
+      id:
+        example: 1
+        type: integer
+      inn:
+        type: string
+      name:
+        example: ЖКХ
+        type: string
+      phone:
+        type: string
+    type: object
   response.PollOption:
     properties:
       id:
@@ -328,9 +352,13 @@ definitions:
       id:
         example: 1
         type: integer
+      job:
+        type: string
       last_name:
         example: Иванов
         type: string
+      organization:
+        $ref: '#/definitions/response.Organization'
       organization_id:
         example: 1
         type: integer
@@ -345,7 +373,7 @@ info:
 paths:
   /appeal:
     get:
-      description: get all appeals
+      description: получение всех обращений
       parameters:
       - example: name
         in: query
@@ -387,13 +415,13 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get all appeals
+      summary: получение всех обращений
       tags:
       - appeal
     post:
       consumes:
       - multipart/form-data
-      description: create appeal
+      description: Создание обращения
       parameters:
       - example: Улица Пушкина
         in: formData
@@ -438,12 +466,12 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: create appeal
+      summary: Создание обращения
       tags:
       - appeal
   /appeal/{id}:
     delete:
-      description: delete appeal
+      description: Удаление обращения
       parameters:
       - default: 1
         description: appeal id
@@ -464,11 +492,11 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: delete appeal
+      summary: Удаление обращения
       tags:
       - appeal
     get:
-      description: get appeal by id
+      description: Получение обращения по айди
       parameters:
       - description: appeal id
         in: path
@@ -490,11 +518,11 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get appeal by id
+      summary: Получение обращения по айди
       tags:
       - appeal
     put:
-      description: update appeal
+      description: Обновление обращения
       parameters:
       - description: appeal
         in: body
@@ -523,12 +551,12 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: update appeal
+      summary: Обновление обращения
       tags:
       - appeal
   /appeal/{id}/comment:
     get:
-      description: get appeal comments
+      description: Получение комментариев обращения
       parameters:
       - default: 1
         description: appeal id
@@ -564,13 +592,13 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get appeal comments
+      summary: Получение комментариев обращения
       tags:
       - appealComment
     post:
       consumes:
       - multipart/form-data
-      description: create comment appeal
+      description: Создание комментария
       parameters:
       - default: 1
         description: appeal id
@@ -604,12 +632,12 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: create comment appeal
+      summary: Создание комментария
       tags:
       - appealComment
   /appeal/{id}/status/{status_id}:
     post:
-      description: update appeal status
+      description: Обновление статуса обращения
       parameters:
       - default: 1
         description: appeal id
@@ -636,12 +664,12 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: update appeal status
+      summary: Обновление статуса обращения
       tags:
       - appeal
   /appeal_category:
     get:
-      description: get all appealCategories
+      description: Получение всех категорий обращений
       produces:
       - application/json
       responses:
@@ -655,12 +683,12 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get all appealCategories
+      summary: Получение всех категорий обращений
       tags:
       - appealCategory
   /appeal_category/{id}:
     get:
-      description: get appealCategory by id
+      description: Получение категории обращения по айди
       parameters:
       - description: appealCategory id
         in: path
@@ -682,12 +710,12 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get appealCategory by id
+      summary: Получение категории обращения по айди
       tags:
       - appealCategory
   /appeal_category/{id}/appeal_types:
     get:
-      description: get all appealTypes by CategoryId
+      description: Получение всех типов обращений по айди категории
       parameters:
       - description: appealCategory id
         in: path
@@ -711,12 +739,12 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get all appealTypes by CategoryId
+      summary: Получение всех типов обращений по айди категории
       tags:
       - appealCategory
   /appeal_status:
     get:
-      description: get all appealStatuses
+      description: Получить все статусы обращений
       produces:
       - application/json
       responses:
@@ -730,12 +758,12 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get all appealStatuses
+      summary: Получить все статусы обращений
       tags:
       - appealStatus
   /appeal_status/{id}:
     get:
-      description: get appealStatus by id
+      description: Получить статус обращения
       parameters:
       - default: 1
         description: appealStatus id
@@ -758,12 +786,12 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get appealStatus by id
+      summary: Получить статус обращения
       tags:
       - appealStatus
   /appeal_type:
     get:
-      description: get all appealTypes
+      description: Получить все типы обращений
       produces:
       - application/json
       responses:
@@ -777,12 +805,12 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get all appealTypes
+      summary: Получить все типы обращений
       tags:
       - appealType
   /appeal_type/{id}:
     get:
-      description: get appealType by id
+      description: Получить тип обращения по айди
       parameters:
       - description: appealType id
         in: path
@@ -804,14 +832,14 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get appealType by id
+      summary: Получить тип обращения по айди
       tags:
       - appealType
   /auth/login:
     post:
       consumes:
       - application/json
-      description: login
+      description: Вход
       parameters:
       - description: login and password
         in: body
@@ -834,23 +862,23 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: login
+      summary: Вход
       tags:
       - auth
   /auth/logout:
     post:
-      description: logout
+      description: Выход
       responses:
         "200":
           description: OK
-      summary: logout
+      summary: Выход
       tags:
       - auth
   /auth/register:
     post:
       consumes:
       - application/json
-      description: register
+      description: Регистрация
       parameters:
       - description: UserRegister
         in: body
@@ -873,7 +901,7 @@ paths:
           description: Conflict
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: register
+      summary: Регистрация
       tags:
       - auth
   /auth/test:
@@ -893,7 +921,7 @@ paths:
       - auth
   /map/get_map_elements:
     get:
-      description: get map elements
+      description: Получение всех маркеров на карте
       parameters:
       - in: query
         name: lat_down
@@ -920,12 +948,12 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get map elements
+      summary: Получение всех маркеров на карте
       tags:
       - map
   /news:
     get:
-      description: get all news
+      description: Получение всех новостей
       parameters:
       - default: 1
         description: page
@@ -951,13 +979,13 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get all news
+      summary: Получение всех новостей
       tags:
       - news
     post:
       consumes:
       - multipart/form-data
-      description: create news
+      description: Создание новости
       parameters:
       - example: Улица Пушкина
         in: formData
@@ -999,12 +1027,12 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: create news
+      summary: Создание новости
       tags:
       - news
   /news/{id}:
     get:
-      description: get news by id
+      description: Получение новости по айди
       parameters:
       - description: news id
         in: path
@@ -1026,12 +1054,12 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: get news by id
+      summary: Получение новости по айди
       tags:
       - news
   /news/{id}/poll_vote/{option_id}:
     post:
-      description: poll vote
+      description: Проголосовать в опросе под новостью
       parameters:
       - description: news id
         in: path
@@ -1058,14 +1086,14 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: poll vote
+      summary: Проголосовать в опросе под новостью
       tags:
       - news
   /organization:
     post:
       consumes:
       - application/json
-      description: register organization
+      description: Регистрация организации
       parameters:
       - description: OrganizationRegister
         in: body
@@ -1088,21 +1116,22 @@ paths:
           description: Conflict
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: register organization
+      summary: Регистрация организации
       tags:
       - organization
-  /organization/{id}/add_user/{user_id}:
+  /organization/{id}/add_user:
     post:
-      description: add user to organization
+      description: Добавление юзера в организацию
       parameters:
+      - description: OrganizationAddUser
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/input.OrganizationAddUser'
       - description: organization id
         in: path
         name: id
-        required: true
-        type: integer
-      - description: user id
-        in: path
-        name: user_id
         required: true
         type: integer
       responses:
@@ -1116,7 +1145,7 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/errorHandler.HttpErr'
-      summary: add user to organization
+      summary: Добавление юзера в организацию
       tags:
       - organization
 swagger: "2.0"

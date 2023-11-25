@@ -17,14 +17,14 @@ const docTemplate = `{
     "paths": {
         "/appeal": {
             "get": {
-                "description": "get all appeals",
+                "description": "получение всех обращений",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appeal"
                 ],
-                "summary": "get all appeals",
+                "summary": "получение всех обращений",
                 "parameters": [
                     {
                         "type": "string",
@@ -90,7 +90,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "create appeal",
+                "description": "Создание обращения",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -100,7 +100,7 @@ const docTemplate = `{
                 "tags": [
                     "appeal"
                 ],
-                "summary": "create appeal",
+                "summary": "Создание обращения",
                 "parameters": [
                     {
                         "type": "string",
@@ -168,14 +168,14 @@ const docTemplate = `{
         },
         "/appeal/{id}": {
             "get": {
-                "description": "get appeal by id",
+                "description": "Получение обращения по айди",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appeal"
                 ],
-                "summary": "get appeal by id",
+                "summary": "Получение обращения по айди",
                 "parameters": [
                     {
                         "type": "integer",
@@ -207,14 +207,14 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "update appeal",
+                "description": "Обновление обращения",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appeal"
                 ],
-                "summary": "update appeal",
+                "summary": "Обновление обращения",
                 "parameters": [
                     {
                         "description": "appeal",
@@ -256,14 +256,14 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "delete appeal",
+                "description": "Удаление обращения",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appeal"
                 ],
-                "summary": "delete appeal",
+                "summary": "Удаление обращения",
                 "parameters": [
                     {
                         "type": "integer",
@@ -295,14 +295,14 @@ const docTemplate = `{
         },
         "/appeal/{id}/comment": {
             "get": {
-                "description": "get appeal comments",
+                "description": "Получение комментариев обращения",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appealComment"
                 ],
-                "summary": "get appeal comments",
+                "summary": "Получение комментариев обращения",
                 "parameters": [
                     {
                         "type": "integer",
@@ -352,7 +352,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "create comment appeal",
+                "description": "Создание комментария",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -362,7 +362,7 @@ const docTemplate = `{
                 "tags": [
                     "appealComment"
                 ],
-                "summary": "create comment appeal",
+                "summary": "Создание комментария",
                 "parameters": [
                     {
                         "type": "integer",
@@ -413,14 +413,14 @@ const docTemplate = `{
         },
         "/appeal/{id}/status/{status_id}": {
             "post": {
-                "description": "update appeal status",
+                "description": "Обновление статуса обращения",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appeal"
                 ],
-                "summary": "update appeal status",
+                "summary": "Обновление статуса обращения",
                 "parameters": [
                     {
                         "type": "integer",
@@ -460,14 +460,14 @@ const docTemplate = `{
         },
         "/appeal_category": {
             "get": {
-                "description": "get all appealCategories",
+                "description": "Получение всех категорий обращений",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appealCategory"
                 ],
-                "summary": "get all appealCategories",
+                "summary": "Получение всех категорий обращений",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -489,14 +489,14 @@ const docTemplate = `{
         },
         "/appeal_category/{id}": {
             "get": {
-                "description": "get appealCategory by id",
+                "description": "Получение категории обращения по айди",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appealCategory"
                 ],
-                "summary": "get appealCategory by id",
+                "summary": "Получение категории обращения по айди",
                 "parameters": [
                     {
                         "type": "integer",
@@ -530,14 +530,14 @@ const docTemplate = `{
         },
         "/appeal_category/{id}/appeal_types": {
             "get": {
-                "description": "get all appealTypes by CategoryId",
+                "description": "Получение всех типов обращений по айди категории",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appealCategory"
                 ],
-                "summary": "get all appealTypes by CategoryId",
+                "summary": "Получение всех типов обращений по айди категории",
                 "parameters": [
                     {
                         "type": "integer",
@@ -574,14 +574,14 @@ const docTemplate = `{
         },
         "/appeal_status": {
             "get": {
-                "description": "get all appealStatuses",
+                "description": "Получить все статусы обращений",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appealStatus"
                 ],
-                "summary": "get all appealStatuses",
+                "summary": "Получить все статусы обращений",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -603,14 +603,14 @@ const docTemplate = `{
         },
         "/appeal_status/{id}": {
             "get": {
-                "description": "get appealStatus by id",
+                "description": "Получить статус обращения",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appealStatus"
                 ],
-                "summary": "get appealStatus by id",
+                "summary": "Получить статус обращения",
                 "parameters": [
                     {
                         "type": "integer",
@@ -645,14 +645,14 @@ const docTemplate = `{
         },
         "/appeal_type": {
             "get": {
-                "description": "get all appealTypes",
+                "description": "Получить все типы обращений",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appealType"
                 ],
-                "summary": "get all appealTypes",
+                "summary": "Получить все типы обращений",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -674,14 +674,14 @@ const docTemplate = `{
         },
         "/appeal_type/{id}": {
             "get": {
-                "description": "get appealType by id",
+                "description": "Получить тип обращения по айди",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "appealType"
                 ],
-                "summary": "get appealType by id",
+                "summary": "Получить тип обращения по айди",
                 "parameters": [
                     {
                         "type": "integer",
@@ -715,7 +715,7 @@ const docTemplate = `{
         },
         "/auth/login": {
             "post": {
-                "description": "login",
+                "description": "Вход",
                 "consumes": [
                     "application/json"
                 ],
@@ -725,7 +725,7 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "login",
+                "summary": "Вход",
                 "parameters": [
                     {
                         "description": "login and password",
@@ -761,11 +761,11 @@ const docTemplate = `{
         },
         "/auth/logout": {
             "post": {
-                "description": "logout",
+                "description": "Выход",
                 "tags": [
                     "auth"
                 ],
-                "summary": "logout",
+                "summary": "Выход",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -775,7 +775,7 @@ const docTemplate = `{
         },
         "/auth/register": {
             "post": {
-                "description": "register",
+                "description": "Регистрация",
                 "consumes": [
                     "application/json"
                 ],
@@ -785,7 +785,7 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "register",
+                "summary": "Регистрация",
                 "parameters": [
                     {
                         "description": "UserRegister",
@@ -844,14 +844,14 @@ const docTemplate = `{
         },
         "/map/get_map_elements": {
             "get": {
-                "description": "get map elements",
+                "description": "Получение всех маркеров на карте",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "map"
                 ],
-                "summary": "get map elements",
+                "summary": "Получение всех маркеров на карте",
                 "parameters": [
                     {
                         "type": "number",
@@ -895,14 +895,14 @@ const docTemplate = `{
         },
         "/news": {
             "get": {
-                "description": "get all news",
+                "description": "Получение всех новостей",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "news"
                 ],
-                "summary": "get all news",
+                "summary": "Получение всех новостей",
                 "parameters": [
                     {
                         "minimum": -1,
@@ -938,7 +938,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "create news",
+                "description": "Создание новости",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -948,7 +948,7 @@ const docTemplate = `{
                 "tags": [
                     "news"
                 ],
-                "summary": "create news",
+                "summary": "Создание новости",
                 "parameters": [
                     {
                         "type": "string",
@@ -1014,14 +1014,14 @@ const docTemplate = `{
         },
         "/news/{id}": {
             "get": {
-                "description": "get news by id",
+                "description": "Получение новости по айди",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "news"
                 ],
-                "summary": "get news by id",
+                "summary": "Получение новости по айди",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1055,14 +1055,14 @@ const docTemplate = `{
         },
         "/news/{id}/poll_vote/{option_id}": {
             "post": {
-                "description": "poll vote",
+                "description": "Проголосовать в опросе под новостью",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "news"
                 ],
-                "summary": "poll vote",
+                "summary": "Проголосовать в опросе под новостью",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1103,7 +1103,7 @@ const docTemplate = `{
         },
         "/organization": {
             "post": {
-                "description": "register organization",
+                "description": "Регистрация организации",
                 "consumes": [
                     "application/json"
                 ],
@@ -1113,7 +1113,7 @@ const docTemplate = `{
                 "tags": [
                     "organization"
                 ],
-                "summary": "register organization",
+                "summary": "Регистрация организации",
                 "parameters": [
                     {
                         "description": "OrganizationRegister",
@@ -1147,25 +1147,27 @@ const docTemplate = `{
                 }
             }
         },
-        "/organization/{id}/add_user/{user_id}": {
+        "/organization/{id}/add_user": {
             "post": {
-                "description": "add user to organization",
+                "description": "Добавление юзера в организацию",
                 "tags": [
                     "organization"
                 ],
-                "summary": "add user to organization",
+                "summary": "Добавление юзера в организацию",
                 "parameters": [
+                    {
+                        "description": "OrganizationAddUser",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/input.OrganizationAddUser"
+                        }
+                    },
                     {
                         "type": "integer",
                         "description": "organization id",
                         "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "user id",
-                        "name": "user_id",
                         "in": "path",
                         "required": true
                     }
@@ -1230,6 +1232,19 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "Обращение"
+                }
+            }
+        },
+        "input.OrganizationAddUser": {
+            "type": "object",
+            "properties": {
+                "job": {
+                    "type": "string",
+                    "example": "Главный по главным"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
                 }
             }
         },
@@ -1626,6 +1641,28 @@ const docTemplate = `{
                 }
             }
         },
+        "response.Organization": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "inn": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "ЖКХ"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
         "response.PollOption": {
             "type": "object",
             "properties": {
@@ -1661,9 +1698,15 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
+                "job": {
+                    "type": "string"
+                },
                 "last_name": {
                     "type": "string",
                     "example": "Иванов"
+                },
+                "organization": {
+                    "$ref": "#/definitions/response.Organization"
                 },
                 "organization_id": {
                     "type": "integer",

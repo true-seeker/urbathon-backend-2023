@@ -24,9 +24,9 @@ func NewAuthHandler(authService AuthService) *AuthHandler {
 	return &AuthHandler{authService: authService}
 }
 
-// Login
-// @Summary		login
-// @Description	login
+// Login Вход
+// @Summary		Вход
+// @Description	Вход
 // @Accept			json
 // @Tags			auth
 // @Produce		json
@@ -57,9 +57,9 @@ func (d *AuthHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// Logout
-// @Summary		logout
-// @Description	logout
+// Logout Выход
+// @Summary		Выход
+// @Description	Выход
 // @Tags			auth
 // @Success		200
 // @Router			/auth/logout [post]
@@ -88,9 +88,9 @@ func (d *AuthHandler) Test(c *gin.Context) {
 	c.JSON(http.StatusOK, userResponse)
 }
 
-// Register
-// @Summary		register
-// @Description	register
+// Register Регистрация
+// @Summary		Регистрация
+// @Description	Регистрация
 // @Accept			json
 // @Tags			auth
 // @Produce		json

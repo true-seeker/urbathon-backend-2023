@@ -22,10 +22,10 @@ func NewOrganizationHandler(organizationService OrganizationService) *Organizati
 	return &OrganizationHandler{organizationService: organizationService}
 }
 
-// Register
+// Register Регистрация организации
 //
-//	@Summary		register organization
-//	@Description	register organization
+//	@Summary		Регистрация организации
+//	@Description	Регистрация организации
 //	@Accept			json
 //	@Tags			organization
 //	@Produce		json
@@ -51,17 +51,17 @@ func (d *OrganizationHandler) Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, organization)
 }
 
-// AddUser
+// AddUser Добавление юзера в организацию
 //
-//	@Summary		add user to organization
-//	@Description	add user to organization
-//	@Tags			organization
-//	@Param			id		path		int	true	"organization id"
-//	@Param			user_id	path		int	true	"user id"
-//	@Success		200		{object}	nil
-//	@Failure		400		{object}	errorHandler.HttpErr
-//	@Failure		404		{object}	errorHandler.HttpErr
-//	@Router			/organization/{id}/add_user/{user_id} [post]
+// @Summary		Добавление юзера в организацию
+// @Description	Добавление юзера в организацию
+// @Tags			organization
+// @Param			input	body		input.OrganizationAddUser	true	"OrganizationAddUser"
+// @Param			id		path		int							true	"organization id"
+// @Success		200		{object}	nil
+// @Failure		400		{object}	errorHandler.HttpErr
+// @Failure		404		{object}	errorHandler.HttpErr
+// @Router			/organization/{id}/add_user [post]
 func (d *OrganizationHandler) AddUser(c *gin.Context) {
 	orgUserInput := input.OrganizationAddUser{}
 	organizationId, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")

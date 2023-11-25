@@ -20,16 +20,16 @@ func NewMapHandler(mapService MapService) *MapHandler {
 	return &MapHandler{mapService: mapService}
 }
 
-// GetMapElements get map elements
+// GetMapElements Получение всех маркеров на карте
 //
-// @Summary		get map elements
-// @Description	get map elements
-// @Tags			map
-// @Param			page		query	filter.Map	false	"page"
-// @Produce		json
-// @Success		200	{object}	[]response.MapElement
-// @Failure		400	{object}	errorHandler.HttpErr
-// @Router			/map/get_map_elements [get]
+//	@Summary		Получение всех маркеров на карте
+//	@Description	Получение всех маркеров на карте
+//	@Tags			map
+//	@Param			page	query	filter.Map	false	"page"
+//	@Produce		json
+//	@Success		200	{object}	[]response.MapElement
+//	@Failure		400	{object}	errorHandler.HttpErr
+//	@Router			/map/get_map_elements [get]
 func (d *MapHandler) GetMapElements(c *gin.Context) {
 	f, httpErr := filter.NewMapFilter(c)
 	if httpErr != nil {

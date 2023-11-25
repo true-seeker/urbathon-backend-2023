@@ -24,10 +24,10 @@ func NewAppealCommentHandler(appealCommentService AppealCommentService) *AppealC
 	return &AppealCommentHandler{appealCommentService: appealCommentService}
 }
 
-// GetComments get appeal comments
+// GetComments Получение комментариев обращения
 //
-//	@Summary		get appeal comments
-//	@Description	get appeal comments
+//	@Summary		Получение комментариев обращения
+//	@Description	Получение комментариев обращения
 //	@Tags			appealComment
 //	@Param			id			path	int	true	"appeal id"	default(1)
 //	@Param			page		query	int	false	"page"		minimum(1)	default(1)
@@ -62,10 +62,10 @@ func (d *AppealCommentHandler) GetComments(c *gin.Context) {
 	c.JSON(http.StatusOK, commentsResponse)
 }
 
-// CreateComment
+// CreateComment Создание комментария
 //
-// @Summary		create comment appeal
-// @Description	create comment appeal
+// @Summary		Создание комментария
+// @Description	Создание комментария
 // @Tags			appealComment
 // @Param			id		path		int					true	"appeal id"	default(1)
 // @Param			comment	formData	input.AppealComment	true	"appeal"

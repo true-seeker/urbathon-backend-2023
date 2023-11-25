@@ -21,10 +21,10 @@ func NewAppealTypeHandler(appealTypeService AppealTypeService) *AppealTypeHandle
 	return &AppealTypeHandler{appealTypeService: appealTypeService}
 }
 
-// Get get appealType by id
+// Get Получить тип обращения по айди
 //
-// @Summary		get appealType by id
-// @Description	get appealType by id
+// @Summary		Получить тип обращения по айди
+// @Description	Получить тип обращения по айди
 // @Tags			appealType
 // @Produce		json
 // @Param			id	path		int	true	"appealType id"
@@ -46,10 +46,10 @@ func (d *AppealTypeHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, appealType)
 }
 
-// GetAll get all appealTypes
+// GetAll Получить все типы обращений
 //
-// @Summary		get all appealTypes
-// @Description	get all appealTypes
+// @Summary		Получить все типы обращений
+// @Description	Получить все типы обращений
 // @Tags			appealType
 // @Produce		json
 // @Success		200	{object}	[]response.AppealType

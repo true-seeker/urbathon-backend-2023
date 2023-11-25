@@ -21,10 +21,10 @@ func NewAppealStatusHandler(appealStatusService AppealStatusService) *AppealStat
 	return &AppealStatusHandler{appealStatusService: appealStatusService}
 }
 
-// Get get appealStatus by id
+// Get Получить статус обращения
 //
-// @Summary		get appealStatus by id
-// @Description	get appealStatus by id
+// @Summary		Получить статус обращения
+// @Description	Получить статус обращения
 // @Tags			appealStatus
 // @Produce		json
 // @Param			id	path		int	true	"appealStatus id" default(1)
@@ -46,10 +46,10 @@ func (d *AppealStatusHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, appealStatus)
 }
 
-// GetAll get all appealStatuses
+// GetAll Получить все статусы обращений
 //
-// @Summary		get all appealStatuses
-// @Description	get all appealStatuses
+// @Summary		Получить все статусы обращений
+// @Description	Получить все статусы обращений
 // @Tags			appealStatus
 // @Produce		json
 // @Success		200	{object}	[]response.AppealStatus
