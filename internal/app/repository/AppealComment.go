@@ -23,7 +23,9 @@ func NewAppealCommentRepository(s storage.Sql) *AppealCommentRepository {
 func getSelectAppealCommentsStmt() SelectStatement {
 	return SELECT(AppealComments.AllColumns,
 		Users.ID.AS("users.id"),
-		Users.Name.AS("users.name"),
+		Users.FirstName.AS("users.firstname"),
+		Users.LastName.AS("users.lastname"),
+		Users.Patronymic.AS("users.patronymic"),
 		AppealCommentPhotos.ID.AS("appealCommentPhotos.id"),
 		AppealCommentPhotos.URL.AS("appealCommentPhotos.url"),
 	).FROM(AppealComments.

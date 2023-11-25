@@ -18,12 +18,14 @@ type usersTable struct {
 
 	// Columns
 	ID             postgres.ColumnInteger
-	Name           postgres.ColumnString
 	Email          postgres.ColumnString
 	Password       postgres.ColumnString
 	Salt           postgres.ColumnString
 	Role           postgres.ColumnInteger
 	OrganizationID postgres.ColumnInteger
+	FirstName      postgres.ColumnString
+	LastName       postgres.ColumnString
+	Patronymic     postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -65,14 +67,16 @@ func newUsersTable(schemaName, tableName, alias string) *UsersTable {
 func newUsersTableImpl(schemaName, tableName, alias string) usersTable {
 	var (
 		IDColumn             = postgres.IntegerColumn("id")
-		NameColumn           = postgres.StringColumn("name")
 		EmailColumn          = postgres.StringColumn("email")
 		PasswordColumn       = postgres.StringColumn("password")
 		SaltColumn           = postgres.StringColumn("salt")
 		RoleColumn           = postgres.IntegerColumn("role")
 		OrganizationIDColumn = postgres.IntegerColumn("organization_id")
-		allColumns           = postgres.ColumnList{IDColumn, NameColumn, EmailColumn, PasswordColumn, SaltColumn, RoleColumn, OrganizationIDColumn}
-		mutableColumns       = postgres.ColumnList{NameColumn, EmailColumn, PasswordColumn, SaltColumn, RoleColumn, OrganizationIDColumn}
+		FirstNameColumn      = postgres.StringColumn("first_name")
+		LastNameColumn       = postgres.StringColumn("last_name")
+		PatronymicColumn     = postgres.StringColumn("patronymic")
+		allColumns           = postgres.ColumnList{IDColumn, EmailColumn, PasswordColumn, SaltColumn, RoleColumn, OrganizationIDColumn, FirstNameColumn, LastNameColumn, PatronymicColumn}
+		mutableColumns       = postgres.ColumnList{EmailColumn, PasswordColumn, SaltColumn, RoleColumn, OrganizationIDColumn, FirstNameColumn, LastNameColumn, PatronymicColumn}
 	)
 
 	return usersTable{
@@ -80,12 +84,14 @@ func newUsersTableImpl(schemaName, tableName, alias string) usersTable {
 
 		//Columns
 		ID:             IDColumn,
-		Name:           NameColumn,
 		Email:          EmailColumn,
 		Password:       PasswordColumn,
 		Salt:           SaltColumn,
 		Role:           RoleColumn,
 		OrganizationID: OrganizationIDColumn,
+		FirstName:      FirstNameColumn,
+		LastName:       LastNameColumn,
+		Patronymic:     PatronymicColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

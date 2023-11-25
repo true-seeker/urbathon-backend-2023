@@ -18,7 +18,7 @@ func NewAuthRepository(s storage.Sql) *UserRepository {
 
 func (a *UserRepository) GetByEmail(email *string) (*model.Users, error) {
 	var u model.Users
-	stmt := SELECT(Users.ID, Users.Name, Users.Email, Users.Password, Users.Salt).
+	stmt := SELECT(Users.ID, Users.FirstName, Users.LastName, Users.Patronymic, Users.Email, Users.Password, Users.Salt).
 		FROM(Users).
 		WHERE(Users.Email.EQ(String(*email)))
 
@@ -31,7 +31,7 @@ func (a *UserRepository) GetByEmail(email *string) (*model.Users, error) {
 
 func (a *UserRepository) Get(id *int32) (*model.Users, error) {
 	var u model.Users
-	stmt := SELECT(Users.ID, Users.Name, Users.Email).
+	stmt := SELECT(Users.ID, Users.FirstName, Users.LastName, Users.Patronymic, Users.Email).
 		FROM(Users).
 		WHERE(Users.ID.EQ(Int32(*id)))
 
@@ -43,7 +43,7 @@ func (a *UserRepository) Get(id *int32) (*model.Users, error) {
 }
 func (a *UserRepository) Create(user *model.Users) (*model.Users, error) {
 	var u model.Users
-	stmt := Users.INSERT(Users.Email, Users.Password, Users.Name, Users.Salt).
+	stmt := Users.INSERT(Users.Email, Users.Password, Users.FirstName, Users.LastName, Users.Patronymic, Users.Salt).
 		MODEL(user).
 		RETURNING(Users.AllColumns)
 

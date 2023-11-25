@@ -22,7 +22,9 @@ func NewAppealRepository(s storage.Sql) *AppealRepository {
 func getSelectAppealStmt() SelectStatement {
 	return SELECT(Appeals.AllColumns,
 		Users.ID.AS("users.id"),
-		Users.Name.AS("users.name"),
+		Users.FirstName.AS("users.firstname"),
+		Users.LastName.AS("users.lastname"),
+		Users.Patronymic.AS("users.patronymic"),
 		Users.Email.AS("users.email"),
 		AppealTypes.ID.AS("appealTypes.id"),
 		AppealTypes.Title.AS("appealTypes.title"),

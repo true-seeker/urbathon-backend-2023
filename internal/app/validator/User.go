@@ -20,9 +20,16 @@ func UserRegistration(userRegister *input.UserRegister) *errorHandler.HttpErr {
 		return errorHandler.New("password is empty", http.StatusBadRequest)
 	}
 
-	if IsStringEmpty(userRegister.Name) {
-		return errorHandler.New("name is empty", http.StatusBadRequest)
+	if IsStringEmpty(userRegister.FirstName) {
+		return errorHandler.New("first_name is empty", http.StatusBadRequest)
 	}
+	if IsStringEmpty(userRegister.LastName) {
+		return errorHandler.New("last_name is empty", http.StatusBadRequest)
+	}
+	if IsStringEmpty(userRegister.Patronymic) {
+		return errorHandler.New("patronymic is empty", http.StatusBadRequest)
+	}
+
 	return nil
 }
 

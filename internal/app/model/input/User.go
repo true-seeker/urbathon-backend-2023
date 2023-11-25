@@ -6,7 +6,9 @@ type UserLogin struct {
 }
 
 type UserRegister struct {
-	Email    *string `json:"email" example:"test@gmail.com"`
-	Password *string `json:"password" example:"123456"`
-	Name     *string `json:"name" example:"Иванов Иван Иванович"`
+	Email      *string `json:"email" example:"test@gmail.com"`
+	Password   *string `json:"password" example:"123456"`
+	FirstName  *string `json:"first_name" example:"Иван"`
+	LastName   *string `json:"last_name" example:"Иванов"`
+	Patronymic *string `json:"patronymic" example:"Иванович"`
 }

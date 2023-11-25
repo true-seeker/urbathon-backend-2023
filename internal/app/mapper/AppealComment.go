@@ -13,9 +13,11 @@ func AppealCommentToAppealCommentResponse(appeal entity.AppealComment) *response
 		Text: appeal.Text,
 		Date: appeal.Date,
 		User: UserToUserResponse(&model.Users{
-			ID:    appeal.User.ID,
-			Name:  appeal.User.Name,
-			Email: appeal.User.Email,
+			ID:         appeal.User.ID,
+			FirstName:  appeal.User.FirstName,
+			LastName:   appeal.User.LastName,
+			Patronymic: appeal.User.Patronymic,
+			Email:      appeal.User.Email,
 		}),
 		AppealCommentPhotos: AppealCommentPhotoModelListToAppealCommentPhotoResponses(appeal.AppealCommentPhotos),
 	}

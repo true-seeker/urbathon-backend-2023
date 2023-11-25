@@ -10,7 +10,9 @@ func UserToUserResponse(user *model.Users) *response.User {
 	r := &response.User{
 		Id:             user.ID,
 		Email:          user.Email,
-		Name:           user.Name,
+		FirstName:      user.FirstName,
+		LastName:       user.LastName,
+		Patronymic:     user.Patronymic,
 		OrganizationId: user.OrganizationID,
 	}
 
@@ -29,8 +31,10 @@ func UserToUserResponses(users *[]model.Users) *[]response.User {
 
 func UserRegisterInputToUser(userInput *input.UserRegister) *model.Users {
 	r := &model.Users{
-		Name:  userInput.Name,
-		Email: userInput.Email,
+		FirstName:  userInput.FirstName,
+		LastName:   userInput.LastName,
+		Patronymic: userInput.Patronymic,
+		Email:      userInput.Email,
 	}
 	return r
 }
