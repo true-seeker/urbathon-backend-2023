@@ -166,3 +166,24 @@ func makeWhere(f *filter.AppealFilter, stmt SelectStatement) SelectStatement {
 	}
 	return stmt
 }
+
+func makeWhereMap(f *filter.Map, stmt SelectStatement) SelectStatement {
+	if f.LatUp != nil && f.LatDown != nil && f.LongDown != nil && f.LongUp != nil {
+		stmt = stmt.WHERE(Appeals.Longitude.GT(Float(*f.LongUp)).
+			AND(Appeals.Longitude.LT(Float(*f.LongDown))).
+			AND(Appeals.Latitude.GT(Float(*f.LatDown))).
+			AND(Appeals.Latitude.LT(Float(*f.LatUp))))
+	}
+	return stmt
+}
+
+func (a *AppealRepository) GetMapElements(f *filter.Map) (*[]entity.Appeal, error) {
+	var u []entity.Appeal
+	stmt := Appeals.SELECT(Appeals.ID, Appeals.Latitude, Appeals.Longitude, Appeals.Title).FROM(Appeals)
+	stmt = makeWhereMap(f, stmt)
+
+	if err := stmt.Query(a.db, &u); err != nil {
+		return nil, err
+	}
+	return &u, nil
+}

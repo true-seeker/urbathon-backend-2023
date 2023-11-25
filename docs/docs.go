@@ -917,6 +917,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/map/get_map_elements": {
+            "get": {
+                "description": "get map elements",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "map"
+                ],
+                "summary": "get map elements",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "name": "lat_down",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "lat_up",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "long_down",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "name": "long_up",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.MapElement"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandler.HttpErr"
+                        }
+                    }
+                }
+            }
+        },
         "/news": {
             "get": {
                 "description": "get all news",
@@ -1507,6 +1558,26 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "Тип"
+                }
+            }
+        },
+        "response.MapElement": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },

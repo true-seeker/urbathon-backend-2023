@@ -93,5 +93,12 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		appealStatusGroup.GET("/:id", appealStatusHandler.Get)
 	}
 
+	mapService := service.NewMapService(appealRepo)
+	mapHandler := handler.NewMapHandler(mapService)
+	mapGroup := api.Group("map")
+	{
+		mapGroup.GET("/get_map_elements", mapHandler.GetMapElements)
+	}
+
 	return r
 }

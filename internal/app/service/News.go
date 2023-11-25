@@ -125,7 +125,7 @@ func (d *NewsService) Vote(userId int32, OptionId int32, newsId int32) (*respons
 	if err := d.newsRepo.Vote(userId, OptionId); err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
-
+	// todo vote exists validation
 	newsResponse, err := d.Get(&newsId, &userId)
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
