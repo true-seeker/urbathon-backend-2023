@@ -61,12 +61,14 @@ func (a *AppealCommentRepository) Create(appealComments *model.AppealComments, u
 		return nil, err
 	}
 
-	for _, url := range *urls {
-		photosStmt := AppealCommentPhotos.
-			INSERT(AppealCommentPhotos.AppealCommentID, AppealCommentPhotos.URL).
-			VALUES(Int32(appealComments.ID), String(url))
-		if _, err := photosStmt.ExecContext(ctx, tx); err != nil {
-			return nil, err
+	if urls != nil {
+		for _, url := range *urls {
+			photosStmt := AppealCommentPhotos.
+				INSERT(AppealCommentPhotos.AppealCommentID, AppealCommentPhotos.URL).
+				VALUES(Int32(appealComments.ID), String(url))
+			if _, err := photosStmt.ExecContext(ctx, tx); err != nil {
+				return nil, err
+			}
 		}
 	}
 

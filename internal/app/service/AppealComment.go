@@ -60,9 +60,13 @@ func (d *AppealCommentService) Create(appealCommentInput *input.AppealComment, u
 	appealComment.UserID = &user.ID
 	appealComment.AppealID = appealId
 
-	photoUrls, httpErr := s3.UploadPhotos(appealCommentInput.Photos)
-	if httpErr != nil {
-		return nil, httpErr
+	var photoUrls *[]string
+	if appealCommentInput.Photos != nil {
+		var httpErr *errorHandler.HttpErr
+		photoUrls, httpErr = s3.UploadPhotos(appealCommentInput.Photos)
+		if httpErr != nil {
+			return nil, httpErr
+		}
 	}
 
 	appeal, err := d.appealCommentRepo.Create(appealComment, photoUrls)
