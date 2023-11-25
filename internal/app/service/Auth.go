@@ -43,7 +43,7 @@ func (d *AuthService) Login(loginInput *input.UserLogin) (*response.User, *error
 	if !checkPassword(loginInput.Password, user) {
 		return nil, errorHandler.New("Wrong email or password", http.StatusUnauthorized)
 	}
-	userResponse = mapper.UserToUserResponse(user)
+	userResponse = mapper.UserModelToUserResponse(user)
 
 	return userResponse, nil
 }
@@ -61,7 +61,7 @@ func (d *AuthService) Register(userRegister *input.UserRegister) (*response.User
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}
-	userResponse = mapper.UserToUserResponse(user)
+	userResponse = mapper.UserModelToUserResponse(user)
 
 	return userResponse, nil
 }

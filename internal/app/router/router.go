@@ -31,8 +31,8 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 	organizationHandler := handler.NewOrganizationHandler(organizationService)
 	organizationGroup := api.Group("organization")
 	{
-		organizationGroup.POST("/", organizationHandler.Register)                     // todo admin role
-		organizationGroup.POST("/:id/add_user/:user_id", organizationHandler.AddUser) // todo admin role
+		organizationGroup.POST("/", organizationHandler.Register)            // todo admin role
+		organizationGroup.POST("/:id/add_user", organizationHandler.AddUser) // todo admin role
 	}
 
 	newsRepository := repository.NewNewsRepository(storage)

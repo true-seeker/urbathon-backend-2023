@@ -15,7 +15,7 @@ func AppealToAppealResponse(appeal entity.Appeal) *response.Appeal {
 		Address:     &appeal.Address,
 		Latitude:    &appeal.Latitude,
 		Longitude:   &appeal.Longitude,
-		User: UserToUserResponse(&model.Users{
+		User: UserModelToUserResponse(&model.Users{
 			ID:         appeal.User.ID,
 			FirstName:  appeal.User.FirstName,
 			LastName:   appeal.User.LastName,

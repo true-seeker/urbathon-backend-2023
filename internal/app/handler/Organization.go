@@ -11,7 +11,7 @@ import (
 
 type OrganizationService interface {
 	Register(organizationInput *input.OrganizationRegister) (*response.Organization, *errorHandler.HttpErr)
-	AddUser(organizationId int32, userId int32) *errorHandler.HttpErr
+	AddUser(organizationId int32, orgUserInout *input.OrganizationAddUser) *errorHandler.HttpErr
 }
 
 type OrganizationHandler struct {
@@ -63,18 +63,19 @@ func (d *OrganizationHandler) Register(c *gin.Context) {
 //	@Failure		404		{object}	errorHandler.HttpErr
 //	@Router			/organization/{id}/add_user/{user_id} [post]
 func (d *OrganizationHandler) AddUser(c *gin.Context) {
+	orgUserInput := input.OrganizationAddUser{}
 	organizationId, httpErr := validator.ValidateAndReturnId(c.Param("id"), "id")
 	if httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}
-	userId, httpErr := validator.ValidateAndReturnId(c.Param("user_id"), "user_id")
-	if httpErr != nil {
-		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
+
+	if err := c.BindJSON(&orgUserInput); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	if httpErr := d.organizationService.AddUser(organizationId, userId); httpErr != nil {
+	if httpErr := d.organizationService.AddUser(organizationId, &orgUserInput); httpErr != nil {
 		c.AbortWithStatusJSON(httpErr.StatusCode, httpErr)
 		return
 	}

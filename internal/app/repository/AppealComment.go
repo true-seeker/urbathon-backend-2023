@@ -26,11 +26,15 @@ func getSelectAppealCommentsStmt() SelectStatement {
 		Users.FirstName.AS("users.firstname"),
 		Users.LastName.AS("users.lastname"),
 		Users.Patronymic.AS("users.patronymic"),
+		Organizations.ID.AS("organizations.id"),
+		Organizations.Name.AS("organizations.name"),
+		Users.Job.AS("users.job"),
 		AppealCommentPhotos.ID.AS("appealCommentPhotos.id"),
 		AppealCommentPhotos.URL.AS("appealCommentPhotos.url"),
 	).FROM(AppealComments.
 		INNER_JOIN(Users, Users.ID.EQ(AppealComments.UserID)).
-		LEFT_JOIN(AppealCommentPhotos, AppealCommentPhotos.AppealCommentID.EQ(AppealComments.ID)))
+		LEFT_JOIN(AppealCommentPhotos, AppealCommentPhotos.AppealCommentID.EQ(AppealComments.ID)).
+		LEFT_JOIN(Organizations, Organizations.ID.EQ(Users.OrganizationID)))
 }
 
 func (a *AppealCommentRepository) Get(id *int32) (*entity.AppealComment, error) {

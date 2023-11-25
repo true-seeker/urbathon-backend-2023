@@ -83,7 +83,7 @@ func (d *AuthHandler) Logout(c *gin.Context) {
 func (d *AuthHandler) Test(c *gin.Context) {
 	userAny, _ := c.Get("user")
 	user := userAny.(*model.Users)
-	userResponse := mapper.UserToUserResponse(user)
+	userResponse := mapper.UserModelToUserResponse(user)
 
 	c.JSON(http.StatusOK, userResponse)
 }

@@ -6,6 +6,7 @@ import (
 	. "github.com/go-jet/jet/v2/postgres"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
 	. "urbathon-backend-2023/.gen/urbathon/public/table"
+	"urbathon-backend-2023/internal/app/model/input"
 	"urbathon-backend-2023/internal/app/storage"
 )
 
@@ -39,11 +40,13 @@ func (a *OrganizationRepository) Register(organization *model.Organizations, org
 
 	return &u, nil
 }
-func (a *OrganizationRepository) AddUser(organizationId int32, userId int32) error {
+func (a *OrganizationRepository) AddUser(organizationId int32, orgUserInput *input.OrganizationAddUser) error {
 	stmt := Users.
-		UPDATE(Users.OrganizationID, Users.Role).
-		SET(Int32(organizationId), Int32(2)).
-		WHERE(Users.ID.EQ(Int32(userId)))
+		UPDATE(Users.OrganizationID, Users.Role, Users.Job).
+		SET(Int32(organizationId),
+			Int32(2),
+			String(*orgUserInput.Job)).
+		WHERE(Users.ID.EQ(Int32(orgUserInput.UserId)))
 	fmt.Println(stmt.Sql())
 	if _, err := stmt.Exec(a.db); err != nil {
 		return err

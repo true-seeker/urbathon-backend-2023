@@ -9,16 +9,10 @@ import (
 
 func AppealCommentToAppealCommentResponse(appeal entity.AppealComment) *response.AppealComment {
 	r := &response.AppealComment{
-		Id:   appeal.ID,
-		Text: appeal.Text,
-		Date: appeal.Date,
-		User: UserToUserResponse(&model.Users{
-			ID:         appeal.User.ID,
-			FirstName:  appeal.User.FirstName,
-			LastName:   appeal.User.LastName,
-			Patronymic: appeal.User.Patronymic,
-			Email:      appeal.User.Email,
-		}),
+		Id:                  appeal.ID,
+		Text:                appeal.Text,
+		Date:                appeal.Date,
+		User:                UserToUserResponse(appeal.User),
 		AppealCommentPhotos: AppealCommentPhotoModelListToAppealCommentPhotoResponses(appeal.AppealCommentPhotos),
 	}
 	return r
