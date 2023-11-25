@@ -43,7 +43,7 @@ func (a *UserRepository) Get(id *int32) (*model.Users, error) {
 }
 func (a *UserRepository) Create(user *model.Users) (*model.Users, error) {
 	var u model.Users
-	stmt := Users.INSERT(Users.Email, Users.Password, Users.FirstName, Users.LastName, Users.Patronymic, Users.Salt).
+	stmt := Users.INSERT(Users.Email, Users.Password, Users.FirstName, Users.LastName, Users.Patronymic, Users.Salt, Users.PhoneNumber).
 		MODEL(user).
 		RETURNING(Users.AllColumns)
 

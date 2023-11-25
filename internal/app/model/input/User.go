@@ -11,4 +11,5 @@ type UserRegister struct {
 	FirstName  *string `json:"first_name" example:"Иван"`
 	LastName   *string `json:"last_name" example:"Иванов"`
 	Patronymic *string `json:"patronymic" example:"Иванович"`
+	Phone      *string `json:"phone" example:"89121234567"`
 }

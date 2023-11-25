@@ -31,10 +31,11 @@ func UserToUserResponses(users *[]model.Users) *[]response.User {
 
 func UserRegisterInputToUser(userInput *input.UserRegister) *model.Users {
 	r := &model.Users{
-		FirstName:  userInput.FirstName,
-		LastName:   userInput.LastName,
-		Patronymic: userInput.Patronymic,
-		Email:      userInput.Email,
+		FirstName:   userInput.FirstName,
+		LastName:    userInput.LastName,
+		Patronymic:  userInput.Patronymic,
+		Email:       userInput.Email,
+		PhoneNumber: userInput.Phone,
 	}
 	return r
 }

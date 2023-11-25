@@ -1235,13 +1235,25 @@ const docTemplate = `{
                     "type": "string",
                     "example": "test@gmail.com"
                 },
-                "name": {
+                "first_name": {
                     "type": "string",
-                    "example": "Иванов Иван Иванович"
+                    "example": "Иван"
+                },
+                "last_name": {
+                    "type": "string",
+                    "example": "Иванов"
                 },
                 "password": {
                     "type": "string",
                     "example": "123456"
+                },
+                "patronymic": {
+                    "type": "string",
+                    "example": "Иванович"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "89121234567"
                 }
             }
         },
@@ -1560,17 +1572,25 @@ const docTemplate = `{
                     "type": "string",
                     "example": "test@gmail.com"
                 },
+                "first_name": {
+                    "type": "string",
+                    "example": "Иван"
+                },
                 "id": {
                     "type": "integer",
                     "example": 1
                 },
-                "name": {
+                "last_name": {
                     "type": "string",
-                    "example": "Иванов Иван Иванович"
+                    "example": "Иванов"
                 },
                 "organization_id": {
                     "type": "integer",
                     "example": 1
+                },
+                "patronymic": {
+                    "type": "string",
+                    "example": "Иванович"
                 }
             }
         }

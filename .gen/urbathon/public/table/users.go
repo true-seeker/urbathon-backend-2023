@@ -26,6 +26,7 @@ type usersTable struct {
 	FirstName      postgres.ColumnString
 	LastName       postgres.ColumnString
 	Patronymic     postgres.ColumnString
+	PhoneNumber    postgres.ColumnString
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -75,8 +76,9 @@ func newUsersTableImpl(schemaName, tableName, alias string) usersTable {
 		FirstNameColumn      = postgres.StringColumn("first_name")
 		LastNameColumn       = postgres.StringColumn("last_name")
 		PatronymicColumn     = postgres.StringColumn("patronymic")
-		allColumns           = postgres.ColumnList{IDColumn, EmailColumn, PasswordColumn, SaltColumn, RoleColumn, OrganizationIDColumn, FirstNameColumn, LastNameColumn, PatronymicColumn}
-		mutableColumns       = postgres.ColumnList{EmailColumn, PasswordColumn, SaltColumn, RoleColumn, OrganizationIDColumn, FirstNameColumn, LastNameColumn, PatronymicColumn}
+		PhoneNumberColumn    = postgres.StringColumn("phone_number")
+		allColumns           = postgres.ColumnList{IDColumn, EmailColumn, PasswordColumn, SaltColumn, RoleColumn, OrganizationIDColumn, FirstNameColumn, LastNameColumn, PatronymicColumn, PhoneNumberColumn}
+		mutableColumns       = postgres.ColumnList{EmailColumn, PasswordColumn, SaltColumn, RoleColumn, OrganizationIDColumn, FirstNameColumn, LastNameColumn, PatronymicColumn, PhoneNumberColumn}
 	)
 
 	return usersTable{
@@ -92,6 +94,7 @@ func newUsersTableImpl(schemaName, tableName, alias string) usersTable {
 		FirstName:      FirstNameColumn,
 		LastName:       LastNameColumn,
 		Patronymic:     PatronymicColumn,
+		PhoneNumber:    PhoneNumberColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

@@ -59,11 +59,20 @@ definitions:
       email:
         example: test@gmail.com
         type: string
-      name:
-        example: Иванов Иван Иванович
+      first_name:
+        example: Иван
+        type: string
+      last_name:
+        example: Иванов
         type: string
       password:
         example: "123456"
+        type: string
+      patronymic:
+        example: Иванович
+        type: string
+      phone:
+        example: "89121234567"
         type: string
     type: object
   response.Appeal:
@@ -286,15 +295,21 @@ definitions:
       email:
         example: test@gmail.com
         type: string
+      first_name:
+        example: Иван
+        type: string
       id:
         example: 1
         type: integer
-      name:
-        example: Иванов Иван Иванович
+      last_name:
+        example: Иванов
         type: string
       organization_id:
         example: 1
         type: integer
+      patronymic:
+        example: Иванович
+        type: string
     type: object
 info:
   contact: {}

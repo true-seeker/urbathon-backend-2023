@@ -17,4 +17,5 @@ type Users struct {
 	FirstName      *string
 	LastName       *string
 	Patronymic     *string
+	PhoneNumber    *string
 }
