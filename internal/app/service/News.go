@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/go-jet/jet/v2/qrm"
 	"mime/multipart"
@@ -20,7 +21,7 @@ type NewsRepository interface {
 	Get(id *int32) (*entity.News, error)
 	GetAll(f *filter.Pagination) (*[]entity.News, error)
 	GetTotal() (*int, error)
-	Create(news *model.News) (*entity.News, error)
+	Create(news *model.News, poll entity.NewsPoll) (*entity.News, error)
 }
 type NewsService struct {
 	newsRepo NewsRepository
@@ -69,6 +70,13 @@ func (d *NewsService) Create(newsInput *input.News, user *model.Users) (*respons
 	news.UserID = &user.ID
 	news.OrganizationID = user.OrganizationID
 
+	var poll entity.NewsPoll
+	if newsInput.Poll != nil {
+		if err := json.Unmarshal([]byte(*newsInput.Poll), &poll); err != nil {
+			return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
+		}
+	}
+
 	if newsInput.Photo != nil {
 		photoUrls, httpErr := s3.UploadPhotos(&[]multipart.FileHeader{*newsInput.Photo})
 		if httpErr != nil {
@@ -77,7 +85,7 @@ func (d *NewsService) Create(newsInput *input.News, user *model.Users) (*respons
 		news.PhotoURL = &((*photoUrls)[0])
 	}
 
-	appealEntity, err := d.newsRepo.Create(news)
+	appealEntity, err := d.newsRepo.Create(news, poll)
 	if err != nil {
 		return nil, errorHandler.New(err.Error(), http.StatusBadRequest)
 	}

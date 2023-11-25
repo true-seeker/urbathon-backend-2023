@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	. "github.com/go-jet/jet/v2/postgres"
 	"urbathon-backend-2023/.gen/urbathon/public/model"
@@ -21,9 +22,15 @@ func NewNewsRepository(s storage.Sql) *NewsRepository {
 func getSelectNewStmt() SelectStatement {
 	return SELECT(News.AllColumns,
 		NewsCategories.ID.AS("newsCategories.id"),
-		NewsCategories.Title.AS("newsCategories.title")).
+		NewsCategories.Title.AS("newsCategories.title"),
+		NewsPolls.ID.AS("newsPolls.id"),
+		NewsPolls.Title.AS("newsPolls.title"),
+		PollOptions.ID.AS("pollOptions.id"),
+		PollOptions.Title.AS("pollOptions.title")).
 		FROM(News.
-			LEFT_JOIN(NewsCategories, NewsCategories.ID.EQ(News.CategoryID)))
+			LEFT_JOIN(NewsCategories, NewsCategories.ID.EQ(News.CategoryID)).
+			LEFT_JOIN(NewsPolls, NewsPolls.ID.EQ(News.PollID)).
+			LEFT_JOIN(PollOptions, PollOptions.PollID.EQ(NewsPolls.ID)))
 }
 
 func (a *NewsRepository) Get(id *int32) (*entity.News, error) {
@@ -59,18 +66,48 @@ func (a *NewsRepository) GetTotal() (*int, error) {
 	return &count, nil
 }
 
-func (a *NewsRepository) Create(news *model.News) (*entity.News, error) {
+func (a *NewsRepository) Create(news *model.News, poll entity.NewsPoll) (*entity.News, error) {
 	var u *entity.News
-
-	stmt := News.INSERT(News.AllColumns.Except(News.ID, News.Date)).
-		MODEL(news).
-		RETURNING(News.ID)
-
-	if err := stmt.Query(a.db, news); err != nil {
+	tx, err := a.db.Begin()
+	if err != nil {
 		return nil, err
 	}
 
-	u, err := a.Get(&news.ID)
+	ctx := context.TODO()
+
+	stmt := NewsPolls.
+		INSERT(NewsPolls.Title).
+		MODEL(poll.NewsPolls).
+		RETURNING(NewsPolls.ID)
+	if err := stmt.QueryContext(ctx, tx, &poll.NewsPolls); err != nil {
+		return nil, err
+	}
+
+	for _, option := range *poll.Options {
+		option.PollID = &poll.NewsPolls.ID
+		stmt = PollOptions.
+			INSERT(PollOptions.Title, PollOptions.PollID).
+			MODEL(option).
+			RETURNING(PollOptions.ID)
+		if err := stmt.QueryContext(ctx, tx, &option); err != nil {
+			return nil, err
+		}
+	}
+
+	news.PollID = &poll.NewsPolls.ID
+	stmt = News.INSERT(News.AllColumns.Except(News.ID, News.Date)).
+		MODEL(news).
+		RETURNING(News.ID)
+
+	if err := stmt.QueryContext(ctx, tx, news); err != nil {
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	u, err = a.Get(&news.ID)
 	if err != nil {
 		return nil, err
 	}

@@ -6,4 +6,5 @@ type News struct {
 	model.News
 
 	NewsCategory *model.NewsCategories `json:"news_category"`
+	Poll         *NewsPoll             `json:"poll"`
 }

@@ -225,6 +225,8 @@ definitions:
       photo_url:
         example: https://storage.yandexcloud.net/urbathon/test.jpg
         type: string
+      poll:
+        $ref: '#/definitions/response.NewsPoll'
       title:
         example: Заголовок
         type: string
@@ -256,6 +258,28 @@ definitions:
       total:
         example: 100
         type: integer
+    type: object
+  response.NewsPoll:
+    properties:
+      id:
+        example: 1
+        type: integer
+      options:
+        items:
+          $ref: '#/definitions/response.PollOption'
+        type: array
+      title:
+        example: Название опроса
+        type: string
+    type: object
+  response.PollOption:
+    properties:
+      id:
+        example: 1
+        type: integer
+      title:
+        example: Вариант опроса
+        type: string
     type: object
   response.User:
     properties:
@@ -914,6 +938,10 @@ paths:
       - in: formData
         name: category_id
         type: integer
+      - example: тут json голосования
+        in: formData
+        name: poll
+        type: string
       - in: formData
         name: title
         type: string

@@ -986,6 +986,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "example": "тут json голосования",
+                        "name": "poll",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "title",
                         "in": "formData"
                     },
@@ -1466,6 +1472,9 @@ const docTemplate = `{
                     "type": "string",
                     "example": "https://storage.yandexcloud.net/urbathon/test.jpg"
                 },
+                "poll": {
+                    "$ref": "#/definitions/response.NewsPoll"
+                },
                 "title": {
                     "type": "string",
                     "example": "Заголовок"
@@ -1509,6 +1518,38 @@ const docTemplate = `{
                 "total": {
                     "type": "integer",
                     "example": 100
+                }
+            }
+        },
+        "response.NewsPoll": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.PollOption"
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Название опроса"
+                }
+            }
+        },
+        "response.PollOption": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Вариант опроса"
                 }
             }
         },

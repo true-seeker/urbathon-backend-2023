@@ -27,6 +27,7 @@ func NewsToNewsResponse(news entity.News) *response.News {
 		Date:     news.Date,
 		Category: NewsCategoryModelToNewsCategoryResponse(*news.NewsCategory),
 		PhotoUrl: news.PhotoURL,
+		Poll:     NewsPollToNewsPollResponse(news.Poll),
 	}
 
 	return r

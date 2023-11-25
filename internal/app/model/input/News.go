@@ -7,4 +7,5 @@ type News struct {
 	Body       *string               `form:"body"`
 	CategoryId *int32                `form:"category_id"`
 	Photo      *multipart.FileHeader `form:"photo" swaggerignore:"true"`
+	Poll       *string               `form:"poll" example:"тут json голосования"`
 }
