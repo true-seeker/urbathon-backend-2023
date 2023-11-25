@@ -12,7 +12,19 @@ func NewsCreate(newsInput *input.News) *errorHandler.HttpErr {
 	}
 
 	if IsStringEmpty(newsInput.Body) {
-		return errorHandler.New("description is empty", http.StatusBadRequest)
+		return errorHandler.New("body is empty", http.StatusBadRequest)
+	}
+
+	if IsStringEmpty(newsInput.Address) {
+		return errorHandler.New("address is empty", http.StatusBadRequest)
+	}
+
+	if !IsLatitudeCorrect(newsInput.Latitude) {
+		return errorHandler.New("latitude must be in [-90;90]", http.StatusBadRequest)
+	}
+
+	if !IsLongitudeCorrect(newsInput.Longitude) {
+		return errorHandler.New("latitude must be in [-180;180]", http.StatusBadRequest)
 	}
 
 	if newsInput.CategoryId == nil {

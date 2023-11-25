@@ -233,6 +233,9 @@ definitions:
     type: object
   response.News:
     properties:
+      address:
+        example: Улица Пушкина
+        type: string
       body:
         example: Тело новости
         type: string
@@ -244,6 +247,12 @@ definitions:
       id:
         example: 1
         type: integer
+      latitude:
+        example: 54.1234
+        type: number
+      longitude:
+        example: 122.7656
+        type: number
       photo_url:
         example: https://storage.yandexcloud.net/urbathon/test.jpg
         type: string
@@ -950,12 +959,24 @@ paths:
       - multipart/form-data
       description: create news
       parameters:
+      - example: Улица Пушкина
+        in: formData
+        name: address
+        type: string
       - in: formData
         name: body
         type: string
       - in: formData
         name: category_id
         type: integer
+      - example: 54.1234
+        in: formData
+        name: latitude
+        type: number
+      - example: 122.7656
+        in: formData
+        name: longitude
+        type: number
       - example: тут json голосования
         in: formData
         name: poll

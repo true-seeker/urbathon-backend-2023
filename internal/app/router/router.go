@@ -92,7 +92,7 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		appealStatusGroup.GET("/:id", appealStatusHandler.Get)
 	}
 	tkoRepo := repository.NewTkoRepository(storage)
-	mapService := service.NewMapService(appealRepo, tkoRepo)
+	mapService := service.NewMapService(appealRepo, tkoRepo, newsRepository)
 	mapHandler := handler.NewMapHandler(mapService)
 	mapGroup := api.Group("map")
 	{

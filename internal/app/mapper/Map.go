@@ -51,3 +51,26 @@ func TkosToMapElementResponses(organizations *[]model.Tko) *[]response.MapElemen
 
 	return &rs
 }
+
+func NewsToMapElementResponse(news model.News) *response.MapElement {
+	t := "news"
+	r := &response.MapElement{
+		Id:        news.ID,
+		Latitude:  news.Latitude,
+		Longitude: news.Longitude,
+		Title:     &news.Title,
+		Type:      &t,
+	}
+
+	return r
+}
+
+func NewsToMapElementResponses(organizations *[]model.News) *[]response.MapElement {
+	rs := make([]response.MapElement, 0)
+
+	for _, organization := range *organizations {
+		rs = append(rs, *NewsToMapElementResponse(organization))
+	}
+
+	return &rs
+}

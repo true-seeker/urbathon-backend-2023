@@ -9,11 +9,14 @@ import (
 
 func NewsModelToNewsResponse(news model.News) *response.News {
 	r := &response.News{
-		Id:       news.ID,
-		Title:    &news.Title,
-		Body:     &news.Body,
-		Date:     news.Date,
-		PhotoUrl: news.PhotoURL,
+		Id:        news.ID,
+		Title:     &news.Title,
+		Body:      &news.Body,
+		Date:      news.Date,
+		PhotoUrl:  news.PhotoURL,
+		Address:   news.Address,
+		Latitude:  news.Latitude,
+		Longitude: news.Longitude,
 	}
 
 	return r
@@ -21,13 +24,16 @@ func NewsModelToNewsResponse(news model.News) *response.News {
 
 func NewsToNewsResponse(news entity.News) *response.News {
 	r := &response.News{
-		Id:       news.ID,
-		Title:    &news.Title,
-		Body:     &news.Body,
-		Date:     news.Date,
-		Category: NewsCategoryModelToNewsCategoryResponse(*news.NewsCategory),
-		PhotoUrl: news.PhotoURL,
-		Poll:     NewsPollToNewsPollResponse(news.Poll),
+		Id:        news.ID,
+		Title:     &news.Title,
+		Body:      &news.Body,
+		Date:      news.Date,
+		Category:  NewsCategoryModelToNewsCategoryResponse(*news.NewsCategory),
+		PhotoUrl:  news.PhotoURL,
+		Poll:      NewsPollToNewsPollResponse(news.Poll),
+		Address:   news.Address,
+		Latitude:  news.Latitude,
+		Longitude: news.Longitude,
 	}
 
 	return r

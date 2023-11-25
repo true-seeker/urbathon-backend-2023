@@ -21,4 +21,7 @@ type News struct {
 	UserID         *int32
 	OrganizationID *int32
 	PollID         *int32
+	Address        *string
+	Latitude       *float64
+	Longitude      *float64
 }

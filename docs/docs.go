@@ -952,12 +952,30 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "Улица Пушкина",
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "body",
                         "in": "formData"
                     },
                     {
                         "type": "integer",
                         "name": "category_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "number",
+                        "example": 54.1234,
+                        "name": "latitude",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "number",
+                        "example": 122.7656,
+                        "name": "longitude",
                         "in": "formData"
                     },
                     {
@@ -1509,6 +1527,10 @@ const docTemplate = `{
         "response.News": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "Улица Пушкина"
+                },
                 "body": {
                     "type": "string",
                     "example": "Тело новости"
@@ -1523,6 +1545,14 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "latitude": {
+                    "type": "number",
+                    "example": 54.1234
+                },
+                "longitude": {
+                    "type": "number",
+                    "example": 122.7656
                 },
                 "photo_url": {
                     "type": "string",

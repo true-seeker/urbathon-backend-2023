@@ -26,6 +26,9 @@ type newsTable struct {
 	UserID         postgres.ColumnInteger
 	OrganizationID postgres.ColumnInteger
 	PollID         postgres.ColumnInteger
+	Address        postgres.ColumnString
+	Latitude       postgres.ColumnFloat
+	Longitude      postgres.ColumnFloat
 
 	AllColumns     postgres.ColumnList
 	MutableColumns postgres.ColumnList
@@ -75,8 +78,11 @@ func newNewsTableImpl(schemaName, tableName, alias string) newsTable {
 		UserIDColumn         = postgres.IntegerColumn("user_id")
 		OrganizationIDColumn = postgres.IntegerColumn("organization_id")
 		PollIDColumn         = postgres.IntegerColumn("poll_id")
-		allColumns           = postgres.ColumnList{IDColumn, TitleColumn, BodyColumn, DateColumn, CategoryIDColumn, PhotoURLColumn, UserIDColumn, OrganizationIDColumn, PollIDColumn}
-		mutableColumns       = postgres.ColumnList{TitleColumn, BodyColumn, DateColumn, CategoryIDColumn, PhotoURLColumn, UserIDColumn, OrganizationIDColumn, PollIDColumn}
+		AddressColumn        = postgres.StringColumn("address")
+		LatitudeColumn       = postgres.FloatColumn("latitude")
+		LongitudeColumn      = postgres.FloatColumn("longitude")
+		allColumns           = postgres.ColumnList{IDColumn, TitleColumn, BodyColumn, DateColumn, CategoryIDColumn, PhotoURLColumn, UserIDColumn, OrganizationIDColumn, PollIDColumn, AddressColumn, LatitudeColumn, LongitudeColumn}
+		mutableColumns       = postgres.ColumnList{TitleColumn, BodyColumn, DateColumn, CategoryIDColumn, PhotoURLColumn, UserIDColumn, OrganizationIDColumn, PollIDColumn, AddressColumn, LatitudeColumn, LongitudeColumn}
 	)
 
 	return newsTable{
@@ -92,6 +98,9 @@ func newNewsTableImpl(schemaName, tableName, alias string) newsTable {
 		UserID:         UserIDColumn,
 		OrganizationID: OrganizationIDColumn,
 		PollID:         PollIDColumn,
+		Address:        AddressColumn,
+		Latitude:       LatitudeColumn,
+		Longitude:      LongitudeColumn,
 
 		AllColumns:     allColumns,
 		MutableColumns: mutableColumns,

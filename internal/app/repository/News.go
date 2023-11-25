@@ -143,3 +143,24 @@ func (a *NewsRepository) GetUserVoteOptionId(userId *int32) (int, error) {
 	}
 	return optionId, nil
 }
+
+func (a *NewsRepository) GetForMap(f *filter.Map) (*[]model.News, error) {
+	var u []model.News
+	stmt := News.SELECT(News.ID, News.Latitude, News.Longitude, News.Address, News.Title)
+	stmt = makeWhereNews(f, stmt).LIMIT(100).
+		WHERE(News.Address.IS_NOT_NULL())
+	if err := stmt.Query(a.db, &u); err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
+func makeWhereNews(f *filter.Map, stmt SelectStatement) SelectStatement {
+	if f.LatUp != nil && f.LatDown != nil && f.LongDown != nil && f.LongUp != nil {
+		stmt = stmt.WHERE(News.Longitude.GT(Float(*f.LongUp)).
+			AND(News.Longitude.LT(Float(*f.LongDown))).
+			AND(News.Latitude.GT(Float(*f.LatDown))).
+			AND(News.Latitude.LT(Float(*f.LatUp))))
+	}
+	return stmt
+}

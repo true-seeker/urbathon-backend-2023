@@ -16,14 +16,18 @@ type AppealMapRepository interface {
 type TkoMapRepository interface {
 	GetForMap(f *filter.Map) (*[]model.Tko, error)
 }
+type NewsMapRepository interface {
+	GetForMap(f *filter.Map) (*[]model.News, error)
+}
 
 type MapService struct {
 	appealRepo AppealMapRepository
 	tkoRepo    TkoMapRepository
+	newsRepo   NewsMapRepository
 }
 
-func NewMapService(appealRepo AppealMapRepository, tkoRepo TkoMapRepository) *MapService {
-	return &MapService{appealRepo: appealRepo, tkoRepo: tkoRepo}
+func NewMapService(appealRepo AppealMapRepository, tkoRepo TkoMapRepository, newsRepo NewsMapRepository) *MapService {
+	return &MapService{appealRepo: appealRepo, tkoRepo: tkoRepo, newsRepo: newsRepo}
 }
 
 func (d *MapService) GetMapElements(f *filter.Map) (*[]response.MapElement, *errorHandler.HttpErr) {
@@ -37,7 +41,11 @@ func (d *MapService) GetMapElements(f *filter.Map) (*[]response.MapElement, *err
 	tkoModel, err := d.tkoRepo.GetForMap(f)
 	tkomapElementResponse := mapper.TkosToMapElementResponses(tkoModel)
 
+	newsModel, err := d.newsRepo.GetForMap(f)
+	newsMapElementResponse := mapper.NewsToMapElementResponses(newsModel)
+
 	response = append(response, *mapElementResponse...)
+	response = append(response, *newsMapElementResponse...)
 	response = append(response, *tkomapElementResponse...)
 	return &response, nil
 }
