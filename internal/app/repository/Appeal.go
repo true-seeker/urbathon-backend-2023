@@ -37,7 +37,10 @@ func getSelectJoinAppealStmt(f *filter.AppealFilter) SelectStatement {
 	rAppealsUserId := Appeals.UserID.From(rAppeals)
 	rAppealsAppealTypeID := Appeals.AppealTypeID.From(rAppeals)
 	rAppealsStatusID := Appeals.StatusID.From(rAppeals)
-	return SELECT(rAppeals.AllColumns(),
+	rAppealsLongitude := Appeals.Longitude.From(rAppeals)
+	rAppealsLatitude := Appeals.Latitude.From(rAppeals)
+
+	stmt := SELECT(rAppeals.AllColumns(),
 		Users.ID.AS("users.id"),
 		Users.FirstName.AS("users.firstname"),
 		Users.LastName.AS("users.lastname"),
@@ -57,6 +60,19 @@ func getSelectJoinAppealStmt(f *filter.AppealFilter) SelectStatement {
 		LEFT_JOIN(AppealPhotos, AppealPhotos.AppealID.EQ(rAppealsId)).
 		INNER_JOIN(AppealStatus, AppealStatus.ID.EQ(rAppealsStatusID)).
 		INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)))
+
+	if f != nil {
+		if f.UserId != nil {
+			stmt = stmt.WHERE(rAppealsUserId.EQ(Int32(*f.UserId)))
+		}
+		if f.LatUp != nil && f.LatDown != nil && f.LongDown != nil && f.LongUp != nil {
+			stmt = stmt.WHERE(rAppealsLongitude.GT(Float(*f.LongUp)).
+				AND(rAppealsLongitude.LT(Float(*f.LongDown))).
+				AND(rAppealsLatitude.GT(Float(*f.LatDown))).
+				AND(rAppealsLatitude.LT(Float(*f.LatUp))))
+		}
+	}
+	return stmt
 }
 
 func getSelectAppealStmt() SelectStatement {
@@ -97,8 +113,6 @@ func (a *AppealRepository) GetAll(f *filter.AppealFilter) (*[]entity.Appeal, err
 	var u []entity.Appeal
 	stmt := getSelectJoinAppealStmt(f)
 
-	stmt = makeWhere(f, stmt)
-
 	fmt.Println(stmt.Sql())
 
 	if err := stmt.Query(a.db, &u); err != nil {
@@ -112,7 +126,6 @@ func (a *AppealRepository) GetTotal(f *filter.AppealFilter) (*int, error) {
 	var count int
 	stmt := SELECT(Raw("count(*)")).
 		FROM(Appeals)
-	stmt = makeWhere(f, stmt)
 
 	rawSql, args := stmt.Sql()
 	if err := a.db.QueryRow(rawSql, args...).Scan(&count); err != nil {
@@ -192,19 +205,6 @@ func (a *AppealRepository) UpdateStatus(appealId int32, statusId int32) error {
 	}
 
 	return nil
-}
-
-func makeWhere(f *filter.AppealFilter, stmt SelectStatement) SelectStatement {
-	if f.UserId != nil {
-		stmt = stmt.WHERE(Appeals.UserID.EQ(Int32(*f.UserId)))
-	}
-	if f.LatUp != nil && f.LatDown != nil && f.LongDown != nil && f.LongUp != nil {
-		stmt = stmt.WHERE(Appeals.Longitude.GT(Float(*f.LongUp)).
-			AND(Appeals.Longitude.LT(Float(*f.LongDown))).
-			AND(Appeals.Latitude.GT(Float(*f.LatDown))).
-			AND(Appeals.Latitude.LT(Float(*f.LatUp))))
-	}
-	return stmt
 }
 
 func makeWhereMap(f *filter.Map, stmt SelectStatement) SelectStatement {
