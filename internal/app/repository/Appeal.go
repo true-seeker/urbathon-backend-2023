@@ -20,6 +20,45 @@ func NewAppealRepository(s storage.Sql) *AppealRepository {
 	return &AppealRepository{db: s.GetDb()}
 }
 
+func getSelectAppeal(f *filter.AppealFilter) SelectTable {
+	stmt := SELECT(Appeals.AllColumns).FROM(Appeals)
+	var stmtTable SelectTable
+	if f != nil {
+		stmtTable = f.GetLimitOffsetStmt(stmt).AsTable("rAppeals")
+	} else {
+		stmtTable = stmt.AsTable("rAppeals")
+	}
+	return stmtTable
+}
+
+func getSelectJoinAppealStmt(f *filter.AppealFilter) SelectStatement {
+	rAppeals := getSelectAppeal(f)
+	rAppealsId := Appeals.ID.From(rAppeals)
+	rAppealsUserId := Appeals.UserID.From(rAppeals)
+	rAppealsAppealTypeID := Appeals.AppealTypeID.From(rAppeals)
+	rAppealsStatusID := Appeals.StatusID.From(rAppeals)
+	return SELECT(rAppeals.AllColumns(),
+		Users.ID.AS("users.id"),
+		Users.FirstName.AS("users.firstname"),
+		Users.LastName.AS("users.lastname"),
+		Users.Patronymic.AS("users.patronymic"),
+		Users.Email.AS("users.email"),
+		AppealTypes.ID.AS("appealTypes.id"),
+		AppealTypes.Title.AS("appealTypes.title"),
+		AppealCategories.ID.AS("appealCategories.id"),
+		AppealCategories.Title.AS("appealCategories.title"),
+		AppealPhotos.ID.AS("appealPhotos.id"),
+		AppealPhotos.URL.AS("appealPhotos.url"),
+		AppealStatus.ID.AS("appealStatus.id"),
+		AppealStatus.Status.AS("appealStatus.status"),
+	).FROM(rAppeals.
+		INNER_JOIN(Users, Users.ID.EQ(rAppealsUserId)).
+		INNER_JOIN(AppealTypes, AppealTypes.ID.EQ(rAppealsAppealTypeID)).
+		LEFT_JOIN(AppealPhotos, AppealPhotos.AppealID.EQ(rAppealsId)).
+		INNER_JOIN(AppealStatus, AppealStatus.ID.EQ(rAppealsStatusID)).
+		INNER_JOIN(AppealCategories, AppealCategories.ID.EQ(AppealTypes.AppealCategoryID)))
+}
+
 func getSelectAppealStmt() SelectStatement {
 	return SELECT(Appeals.AllColumns,
 		Users.ID.AS("users.id"),
@@ -43,7 +82,6 @@ func getSelectAppealStmt() SelectStatement {
 		INNER_JOIN(AppealStatus, AppealStatus.ID.EQ(Appeals.StatusID)))
 
 }
-
 func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 	var u entity.Appeal
 	stmt := getSelectAppealStmt().
@@ -57,9 +95,7 @@ func (a *AppealRepository) Get(id *int32) (*entity.Appeal, error) {
 
 func (a *AppealRepository) GetAll(f *filter.AppealFilter) (*[]entity.Appeal, error) {
 	var u []entity.Appeal
-	stmt := getSelectAppealStmt()
-	stmt = f.GetLimitOffsetStmt(stmt).
-		ORDER_BY(Appeals.ID.DESC())
+	stmt := getSelectJoinAppealStmt(f)
 
 	stmt = makeWhere(f, stmt)
 
