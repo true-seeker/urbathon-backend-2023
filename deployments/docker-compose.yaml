@@ -47,6 +47,9 @@ services:
     volumes:
       - ../deployments/.aws/:/root/.aws/
     depends_on:
-      - migrate
+      migrate:
+        condition: service_completed_successfully
+
     environment:
       <<: *database-credentials
+    command: ./urbathon-backend-2023 -srvAddr=webapi -srvPort=8080

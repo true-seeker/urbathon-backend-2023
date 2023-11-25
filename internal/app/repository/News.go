@@ -26,7 +26,7 @@ func getSelectNewStmt() SelectStatement {
 		NewsPolls.ID.AS("newsPolls.id"),
 		NewsPolls.Title.AS("newsPolls.title"),
 		PollOptions.ID.AS("pollOptions.id"),
-		PollOptions.Title.AS("pollOptions.title")).
+		PollOptions.Title.AS("pollOptions.tisstle")).
 		FROM(News.
 			LEFT_JOIN(NewsCategories, NewsCategories.ID.EQ(News.CategoryID)).
 			LEFT_JOIN(NewsPolls, NewsPolls.ID.EQ(News.PollID)).

@@ -9,7 +9,8 @@ RUN go install github.com/go-jet/jet/v2/cmd/jet@latest
 
 RUN go mod download
 
-
 COPY . .
 
-CMD sh deployments/startup.sh
+WORKDIR cmd/urbathon-backend-2023
+
+RUN go build
