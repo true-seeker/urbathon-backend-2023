@@ -24,6 +24,7 @@ func UseSchema(schema string) {
 	Organizations = Organizations.FromSchema(schema)
 	PollOptions = PollOptions.FromSchema(schema)
 	SchemaMigrations = SchemaMigrations.FromSchema(schema)
+	Tko = Tko.FromSchema(schema)
 	UserPollVotes = UserPollVotes.FromSchema(schema)
 	UserRoles = UserRoles.FromSchema(schema)
 	Users = Users.FromSchema(schema)

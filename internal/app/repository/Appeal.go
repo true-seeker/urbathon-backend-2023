@@ -217,7 +217,7 @@ func makeWhereMap(f *filter.Map, stmt SelectStatement) SelectStatement {
 	return stmt
 }
 
-func (a *AppealRepository) GetMapElements(f *filter.Map) (*[]entity.Appeal, error) {
+func (a *AppealRepository) GetForMap(f *filter.Map) (*[]entity.Appeal, error) {
 	var u []entity.Appeal
 	stmt := Appeals.SELECT(Appeals.ID, Appeals.Latitude, Appeals.Longitude, Appeals.Title).FROM(Appeals)
 	stmt = makeWhereMap(f, stmt)

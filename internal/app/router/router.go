@@ -60,7 +60,7 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		appealGroup.POST("/", middleware.Session, appealHandler.Create)
 		appealGroup.PUT("/:id", middleware.Session, appealHandler.Update)
 		appealGroup.POST("/:id/status/:status_id", middleware.Session, appealHandler.UpdateStatus)
-		appealGroup.GET("/:id/comment", middleware.Session, appealCommentHandler.GetComments)
+		appealGroup.GET("/:id/comment", appealCommentHandler.GetComments)
 		appealGroup.POST("/:id/comment", middleware.Session, appealCommentHandler.CreateComment)
 		appealGroup.DELETE("/:id", middleware.Session, appealHandler.Delete)
 	}
@@ -92,8 +92,8 @@ func InitRoutes(r *gin.Engine, storage storage.Sql) *gin.Engine {
 		appealStatusGroup.GET("/", appealStatusHandler.GetAll)
 		appealStatusGroup.GET("/:id", appealStatusHandler.Get)
 	}
-
-	mapService := service.NewMapService(appealRepo)
+	tkoRepo := repository.NewTkoRepository(storage)
+	mapService := service.NewMapService(appealRepo, tkoRepo)
 	mapHandler := handler.NewMapHandler(mapService)
 	mapGroup := api.Group("map")
 	{
