@@ -1,5 +1,7 @@
 ## Бэкенд приложения "Городские связи" для хакатона "Урбатон-2023"
 
+#### Задание можно увидеть [здесь](task.md)
+
 Используемые технологии: Golang, PostgreSQL, Redis, s3 (Yandex Object Storage).
 Пакеты Go: 
 - [Gin](https://github.com/gin-gonic/gin) (веб-фреймворк)
