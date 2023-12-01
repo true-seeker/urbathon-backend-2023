@@ -2,11 +2,11 @@
 
 Используемые технологии: Golang, PostgreSQL, Redis, s3 (Yandex Object Storage).
 Пакеты Go: 
-- Gin (веб-фреймворк)
-- go-jet (кодогенерация моделей БД, и конструктор запросов БД)
-- go-migrate (миграции БД)
+- [Gin](https://github.com/gin-gonic/gin) (веб-фреймворк)
+- [go-jet](https://github.com/go-jet/jet) (кодогенерация моделей БД, и конструктор запросов БД)
+- [go-migrate](https://github.com/golang-migrate/migrate) (миграции БД)
 - aws (s3)
-- swag (генерация спецификации Swagger)
+- [swag](https://github.com/swaggo/swag) (генерация спецификации Swagger)
 
 #### Локальный запуск:
 
